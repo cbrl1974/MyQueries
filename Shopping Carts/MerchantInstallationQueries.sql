@@ -1,31 +1,31 @@
 use datatail20130410
 
-DECLARE @MerchantIdinstallations AS INT = 2812;
+DECLARE @MerchantIdinstallations AS INT = 1733;
 select * from merchantinstallations
 where merchantid = @MerchantIdinstallations
 
-DECLARE @MerchantIdinstallationsPrices AS INT = 2812;
+DECLARE @MerchantIdinstallationsPrices AS INT = 1733;
 select * from MerchantInstallationPrices
 where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantIdinstallationsPrices)
 
 
-DECLARE @MerchantIdinstallationsFilters AS INT = 2812;
+DECLARE @MerchantIdinstallationsFilters AS INT = 1733;
 select * from MerchantInstallationFilters
 where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantIdinstallationsFilters)
 
-DECLARE @MerchantIdinstallationsZones AS INT = 2812;
+DECLARE @MerchantIdinstallationsZones AS INT = 1733;
 select * from MerchantInstallationZones
 where merchantinstallationID in (select id from merchantinstallations
 where merchantid = @MerchantIdinstallationsZones)
 
-DECLARE @MerchantIdZones AS INT = 2812;
+DECLARE @MerchantIdZones AS INT = 1733;
 select * from merchantzones where merchant_id = @MerchantIdZones
 
-DECLARE @MerchantId AS INT = 2812;
+DECLARE @MerchantId AS INT = 1733;
 update top (13) MerchantInstallationZones set merchantzoneid = 1162
 where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantId)
 
-DECLARE @MerchantIdZoneCodes AS INT = 2812;
+DECLARE @MerchantIdZoneCodes AS INT = 1733;
 select * from merchantZoneCodes where merchantZoneId in (select id from merchantzones where merchant_id = @MerchantIdZoneCodes)
 
 
