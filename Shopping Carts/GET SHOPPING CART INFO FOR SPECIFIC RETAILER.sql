@@ -1,36 +1,36 @@
  
 --Debugging
-DECLARE @MerchantIdforDebugForLogs AS INT = 1733;
+DECLARE @MerchantIdforDebugForLogs AS INT = 3198;
 select top 100 * from merchantwebsiteeventlogs 
 where merchantid = @MerchantIdforDebugForLogs
 order by time desc
 
 
-DECLARE @MerchantIdforDebug AS INT = 1733;
+DECLARE @MerchantIdforDebug AS INT = 3198;
 select top 200 * from MerchantTransactionLog
 where merchant_id = @MerchantIdforDebug
 order by id desc
 
 
-DECLARE @MerchantIdforDebugForActiveCarts AS INT = 1733;
+DECLARE @MerchantIdforDebugForActiveCarts AS INT = 3198;
 select  top 100 * from ActiveShoppingCarts 
 where merchantid = @MerchantIdforDebugForActiveCarts order by id desc
 
 
-DECLARE @MIDCustomerOrders AS INT = 1733;
+DECLARE @MIDCustomerOrders AS INT = 3198;
 select top 100 * from CustomerOrders
 where merchant_id = @MIDCustomerOrders
 order by id desc
 
-DECLARE @MIDCustomerOrderPayments AS INT = 1733;
+DECLARE @MIDCustomerOrderPayments AS INT = 3198;
 select top 100 * from CustomerOrderPayments
 where orderid in (select id from CustomerOrders where merchant_id = @MIDCustomerOrderPayments )
 order by orderid desc
 
-DECLARE @MerchantIdcustomers AS INT = 1733;
-select * from customers where merchant_id = 1733 and id =198362
+DECLARE @MerchantIdcustomers AS INT = 3198;
+select * from customers where merchant_id = 3198 and id =198362
 
-DECLARE @MerchantIdforcustomerOrdersItems AS INT = 1733;
+DECLARE @MerchantIdforcustomerOrdersItems AS INT = 3198;
 select top 100 * from CustomerOrderItems  
 where orderID in (select  ID from CustomerOrders where merchant_id = @MerchantIdforcustomerOrdersItems )
 order by id desc
@@ -42,93 +42,110 @@ select * from PaymentIntegrations
 
 
 
-DECLARE @CustomerOrderEmailsHistory AS INT = 1733;
+DECLARE @CustomerOrderEmailsHistory AS INT = 3198;
 select top 100 * from CustomerOrderEmailsHistory
 where orderid in (select customerOrderId from MerchantTransactionLog
 where merchant_id = @CustomerOrderEmailsHistory)
 order by id desc
 
 
-DECLARE @MerchantIdforDebugForCartConfigurations AS INT = 1733;
+DECLARE @MerchantIdforDebugForCartConfigurations AS INT = 1507;
 select * from MerchantShoppingCartConfigurations
 where merchantid = @MerchantIdforDebugForCartConfigurations
 
+delete top (1) from MerchantShoppingCartConfigurations
+where id = 134
+
 
  --********************FEATURES********************
- DECLARE @MerchantIdforFeatures AS INT = 1733;
+ DECLARE @MerchantIdforFeatures AS INT = 3198;
  select * from merchantWebsiteFeatures where merchant_id = @MerchantIdforFeatures 
 
 
  --********************texts********************
-DECLARE @MerchantIdfortexts AS INT = 1733;
+DECLARE @MerchantIdfortexts AS INT = 3198;
 select * from merchantWebsitetexts
 where merchant_id = @MerchantIdfortexts
 and textcode like '%payment%'
 
+--************Products with prices******************
+DECLARE @MerchantIdforProdsWithPrices AS INT = 3198;
+select top 1 productid, price, reducedPrice from merchantprods
+where merchant_id = @MerchantIdforProdsWithPrices
+and price is not null
+
+-- update top (1) merchantprods
+-- set price = NULL
+-- where merchant_id = @MerchantIdforProdsWithPrices
+-- and productid in (select productid from merchantprods
+-- where merchant_id = @MerchantIdforProdsWithPrices)
+
+
+
  --********************Shipping********************
-DECLARE @MerchantIdforShipping AS INT = 1733;
+DECLARE @MerchantIdforShipping AS INT = 3198;
 select * from merchantshipping where merchant_id =@MerchantIdforShipping
 
 
 
 --select  * from MerchantShippingIncludeRules where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShipping)
-DECLARE @MerchantIdforShippingShippingPricesBYValueRanges AS INT = 1733;
+DECLARE @MerchantIdforShippingShippingPricesBYValueRanges AS INT = 3198;
 select * from MerchantShippingPricesByValueRanges
 where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShippingShippingPricesBYValueRanges)
 
-select * from merchantshoppingcartconfigurations where merchantid = 1733
+select * from merchantshoppingcartconfigurations where merchantid = 3198
 
  
-DECLARE @MerchantIdforShippingShippingPricesByQuantity AS INT = 1733;
+DECLARE @MerchantIdforShippingShippingPricesByQuantity AS INT = 3198;
 select * from MerchantShippingPricesByQuantity
 where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShippingShippingPricesByQuantity)
 
 
-DECLARE @MerchantIdforShippingPricesByStoreLocRings AS INT = 1733;
+DECLARE @MerchantIdforShippingPricesByStoreLocRings AS INT = 3198;
 select * from MerchantShippingPricesByStoreLocRings
 where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShippingPricesByStoreLocRings)
 
 
 
-DECLARE @MerchantIdforShippingPricesByStoreLocRadio AS INT = 1733;
+DECLARE @MerchantIdforShippingPricesByStoreLocRadio AS INT = 3198;
 select * from MerchantShippingPricesByStoreLocRadio
 where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShippingPricesByStoreLocRadio)
 
 
 
-DECLARE @MerchantIdforShippingPricesShippingPrices AS INT = 1733;
+DECLARE @MerchantIdforShippingPricesShippingPrices AS INT = 3198;
 select * from MerchantShippingPrices
 where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShippingPricesShippingPrices)
 
 
 
-DECLARE @merchantshippingIncluderules AS INT = 1733;
+DECLARE @merchantshippingIncluderules AS INT = 3198;
 select * from merchantshippingIncluderules
 where merchantshippingid in (select id from merchantshipping where merchant_id = @merchantshippingIncluderules)
 
 
 
-DECLARE @merchantshippingexcludeRules AS INT = 1733;
+DECLARE @merchantshippingexcludeRules AS INT = 3198;
 select * from merchantshippingexcludeRules
 where merchantshippingid in (select id from merchantshipping where merchant_id = @merchantshippingexcludeRules )
 
 
 ----********************Warranties********************
-DECLARE @MerchantIdforWarranties AS INT = 1733;
+DECLARE @MerchantIdforWarranties AS INT = 3198;
 select * from merchantwarranties where merchantid = @MerchantIdforWarranties
 select * from merchantwarrantyprices where merchantwarrantyid in (select id from merchantwarranties where merchantid = @MerchantIdforWarranties)
 
 
 
 --********************Stores********************
-DECLARE @MerchantIdforStores AS INT = 1733;
+DECLARE @MerchantIdforStores AS INT = 3198;
 select * from merchantstores where merchantid = @MerchantIdforStores
 
 
 
 
 --********************Zones********************
-DECLARE @MerchantIdforZones AS INT = 1733;
+DECLARE @MerchantIdforZones AS INT = 3198;
 select * from merchantzones where merchant_id =@MerchantIdforZones
 select * from merchantzonecodes
 where merchantzoneid in (select id from merchantzones where merchant_id =@MerchantIdforZones) 
@@ -139,7 +156,7 @@ where merchantzoneid in (select id from merchantzones where merchant_id =@Mercha
 
 --********************Taxes********************
 
-DECLARE @MerchantIdforTaxes AS INT = 1733;
+DECLARE @MerchantIdforTaxes AS INT = 3198;
 select * from merchanttaxes where merchant_id =@MerchantIdforTaxes 
 select * from MerchantStoresTaxes
 where merchantTaxId in (select id from merchanttaxes where merchant_id =@MerchantIdforTaxes)
@@ -184,7 +201,7 @@ from merchantwebsitefeatures mf
 join merchants m on m.id = mf.merchant_id
 --where  mf.featureCode like '%onlyppe%'
 where  mf.featureCode = 'shoppingCartType'
-and  mf.featurevalue like '%beanstream%'
+and  mf.featurevalue like '%onlyppe%'
 and m.active = 1
 and  mf.merchant_id in (select merchant_id  from merchantwebsitefeatures
 where featurevalue    in ('tbvision') and featureCode = 'template')
@@ -193,9 +210,9 @@ and  mf.merchant_id in (select merchant_id  from merchantwebsitefeatures
 where featureCode    in ('hasShippingOptionsOnItems'))
 
 
-DECLARE @MerchantIdfortextsa AS INT = 1733;
+DECLARE @MerchantIdfortextsa AS INT = 3198;
 select * from merchantWebsitetexts  where merchant_id = @MerchantIdfortextsa and textcode like '%payment%'
 
-DECLARE @MerchantIdfortexts AS INT = 1733;
+DECLARE @MerchantIdfortexts AS INT = 3198;
 select * from merchantWebsitetexts  where merchant_id = @MerchantIdfortexts and textcode like '%payment%'
 
