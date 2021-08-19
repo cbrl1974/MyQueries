@@ -35,8 +35,35 @@ for json path
 
 
 --Script to poulate the shipping options shared document for alliance furnishings
-DECLARE @MerchantIdforFones AS INT = 1097;
-select * from merchantzones where merchant_id =@MerchantIdforFones
-select  mz.name_1,mzc.stateCode, mzc.postalCode from merchantzonecodes mzc
+DECLARE @MerchantIdZones AS INT = 1097;
+--select * from merchantzones where merchant_id =@MerchantIdZones
+select mz.name_1,mzc.stateCode, mzc.postalCode from merchantzonecodes mzc
 join merchantzones mz on mz.id = mzc.merchantzoneId
-where mzc.merchantzoneid in (select id from merchantzones where merchant_id = @MerchantIdforFones)
+where mzc.merchantzoneid in (select id from merchantzones where merchant_id = @MerchantIdZones)
+and mzc.postalCode = '70502'
+
+
+
+--Finding duplicated zipcodes on delivery zones
+WITH CTE AS 
+(
+    SELECT  postalcode
+    from merchantzonecodes 
+    where merchantzoneid in (select id from merchantzones where merchant_id = 1097)
+    GROUP BY postalcode 
+    HAVING COUNT(postalcode) > 1
+)
+
+select mz.name_1,mzc.stateCode, mzc.postalCode from merchantzonecodes mzc
+join merchantzones mz on mz.id = mzc.merchantzoneId
+join CTE ct on ct.postalCode = mzc.postalCode
+where mzc.merchantzoneid in (select id from merchantzones where merchant_id = 1097) 
+
+WITH CTE AS
+(
+SELECT *,ROW_NUMBER() OVER (PARTITION BY postalcode ORDER BY postalcode) AS RN
+from merchantzonecodes 
+where merchantzoneid = 1051
+)
+
+DELETE FROM CTE WHERE RN<>1
