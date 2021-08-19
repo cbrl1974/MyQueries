@@ -32,9 +32,11 @@ where merchantZoneId = (select id from merchantzones where merchant_id = @Mercha
 and statecode not in ('CT')
 for json path
 
-select postalcode, statecode, count(postalcode) as total
-from merchantzonecodes
-where merchantzoneid in (1181,1182,1183,1184)
-having  count(postalcode) > 1
 
 
+--Script to poulate the shipping options shared document for alliance furnishings
+DECLARE @MerchantIdforFones AS INT = 1097;
+select * from merchantzones where merchant_id =@MerchantIdforFones
+select  mz.name_1,mzc.stateCode, mzc.postalCode from merchantzonecodes mzc
+join merchantzones mz on mz.id = mzc.merchantzoneId
+where mzc.merchantzoneid in (select id from merchantzones where merchant_id = @MerchantIdforFones)
