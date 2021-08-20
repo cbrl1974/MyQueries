@@ -10,7 +10,6 @@ DECLARE @MerchantIdforZone2 AS INT = 1097;
 select distinct postalcode as z, statecode as s
 from merchantzonecodes
 where merchantZoneId = (select id from merchantzones where merchant_id = @MerchantIdforZone2 and name_1 = 'Zone 2 - remote')
---and statecode not in ('CT')
 for json path
 
 
@@ -20,7 +19,6 @@ DECLARE @MerchantIdforZone3 AS INT = 1097;
 select distinct postalcode as z, statecode as s
 from merchantzonecodes
 where merchantZoneId = (select id from merchantzones where merchant_id = @MerchantIdforZone3 and name_1 = 'Zone 3 - isolated')
-and statecode not in ('CT')
 for json path
 
 
@@ -29,7 +27,6 @@ DECLARE @MerchantIdforZone4 AS INT = 1097;
 select  postalcode as z, statecode as s
 from merchantzonecodes
 where merchantZoneId = (select id from merchantzones where merchant_id = @MerchantIdforZone4 and name_1 = 'Zone 4')
-and statecode not in ('CT')
 for json path
 
 
