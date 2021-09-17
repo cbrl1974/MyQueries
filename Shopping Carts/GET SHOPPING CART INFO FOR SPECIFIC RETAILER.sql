@@ -68,6 +68,8 @@ select * from merchantWebsitetexts
 where merchant_id = @MerchantIdfortexts
 and textcode like '%payment%'
 
+
+
 --************Products with prices******************
 DECLARE @MerchantIdforProdsWithPrices AS INT = 2456;
 select top 1 productid, price, reducedPrice from merchantprods
@@ -119,7 +121,7 @@ where merchantshippingid in (select id from merchantshipping where merchant_id =
 DECLARE @merchantshippingIncluderules AS INT = 2456;
 select c.category, ms.name_1, msir.* from merchantshippingIncluderules msir
 inner join merchantshipping ms on ms.id = msir.MerchantShippingId
-inner join categories c on c.id_category = msir.catid and c.id_langue = 1
+left join categories c on c.id_category = msir.catid and c.id_langue = 1
 where msir.merchantshippingid in (select id from merchantshipping where merchant_id = @merchantshippingIncluderules)
 
 
@@ -129,6 +131,10 @@ select c.category, ms.name_1, mser.* from merchantshippingExcluderules mser
 inner join merchantshipping ms on ms.id = mser.MerchantShippingId
 inner join categories c on c.id_category = mser.catid and c.id_langue = 1
 where mser.merchantshippingid in (select id from merchantshipping where merchant_id = @merchantshippingexcludeRules)
+
+DECLARE @MERCHANTIDFORE0XCLUSIONS as int = 2456;
+select * from MerchantShippingExclusions
+where MerchantShippingId in (select id from merchantshipping where merchant_id = @MERCHANTIDFORE0XCLUSIONS)
 
 
 ----********************Warranties********************
