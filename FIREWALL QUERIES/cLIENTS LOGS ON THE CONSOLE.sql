@@ -1,13 +1,19 @@
 select top 500  * from firewall.dbo.LoggerClientEvents
-WHERE MERCHANTID = 1175
-AND EventTime between '2021-09-16' and '2021-09-17'
+WHERE MERCHANTID = 1781
+AND EventTime between '2021-10-07' and '2021-10-08'
 order by eventtime desc
 
 --Check history of price change per product and merchant
 select top 100 * from MerchantProds_ChangeTracking
- where merchantid = 1175 
- and [changetime] between '2021-09-10' and '2021-09-30'
+ WHERE MERCHANTID = 1781
+ and [changetime] between '2021-10-07' and '2021-10-08'
  order by ChangeTime 
+
+ select top 5  * from MerchantProducts_ChangeTrackingArchive
+ WHERE MERCHANTID = 1781
+ and [changetime] between '2021-10-01' and '2021-10-15'
+ and productid =641062
+ 
 
 
 
@@ -15,9 +21,9 @@ select * from firewall.dbo.
 
 
 select  * from firewall.dbo.historical
- where url_string like '%www.stereoplus.com%'
- and [timestamp] between '2021-09-16 10:15:00.000' and '2021-09-16 10:45:00.000'
- and ipaddress = '72.0.250.194'
+ where url_string like '%meublesetdavantage.ca%'
+ and [timestamp] between '2021-10-07 22:00:00.000' and '2021-10-07 23:00:00.000'
+ and ipaddress = '192.222.167.103'
  order by [timestamp] desc
 
  select  distinct ipaddress from firewall.dbo.historical
