@@ -3,7 +3,6 @@
 DECLARE @MerchantIdforDebugForLogs AS INT = 1175;
 select top 100 * from merchantwebsiteeventlogs 
 where merchantid = @MerchantIdforDebugForLogs
-and [time] between '2021-09-16' and '2021-09-17'
 --and module = 'ShoppingCart'
 order by time desc
 
@@ -11,23 +10,18 @@ order by time desc
 DECLARE @MerchantIdforDebug AS INT = 1175;
 select top 150  * from MerchantTransactionLog
 where merchant_id = @MerchantIdforDebug
---and requestSent like '%vincentlebel98@gmail.com%'
-and creationTimestamp between '2021-09-16' and '2021-09-17'
 order by id desc
 
 
 DECLARE @MerchantIdforDebugForActiveCarts AS INT = 1175;
 select  top 100 * from ActiveShoppingCarts 
 where merchantid = @MerchantIdforDebugForActiveCarts
---and LastTransactionResult = 'failed'
---and [OrderSubmitDate] between '2021-09-10' and '2021-09-17'
  order by id desc
 
 
 DECLARE @MIDCustomerOrders AS INT = 1175;
 select top 100 * from CustomerOrders
 where merchant_id = @MIDCustomerOrders
-and orderTimeStamp between '2021-09-16' and '2021-09-17'
 order by id desc
 
 DECLARE @MIDCustomerOrderPayments AS INT = 1175;
@@ -40,18 +34,10 @@ select * from customers where merchant_id = 1175
 and last_name like '%Lebel%'
 
 DECLARE @MerchantIdforcustomerOrdersItems AS INT = 1175;
-select top 100 * from CustomerOrderItems  
---where orderID in (select  ID from CustomerOrders where merchant_id = @MerchantIdforcustomerOrdersItems )
+select top 100 * from CustomerOrderItems
 order by id desc
 
-
-select * from merchantprods where merchant_id = 1175 and productid = 501973
-select * from merchantprods where merchant_id = 1175 and qty >= 3
-
-
 select * from PaymentIntegrations
-
-
 
 
 DECLARE @CustomerOrderEmailsHistory AS INT = 1175;
