@@ -20,9 +20,28 @@ select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as P
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  >= '2021-12-16'
+where cast(a.date as date)  = '2021-12-17'
 group by a.retailerid, b.cie,date
 order by b.cie
+
+
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%Visions%' and AssemblyMethodName = 'ScrapeProducts'
+
+update top (1) Tailbaseservices.dbo.AsyncTasks 
+set State = 1
+where id = '18DE8062-ABCE-42AA-83A0-C03049382FCB'
+
+
+--the brick
+--home depot canada
+--leon
+--Best Buy CA
+--Canadian Appliance Source (Run any of them)
+--Les Spécialistes de l'électroménager (MesElectrosScraper)
+--Reno Depot
+--Rona
+--Visions
+--Best Buy USA
 
 
 select * from companies where Id_cie = 3132
