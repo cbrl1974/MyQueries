@@ -18,25 +18,16 @@ from merchantfeeds mf
     inner join merchantProds mp on mp.Merchant_ID = m.id
     left join products p on p.Id_product = mp.ProductID
     left join MerchantDistributorWarehouseLocations md on md.merchantid = mf.merchant_id
-    left join merchantwebsitefeatures mwf on mwf.merchant_id = mf.merchant_id
+    left join merchantwebsitefeatures mwf on mwf.merchant_id = mf.merchant_id 
+    and mwf.featurecode = 'shoppingCartType'
     left join merchantshipping ms on ms.dropShippingProgramID = md.DistributorID
 where mf.brand = 'Ashley'
     and m.active = 1
     and mf.active = 1
     and p.manufID in (1436,3181,3182,3184,4227)
-    and mwf.featurecode = 'shoppingCartType'
-and ms.dropShippingProgramID = 1  ---added direct express
+--and ms.dropShippingProgramID = 1  ---added direct express
 group by m.id, m.merchant,mf.remoteFTPUser,m.merchant_url,mwf.featurecode,ms.dropShippingProgramID,md.city, md.statecode, md.CountryName, lastmodified
 order by m.id
-
-
-select mp.merchant_id, count(mp.productid) from merchantProds mp 
-inner join products p on p.Id_product = mp.ProductID
-where p.manufID in (1436,3181,3182,3184,4227)
-and mp.merchant_id = 1704
-group by mp.merchant_id
-
-
 
 --Ashley Brands
 select * from companies where cie in ('Ashley','Ashley Sleep','Signature Design by Ashley','Benchcraft','Millennium')
@@ -45,7 +36,9 @@ select * from companies where cie in ('Ashley','Ashley Sleep','Signature Design 
 select mp.merchant_id, count(mp.productid) from merchantProds mp 
 inner join products p on p.Id_product = mp.ProductID
 where p.manufID in (1436,3181,3182,3184,4227)
-and mp.merchant_id = 1704
+and mp.merchant_id = 2417
 group by mp.merchant_id
+
+
 
 
