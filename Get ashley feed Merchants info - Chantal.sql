@@ -25,7 +25,7 @@ where mf.brand = 'Ashley'
     and mf.active = 1
     and p.manufID in (1436,3181,3182,3184,4227)
     and mwf.featurecode = 'shoppingCartType'
---and ms.dropShippingProgramID = 1  ---added direct express
+and ms.dropShippingProgramID = 1  ---added direct express
 group by m.id, m.merchant,mf.remoteFTPUser,m.merchant_url,mwf.featurecode,ms.dropShippingProgramID,md.city, md.statecode, md.CountryName, lastmodified
 order by m.id
 
