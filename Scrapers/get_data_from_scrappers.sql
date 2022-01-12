@@ -7,11 +7,11 @@ select * from retailers where webtracking = 1 and countryid = 36
 select * from products where model like '%RF25HMIDBSR%'
 
 
-select retailerid, sku, modelNo, RegularPrice, AdvertisedPrice
+select retailerid, sku, modelNo, RegularPrice, AdvertisedPrice, [date]
   from TailbaseServices.dbo.WebTrackingProducts
 where retailerid = 26
 and [date] between '2022-01-12' and '2022-01-13'
-and modelNo like '%RF28T5A01SR%'
+and modelNo like '%RF25HMIDBSR%'
 
 
 
@@ -25,24 +25,18 @@ group by a.retailerid, b.cie,date
 order by b.cie
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%Visions%' and AssemblyMethodName = 'ScrapeProducts'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%Leon%' and AssemblyMethodName = 'ScrapeProducts'
 
 --This runs an indicidual scrapper
 update top (1) Tailbaseservices.dbo.AsyncTasks 
 set State = 1
-where id = '18DE8062-ABCE-42AA-83A0-C03049382FCB'
+where id = '38c5029f-efb6-4e8e-b25d-ebdad106470e'
 
-
---the brick
---home depot canada
---leon
---Best Buy CA
---Canadian Appliance Source (Run any of them)
---Les Spécialistes de l'électroménager (MesElectrosScraper)
---Reno Depot
---Rona
---Visions
---Best Buy USA
+--States Defintiion
+    1 = queue to the tasks list (will be executed shortly)
+    3 = currently executing
+    5 = finished executing
+    6 = finished executing successfully
 
 
 select * from companies where Id_cie = 3132
