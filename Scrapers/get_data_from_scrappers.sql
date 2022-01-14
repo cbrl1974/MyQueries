@@ -28,9 +28,137 @@ order by b.cie
 select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%Leon%' and AssemblyMethodName = 'ScrapeProducts'
 
 --This runs an indicidual scrapper
-update top (1) Tailbaseservices.dbo.AsyncTasks 
+
+--BestBuyCanadaScraper
+update asynctasks
 set State = 1
-where id = '38c5029f-efb6-4e8e-b25d-ebdad106470e'
+where id = '283D76B5-C42E-4B8D-A921-39DEDC447C45'
+
+
+--RonaScraper
+update asynctasks
+set State = 1
+where id = 'E95716A6-4C72-4FB7-AA3C-3E8D8B843936'
+
+
+--BraultetMartineauScraper
+update asynctasks
+set state= 1
+where id = 'EDF195ED-B671-4AF6-8048-824306FD1E08'
+
+--BestBuyUsScraper
+update asynctasks
+set state= 1
+where id = '556BCCBA-7C26-4732-9DA0-82D9D80CC1C1'
+
+
+--HomeDepotUsScraper
+update asynctasks
+set State = 1
+where id = 'A84C8FD6-B708-446B-BA86-95086E76FD0B'
+
+
+--MesElectrosScraper
+update asynctasks
+set state = 1
+where id = '247349A6-1605-41E4-91D8-A58EE1A06C1F'
+
+
+--CostcoCanadaScraper
+update asynctasks
+set State = 1
+where id = 'BBF0B852-5967-4278-B302-A9D3747F7C87'
+
+
+--LowesCanadaScraper
+update asynctasks
+set state = 1
+where id = 'CFA1D4BB-9F88-4A93-A0EE-AA40A1E9B607'
+
+
+--RenoDepotScraper
+update asynctasks
+set state = 1
+where id = '9CA939FF-B5E8-42CE-A9F0-AD04BEFDE670'
+
+
+--LeonsScraper
+update asynctasks
+set state = 1
+where id = '38C5029F-EFB6-4E8E-B25D-EBDAD106470E'
+
+
+--HomeDepotCanadaScraper
+update asynctasks
+set State = 1
+where id = '7C2CB5E5-171A-4354-A1DE-F5E9E198B7B1'
+
+
+--LowesUsScraper
+update asynctasks
+set state = 1
+where id = '3FF2B78B-5CE8-465F-942B-F62AF9AB9A6D'
+
+
+--TheBrickScraper
+update asynctasks
+set State = 1
+where id = 'F2227F48-7997-446C-BF34-9DBDB069D9CE'
+
+
+--CAS Morning
+update asynctasks
+set State = 1
+where id = '90FB4928-525F-4CF5-9EA1-915CE2406478'
+
+
+--Goemans
+update asynctasks
+set state = 1
+where id = 'B9D227DC-8FFE-48BB-A983-806C4EC1D30F'
+
+
+--Staples
+update asynctasks
+set state = 1
+where id = 'F98DE0B9-7AFA-4FDC-AF18-1A00D794BD0B'
+
+
+--TheBay
+update asynctasks
+set state = 1
+where id = '6291fd82-5229-459b-bc78-f8dd9d7ebe8e'
+
+
+--Visions
+update asynctasks
+set state = 1
+where id = '18DE8062-ABCE-42AA-83A0-C03049382FCB'
+
+
+--CorbeilElectroScraper
+update asynctasks
+set state = 1
+where id = 'b06311af-3c7e-406f-aeac-6037c8fea39a'
+
+
+--Tanguay
+update asynctasks
+set lset state = 1
+where id = '4D8C9AEE-E07F-4090-936C-0E49EF8B64EB'
+
+
+--The Source
+update asynctasks
+set lastintervalexecution = set state = 1
+where id = '425D9ECB-3D1C-47DE-9B07-20C105908682'
+
+
+--Amazon
+update asynctasks
+set lastintervalexecution = set state = 1
+where id = 'E67BEB31-D352-4981-B164-C3A501748555'
+
 
 --States Defintiion
     1 = queue to the tasks list (will be executed shortly)
