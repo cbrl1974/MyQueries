@@ -4,60 +4,31 @@ select m.id, m.merchant, mf.* from merchantwebsitefeatures mf
 join merchants m on m.id = mf.merchant_id
 where mf.featurecode like '%sort%'
 and  mf.merchant_id in (select merchant_id  from merchantwebsitefeatures
-where featurevalue    in ('tbx') and featureCode = 'template')
+where featurevalue    in ('tbplatinum') and featureCode = 'template')
 order by mf.featurecode
 
-Declare @merchantId as int = 2953;
+--Check if feature already exists
+Declare @merchantId as int = 3361;
 select * from merchantwebsitefeatures where merchant_id = @merchantId AND Featurecode like '%sort%'
-(CASE WHEN item.displayorder IS NULL THEN 1 ELSE 0 END), ISNULL(item.displayorder, 0)
 
+
+-- Insert feature
+Declare @merchantIdForFeatures as int = 3361;
 insert into merchantwebsitefeatures values
-(2953,'defaultSort','(CASE WHEN mc.displayorder IS NULL THEN 1 ELSE 0 END), ISNULL(mc.displayorder, 0), mc.brandHidden ASC, mc.specialbuy DESC,  mc.displayorder, ISNULL(mc.realprice, 9999999) ASC'),
-(2510,'colldefaultsort','(CASE WHEN mc.displayorder IS NULL THEN 1 ELSE 0 END), mc.displayorder, mc.brandHidden ASC, mc.specialbuy DESC,  mc.displayorder, ISNULL(mc.realprice, 9999999) ASC')
-(2953,'searchDefaultSort','price ASC, category ASC, brand ASC')
+(@merchantIdForFeatures,'defaultSort','(CASE WHEN item.displayorder IS NULL THEN 1 ELSE 0 END), ISNULL(item.displayorder, 0), CASE WHEN (item.reducedPrice IS NOT NULL AND (item.reducedPriceEndDate IS NULL or item.reducedPriceEndDate > GETDATE()) and (item.reducedPriceStartDate IS NULL or item.reducedPriceStartDate < GETDATE())) THEN item.reducedPrice WHEN item.price IS NOT NULL THEN item.price ELSE 9999999 END ASC'),
+(@merchantIdForFeatures,'colldefaultsort','(CASE WHEN item.displayorder IS NULL THEN 1 ELSE 0 END), ISNULL(item.displayorder, 0), CASE WHEN (item.reducedPrice IS NOT NULL AND (item.reducedPriceEndDate IS NULL or item.reducedPriceEndDate > GETDATE()) and (item.reducedPriceStartDate IS NULL or item.reducedPriceStartDate < GETDATE())) THEN item.reducedPrice WHEN item.price IS NOT NULL THEN item.price ELSE 9999999 END ASC')
 
 
+-- or update feature
+Declare @merchantIdForUpdateFeatures as int = 3361;
 update top (1) merchantwebsitefeatures
 set featureValue = '(CASE WHEN mp.displayorder IS NULL THEN 1 ELSE 0 END), ISNULL(mp.displayorder, 0), mp.specialbuy DESC, mp.brandHidden DESC, mc.display_order, cat.category, ci.cie ASC, ISNULL(mp.realprice, 9999999) ASC'
-where merchant_id = 2953
+where merchant_id = @merchantIdForUpdateFeatures
 and featurecode  =  'defaultSort'
 
 
+-- Delete feature
+Declare @merchantIdForDeleteFeatures as int = 3361;
+DELETE TOP (1) merchantwebsitefeatures WHERE MERCHANT_ID = @merchantIdForDeleteFeatures
+AND Featurecode = 'defaultSort'
 
-DELETE TOP (1) merchantwebsitefeatures WHERE MERCHANT_ID = 2953 AND Featurecode = 'defaultSort'
-
-
-select * from companies where cie like '%crow%'
-
---Collections
-select mc.collectionid, mc.displayOrder
-from merchantcollections mc 
-join collections c on c.id = mc.collectionID
-where mc.merchant_id = 2510
-and c.brands = '2768'
-
-update top (315) merchantcollections
-set displayOrder = 1
-where merchant_id = 2510
-and collectionid in (select mc.collectionid
-from merchantcollections mc 
-join collections c on c.id = mc.collectionID
-where mc.merchant_id = 2510
-and c.brands = '2768')
-
---Products
-
-select mp.productid, mp.displayOrder
-from merchantprods mp 
-join products p on p.id_product = mp.productid
-where mp.merchant_id = 2510
-and p.manufid = 2768
-
-update top (956) merchantprods
-set displayOrder = 1
-where merchant_id = 2510
-and productid in (select mp.productid
-from merchantprods mp 
-join products p on p.id_product = mp.productid
-where mp.merchant_id = 2510
-and p.manufid = 2768)
