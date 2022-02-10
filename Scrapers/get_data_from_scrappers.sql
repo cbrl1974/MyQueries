@@ -20,149 +20,126 @@ select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as P
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2022-01-17'
+where cast(a.date as date)  = '2022-02-10'
 group by a.retailerid, b.cie,date
 order by b.cie
 
 --Check the state of a scraper
-select assemblyclass, [state], LastIntervalExecution, [Interval] from AsyncTasks where AssemblyClass like '%scraper%'
+select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%scraper%'
  order by [state] , LastIntervalExecution
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%Leon%' and AssemblyMethodName = 'ScrapeProducts'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%best%' and AssemblyMethodName = 'ScrapeProducts'
 
---This runs an indicidual scrapper
+----- *****************This runs an indicidual scrapper********************
 
 --BestBuyCanadaScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
-where id = '283D76B5-C42E-4B8D-A921-39DEDC447C45'
+where id = '283d76b5-c42e-4b8d-a921-39dedc447c45'
 
 --LeonsScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = '38C5029F-EFB6-4E8E-B25D-EBDAD106470E'
 
 
 --HomeDepotCanadaScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = '7C2CB5E5-171A-4354-A1DE-F5E9E198B7B1'
 
 
 --LowesCanadaScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = 'CFA1D4BB-9F88-4A93-A0EE-AA40A1E9B607'
 
 
 --RonaScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = 'E95716A6-4C72-4FB7-AA3C-3E8D8B843936'
 
 
 --BraultetMartineauScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state= 1
 where id = 'EDF195ED-B671-4AF6-8048-824306FD1E08'
 
 
 --Visions
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = '18DE8062-ABCE-42AA-83A0-C03049382FCB'
 
 
 --MesElectrosScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = '247349A6-1605-41E4-91D8-A58EE1A06C1F'
 
 
 --CostcoCanadaScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = 'BBF0B852-5967-4278-B302-A9D3747F7C87'
 
 
 --RenoDepotScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = '9CA939FF-B5E8-42CE-A9F0-AD04BEFDE670'
 
 
 
 --TheBrickScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = 'F2227F48-7997-446C-BF34-9DBDB069D9CE'
 
 
 --CAS Morning
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = '90FB4928-525F-4CF5-9EA1-915CE2406478'
 
 
 --Goemans
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = 'B9D227DC-8FFE-48BB-A983-806C4EC1D30F'
 
 
 --CorbeilElectroScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = 'b06311af-3c7e-406f-aeac-6037c8fea39a'
 
 
 
 --Tanguay
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set  state = 1
 where id = '4D8C9AEE-E07F-4090-936C-0E49EF8B64EB'
 
 
---The Source (no need to run)
-update asynctasks
-set lastintervalexecution = set state = 1
-where id = '425D9ECB-3D1C-47DE-9B07-20C105908682'
-
-
---Amazon (no need to run)
-update asynctasks
-set lastintervalexecution = set state = 1
-where id = 'E67BEB31-D352-4981-B164-C3A501748555'
-
-
---Staples (no need to run)
-update asynctasks
-set state = 1
-where id = 'F98DE0B9-7AFA-4FDC-AF18-1A00D794BD0B'
-
-
---TheBay (no need to run)
-update asynctasks
-set state = 1
-where id = '6291fd82-5229-459b-bc78-f8dd9d7ebe8e'
-
 
 
 --BestBuyUsScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state= 1
 where id = '556BCCBA-7C26-4732-9DA0-82D9D80CC1C1'
 
 
 --HomeDepotUsScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = 'A84C8FD6-B708-446B-BA86-95086E76FD0B'
 
 
 --LowesUsScraper
-update asynctasks
+update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = '3FF2B78B-5CE8-465F-942B-F62AF9AB9A6D'
 
