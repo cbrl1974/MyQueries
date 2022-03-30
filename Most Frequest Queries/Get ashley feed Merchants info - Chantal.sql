@@ -20,10 +20,10 @@ from merchantfeeds mf
     join merchants m on m.id = mf.merchant_id and mf.brand = 'Ashley'
     inner join merchantProds mp on mp.Merchant_ID = m.id
     left join products p on p.Id_product = mp.ProductID
-    left join MerchantDistributorWarehouseLocations md on md.merchantid = mf.merchant_id
-    left join merchantwebsitefeatures mwf on mwf.merchant_id = mf.merchant_id 
-    inner join merchantCms mc on mc.Merchant_id = m.id
+    left join MerchantDistributorWarehouseLocations md on md.merchantid = mf.merchant_id 
+    left join merchantwebsitefeatures mwf on mwf.merchant_id = mf.merchant_id
     and mwf.featurecode = 'shoppingCartType'
+    inner join merchantCms mc on mc.Merchant_id = m.id
     left join merchantshipping ms on ms.dropShippingProgramID = md.DistributorID
 where mf.brand = 'Ashley'
     and m.active = 1
@@ -40,12 +40,14 @@ select * from companies where cie in ('Ashley','Ashley Sleep','Signature Design 
 select mp.merchant_id, count(mp.productid) from merchantProds mp 
 inner join products p on p.Id_product = mp.ProductID
 where p.manufID in (1436,3181,3182,3184,4227)
-and mp.merchant_id = 2417
+and mp.merchant_id = 2232
 group by mp.merchant_id
 
-select * from merchantWebsitefeatures where merchant_id = 2417
-select * from merchants where id = 2417
+select * from merchantWebsitefeatures where merchant_id = 2232
+select * from merchants where id = 2232
 select RTOConsole from merchantCms where merchant_id = 2417 
+
+select * from merchantFeeds where 
 
 
 
