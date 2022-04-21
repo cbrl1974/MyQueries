@@ -6,6 +6,16 @@ select competition from merchants where id = @MerchantID
 select * from retailers where webtracking = 1 and countryid = 36
 select * from products where model like '%RF25HMIDBSR%'
 
+SELECT TOP (100) [LogID]
+      ,[Project]
+      ,[Category]
+      ,[Text]
+      ,[Time]
+      ,[Severity]
+      ,[Module]
+      ,[Location]
+  FROM [EventReactor].[dbo].[Logs]
+
 
 select retailerid, sku, modelNo, RegularPrice, AdvertisedPrice, [date]
   from TailbaseServices.dbo.WebTrackingProducts
@@ -20,13 +30,13 @@ select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as P
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2022-02-10'
+where cast(a.date as date)  = '2022-04-20'
 group by a.retailerid, b.cie,date
 order by b.cie
 
 --Check the state of a scraper
 select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%scraper%'
- order by [state] , LastIntervalExecution
+ order by  [state] , LastIntervalExecution desc
 
 --This checks  the state of a scraper
 select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%best%' and AssemblyMethodName = 'ScrapeProducts'
@@ -61,6 +71,7 @@ update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
 where id = 'E95716A6-4C72-4FB7-AA3C-3E8D8B843936'
 
+********************************HERE
 
 --BraultetMartineauScraper
 update top (1) Tailbaseservices.dbo.asynctasks
