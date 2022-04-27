@@ -1,17 +1,18 @@
 select top 500  * from firewall.dbo.LoggerClientEvents
 WHERE MERCHANTID = 1781
-AND EventTime between '2021-10-07' and '2021-10-08'
+AND EventTime between '2022-04-01' and '2022-04-26'
+and UrlPath like '%cmtx%'
 order by eventtime desc
 
 --Check history of price change per product and merchant
 select top 100 * from MerchantProds_ChangeTracking
  WHERE MERCHANTID = 1781
- and [changetime] between '2021-10-07' and '2021-10-08'
+ and [changetime] between '2022-04-01' and '2022-04-26'
  order by ChangeTime 
 
  select top 5  * from MerchantProducts_ChangeTrackingArchive
  WHERE MERCHANTID = 1781
- and [changetime] between '2021-10-01' and '2021-10-15'
+ and [changetime] between '2022-03-31' and '2022-04-26'
  and productid =641062
  
 
