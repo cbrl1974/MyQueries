@@ -17,6 +17,7 @@ SELECT TOP (100) [LogID]
   FROM [EventReactor].[dbo].[Logs]
 
 
+
 select retailerid, sku, modelNo, RegularPrice, AdvertisedPrice, [date]
   from TailbaseServices.dbo.WebTrackingProducts
 where retailerid = 26
@@ -26,11 +27,15 @@ and modelNo like '%RF25HMIDBSR%'
 
 
 --This checks if the total of products per merchant on a specific day. To check if the scrapper did ran
+
+exec dbo.ScraperDataReport
+
+--OR
 select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as PRODUCT_COUNT
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2022-04-20'
+where cast(a.date as date)  = '2022-04-26'
 group by a.retailerid, b.cie,date
 order by b.cie
 
@@ -39,7 +44,7 @@ select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbasese
  order by  [state] , LastIntervalExecution desc
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%best%' and AssemblyMethodName = 'ScrapeProducts'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%lowes%' and AssemblyMethodName = 'ScrapeProducts'
 
 ----- *****************This runs an indicidual scrapper********************
 
@@ -63,7 +68,7 @@ where id = '7C2CB5E5-171A-4354-A1DE-F5E9E198B7B1'
 --LowesCanadaScraper
 update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
-where id = 'CFA1D4BB-9F88-4A93-A0EE-AA40A1E9B607'
+where id = 'cfa1d4bb-9f88-4a93-a0ee-aa40a1e9b607'
 
 
 --RonaScraper
@@ -152,7 +157,7 @@ where id = 'A84C8FD6-B708-446B-BA86-95086E76FD0B'
 --LowesUsScraper
 update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
-where id = '3FF2B78B-5CE8-465F-942B-F62AF9AB9A6D'
+where id = '3ff2b78b-5ce8-465f-942b-f62af9ab9a6d'
 
 
 
