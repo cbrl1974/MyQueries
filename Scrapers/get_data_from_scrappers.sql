@@ -15,6 +15,10 @@ SELECT TOP (100) [LogID]
       ,[Module]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
+  where Category = 'scrapers'
+  order by [Time] desc
+
+  select distinct category  FROM [EventReactor].[dbo].[Logs]
 
 
 
@@ -35,7 +39,7 @@ select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as P
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2022-04-26'
+where cast(a.date as date)  = '2022-04-30'
 group by a.retailerid, b.cie,date
 order by b.cie
 
@@ -44,7 +48,7 @@ select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbasese
  order by  [state] , LastIntervalExecution desc
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%lowes%' and AssemblyMethodName = 'ScrapeProducts'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%bestbuy%' and AssemblyMethodName = 'ScrapeProducts'
 
 ----- *****************This runs an indicidual scrapper********************
 
@@ -145,13 +149,13 @@ where id = '4D8C9AEE-E07F-4090-936C-0E49EF8B64EB'
 --BestBuyUsScraper
 update top (1) Tailbaseservices.dbo.asynctasks
 set state= 1
-where id = '556BCCBA-7C26-4732-9DA0-82D9D80CC1C1'
+where id = '556bccba-7c26-4732-9da0-82d9d80cc1c1'
 
 
 --HomeDepotUsScraper
 update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
-where id = 'A84C8FD6-B708-446B-BA86-95086E76FD0B'
+where id = 'a84c8fd6-b708-446b-ba86-95086e76fd0b'
 
 
 --LowesUsScraper
