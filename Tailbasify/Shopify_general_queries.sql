@@ -1,23 +1,33 @@
 
 
 -- Merchants
-select * from shopify.shopifyMerchants where merchantid = 1202
+select * from shopify.shopifyMerchants
+ where merchantid = 3398
 
 -- update top (1) MerchantExports
 -- set [status] = 1
--- where merchantid = 3209
+-- where merchantid = 2887
 
 select * from MerchantExports
 
 select top 100 * from logs  WITH (NOLOCK)
-WHERE  merchantid = 1202
+WHERE  merchantid = 3398
 order by LogTime desc
 
 --Reports
-select * from shopify.ShopifyConvertReports where merchantid = 1202 order by EndTime desc
-select * from shopify.ShopifySyncReports where merchantid = 1202  order by EndTime desc
+--Convert Report
+select top(50) *
+from
+    Shopify.ShopifyConvertReports h
+join
+    Shopify.ShopifyConvertProductReportsDetail d on h.Id = d.ConvertReportId
+where
+    d.Id in (select Id from Shopify.ShopifyProducts where MerchantId = 1202)
+order by
+    h.id desc
 
 
+--Sunc Report
 select top(50) *
 from
     Shopify.ShopifySyncReports h
@@ -27,10 +37,6 @@ where
     d.ShopifyProductId in (select Id from Shopify.ShopifyProducts where MerchantId = 1202)
 order by
     h.id desc
-
-
-select * from shopify.ShopifyMerchantMetafields where ShopifyProductId  in (select id from shopify.shopifyProducts where merchantid = 1202)
- and  keyname = 'BundlesOfProduct'
 
 
 

@@ -21,15 +21,16 @@ select top 100 * from MerchantProds_ChangeTracking
 select * from firewall.dbo.
 
 
-select  * from firewall.dbo.historical
- where url_string like '%meublesetdavantage.ca%'
- and [timestamp] between '2021-10-07 22:00:00.000' and '2021-10-07 23:00:00.000'
- and ipaddress = '192.222.167.103'
- order by [timestamp] desc
+select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
+ where url_string like '%liquidationelectromenagers.com%'
+ and [timestamp] between '2022-05-02 20:30:47.873' and '2022-05-02 21:22:13.630'
+ and ipaddress = '2605:8d80:544:5fc7:ed3c:849b:2a38:79b3'
+  order by [timestamp] desc
 
  select  distinct ipaddress from firewall.dbo.historical
- where url_string like '%www.stereoplus.com%'
- and [timestamp] between '2021-09-16 10:15:00.000' and '2021-09-16 10:30:00.000'
+ where url_string like '%liquidationelectromenagers.com%'
+ and [timestamp] between '2022-05-02 08:00:03.290' and '2022-05-02 09:15:03.290'
+ and url_string like '%HER30F5CSS%'
  group by ipaddress
  --order by [timestamp] 
 
