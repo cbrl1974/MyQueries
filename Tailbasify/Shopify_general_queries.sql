@@ -4,39 +4,40 @@
 select * from shopify.shopifyMerchants
  where merchantid = 3398
 
+
 -- update top (1) MerchantExports
 -- set [status] = 1
--- where merchantid = 2887
+-- where merchantid = 1956
 
 select * from MerchantExports
 
+
 select top 100 * from logs  WITH (NOLOCK)
-WHERE  merchantid = 3398
+--WHERE  merchantid = 3398
 order by LogTime desc
+
 
 --Reports
 --Convert Report
 select top(50) *
-from
-    Shopify.ShopifyConvertReports h
-join
-    Shopify.ShopifyConvertProductReportsDetail d on h.Id = d.ConvertReportId
-where
-    d.Id in (select Id from Shopify.ShopifyProducts where MerchantId = 1202)
-order by
-    h.id desc
+from Shopify.ShopifyConvertReports h
+join Shopify.ShopifyConvertProductReportsDetail d on h.Id = d.ConvertReportId
+where h.MerchantId = 3398
+order by h.id desc
 
 
 --Sunc Report
 select top(50) *
-from
-    Shopify.ShopifySyncReports h
-join
-    Shopify.ShopifyProductSyncReportsDetail d on h.Id = d.SyncReportId
-where
-    d.ShopifyProductId in (select Id from Shopify.ShopifyProducts where MerchantId = 1202)
-order by
-    h.id desc
+from Shopify.ShopifySyncReports h
+join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
+where h.MerchantId = 3398
+order by h.id desc
+
+
+
+select * from Shopify.ShopifyProducts where MerchantId = 3398
+select top (1) * from  Shopify.ShopifyConvertReports 
+select top (1) * from  Shopify.ShopifyProductSyncReportsDetail 
 
 
 
