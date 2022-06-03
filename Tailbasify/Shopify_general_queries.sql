@@ -5,15 +5,15 @@ select * from shopify.shopifyMerchants
  where merchantid = 3398
 
 
--- update top (1) MerchantExports
--- set [status] = 1
--- where merchantid = 1956
+update top (1) MerchantExports
+set [status] = 1
+where merchantid = 3209
 
 select * from MerchantExports
 
 
 select top 100 * from logs  WITH (NOLOCK)
---WHERE  merchantid = 3398
+--WHERE  merchantid = 3209
 order by LogTime desc
 
 
@@ -22,7 +22,7 @@ order by LogTime desc
 select top(50) *
 from Shopify.ShopifyConvertReports h
 join Shopify.ShopifyConvertProductReportsDetail d on h.Id = d.ConvertReportId
-where h.MerchantId = 3398
+where h.MerchantId = 3209
 order by h.id desc
 
 
@@ -30,7 +30,7 @@ order by h.id desc
 select top(50) *
 from Shopify.ShopifySyncReports h
 join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 3398
+where h.MerchantId = 3209
 order by h.id desc
 
 
@@ -40,7 +40,10 @@ select top (1) * from  Shopify.ShopifyConvertReports
 select top (1) * from  Shopify.ShopifyProductSyncReportsDetail 
 
 
+select * from datatail20130410.dbo.merchantprods where merchant_id = 3209 and productid = 400217
+select * from shopify.ShopifyProducts where merchantid = 3209 and tailbaseid = 400217
 
+select * from datatail20130410.dbo.merchantCollections where merchant_id = 3209
 
 --Count on tailbasify
 select count(1) from shopify.ShopifyMerchantCollections where merchantid = 1202
@@ -66,6 +69,7 @@ select top 10 * from shopify.ShopifyCollectionRuleInputs
 select top 10 * from shopify.ShopifyMerchantCollectionImages 
 select * from SyncStatus
 select * from shopify.shopifyProducts where merchantid = 1448
+
 
 
 

@@ -46,7 +46,7 @@ SET IDENTITY_INSERT DevTailbaseCore.dbo.merchantzones OFF
 
 
 
-SET IDENTITY_INSERT DevTailbaseCore.dbo.merchantzonecodes ON
+
 insert into
     DevTailbaseCore.dbo.merchantzonecodes
 	(merchantZoneId,countryCode,stateCode,postalCode)
@@ -56,7 +56,7 @@ from
 	[DB.PROD].datatail20130410.dbo.merchantzonecodes
 where
      merchantzoneid in (select id from merchantzones where merchant_id = @MerchantID) 
-SET IDENTITY_INSERT DevTailbaseCore.dbo.merchantzonecodes OFF
+
 
 
 
