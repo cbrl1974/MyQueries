@@ -1,8 +1,8 @@
-SELECT  postalcode
-from merchantzonecodes 
-where merchantzoneid = 1053
-GROUP BY postalcode
-HAVING COUNT(postalcode) > 1
+SELECT  productid
+from merchantProducts 
+where merchant_id = 1931
+GROUP BY productid
+HAVING COUNT(productid) > 1
 
 WITH CTE AS
 (
