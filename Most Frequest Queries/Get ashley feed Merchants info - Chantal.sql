@@ -24,12 +24,12 @@ from merchantfeeds mf
     left join merchantwebsitefeatures mwf on mwf.merchant_id = mf.merchant_id
     and mwf.featurecode = 'shoppingCartType'
     inner join merchantCms mc on mc.Merchant_id = m.id
-    left join merchantshipping ms on ms.dropShippingProgramID = md.DistributorID
+    left join merchantshipping ms on ms.dropShippingProgramID = md.DistributorID and ms.dropShippingProgramID = 1  ---added direct express
 where mf.brand = 'Ashley'
     and m.active = 1
     and mf.active = 1
     and p.manufID in (1436,3181,3182,3184,4227)
-and ms.dropShippingProgramID = 1  ---added direct express
+--and ms.dropShippingProgramID = 1  ---added direct express
 group by m.id, m.merchant,mf.remoteFTPUser,m.merchant_url,mwf.featurecode,ms.dropShippingProgramID,md.city, md.statecode, md.CountryName,mc.RTOConsole, lastmodified
 order by m.id
 
@@ -40,7 +40,7 @@ select * from companies where cie in ('Ashley','Ashley Sleep','Signature Design 
 select mp.merchant_id, count(mp.productid) from merchantProds mp 
 inner join products p on p.Id_product = mp.ProductID
 where p.manufID in (1436,3181,3182,3184,4227)
-and mp.merchant_id = 2232
+and mp.merchant_id = 589
 group by mp.merchant_id
 
 select * from merchantWebsitefeatures where merchant_id = 2232
