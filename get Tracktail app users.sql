@@ -1,1 +1,0 @@
-SELECT * FROM [TrackTailApp].[AspNetUsers] where Email = 'lcabral@tailbase.com';
