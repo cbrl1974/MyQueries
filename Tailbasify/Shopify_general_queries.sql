@@ -7,22 +7,23 @@ select
  from shopify.shopifyMerchants
   where merchantid = 3336
 
-
 -- update top (1) MerchantExports
 -- set [status] = 1
 -- where merchantid = 3398
 
 select * from MerchantExports order by [Status] desc
 
+
+
  --Logs for Converter
 select top 200 * from logs  WITH (NOLOCK)
-WHERE  merchantid = 3402
+WHERE  merchantid = 3336
 AND module = 'Converter'
 order by LogTime desc
 
  --Logs for Synchronizer
 select  top(100) * from logs  WITH (NOLOCK)
-WHERE  merchantid = 3402
+WHERE  merchantid = 3336
 AND module = 'Synchronizer'
 order by id desc
 
@@ -30,7 +31,7 @@ order by id desc
 --Reports
 --Convert Report
 select  top(100) *
-from Shopify.ShopifyConvertReports h
+from Shopify.ShopifyConvertReports h WITH (NOLOCK)
 join Shopify.ShopifyConvertProductReportsDetail d on h.Id = d.ConvertReportId
 where h.MerchantId = 3402
 order by h.id desc
@@ -41,7 +42,7 @@ order by h.id desc
 select 
 --distinct d.[Status]
 top(500) *
-from Shopify.ShopifySyncReports h
+from Shopify.ShopifySyncReports h WITH (NOLOCK)
 join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
 where h.MerchantId = 3336
 order by h.id desc
@@ -54,18 +55,18 @@ select top (1) * from  Shopify.ShopifyConvertReports
 select top (1) * from  Shopify.ShopifyProductSyncReportsDetail 
 
 select * from datatail20130410.dbo.merchantCollections where merchant_id = 2217 and collectionID = 22771
-delete top (2) from datatail20130410.dbo.merchantCollections where merchant_id = 2217 and collectionID = 22771
 
 select count(1) from datatail20130410.dbo.merchantprods where merchant_id = 3398 and productid in (730869)-- 
 select * from shopify.shopifyProducts where  tailbaseid = 10028
 select * from shopify.shopifyProducts where handle like  '%ashley-berringer-dining-chair-d199-1%'
 select * from products where  model = 'd293-01'
 
-select count(1) from shopify.shopifyProducts where merchantid = 3398 and tailbaseid = 10028
+select count(1) from shopify.shopifyProducts where merchantid = 3398 and tailbaseid  = '3333333'
 select * from shopify.ShopifyMerchantCollections where tailbaseid = 10028 an
-select  * from shopify.ShopifyProducts where MerchantId = 3402 and Handle = 'canadel-chaise-de-salle-a-manger-gourmet-cnn090437u03avc'
-select  * from shopify.ShopifyProducts where MerchantId = 2217 and [TitleEn] = 'LG 4.2 cu. ft. Front Loading Washer WM2355CS'
-select  * from shopify.ShopifyProducts where MerchantId = 1956 and [ItemType] = 3
+select  * from shopify.ShopifyProducts where MerchantId = 3398 and Handle = 'canadel-chaise-de-salle-a-manger-gourmet-cnn090437u03avc'
+select  * from shopify.ShopifyProducts where MerchantId = 3398 and [TitleEn] = 'LG 4.2 cu. ft. Front Loading Washer WM2355CS'
+select  * from shopify.ShopifyProducts where MerchantId = 3398 and [ItemType] = 3
+select * from shopify.shopifyProducts where merchantid = 3336 and tailbaseid  in (340663,340669)
 select top 10  * from shopify.ShopifyMerchantMetafields
 select * from shopify.ShopifyMerchantMetafields
  where ShopifyProductId  in (select id from shopify.shopifyProducts where merchantid = 1448)
@@ -73,14 +74,8 @@ select * from shopify.ShopifyMerchantMetafields
 select  * from shopify.ShopifyProducts where MerchantId = 3336 and Handle =  'signature-design-by-ashley-mayflyn-tv-stand-w729-68'
 select  * from shopify.ShopifyProducts where MerchantId = 3336 and Handle =  'signature-design-by-ashley-tv-stands-media-consoles-and-credenzas-w729-68w100-02'
 
+ 
 
-
-  
-
-select * from shopify.shopifyProducts where id = 259490
-
-select * from datatail20130410.dbo.merchantcats where merchant_id = 2953
-select * from datatail20130410.dbo.products where id_product = 722803
 --Configs
 select  c.id, c.Configuration, sc.ConfigurationValue from shopify.ShopifyMerchantConfigurations sc
 inner join shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
