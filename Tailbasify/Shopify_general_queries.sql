@@ -3,27 +3,36 @@
 -- Merchants
 select  s.id, m.merchant, s.MerchantId,s.ShopUrl, s.SecurityStamp,s.ApiVersion
  from shopify.shopifyMerchants s
- inner join  datatail20130410.dbo.merchants m on m.id = s.MerchantId
-where m.id = 2798
+ inner join  devTailbaseCore.dbo.merchants m on m.id = s.MerchantId
+where m.id = 1202
 
 update top (1) MerchantExports
 set [status] = 1
-where merchantid = 2798
+where merchantid = 1202
 
 select * from MerchantExports order by [Status] desc
 
  --Logs for Converter
 select top 200 * from logs  WITH (NOLOCK)
-WHERE  merchantid = 2798
+WHERE  merchantid = 1202
 AND module = 'Converter'
 order by LogTime desc
 
  --Logs for Synchronizer
 select  top(50) * from logs  WITH (NOLOCK)
-WHERE  merchantid = 2798
+WHERE  merchantid = 1202
 AND module = 'Synchronizer'
 --AND text like '%235625%'
 order by id desc
+
+select 
+--distinct d.[Status]
+top(3) *
+from Shopify.ShopifyConvertReports h WITH (NOLOCK)
+join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
+where h.MerchantId = 1202
+--and ShopifyProductId in (235625,236600,245032)
+order by h.id desc
 
 
 --Sunc Report
@@ -32,7 +41,7 @@ select
 top(3) *
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
 join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 2798
+where h.MerchantId = 1202
 and ShopifyProductId in (235625,236600,245032)
 order by h.id desc
 
@@ -43,23 +52,23 @@ select * from Shopify.ShopifyProductSyncReportsDetail where GraphQLCallInfo like
 select top (1) * from  Shopify.ShopifyConvertReports 
 select top (1) * from  Shopify.ShopifyProductSyncReportsDetail 
 
-select * from datatail20130410.dbo.merchantCollections where merchant_id = 2798 and collectionID = 22771
-select * from datatail20130410.dbo.merchantcats where merchant_id = 2798
-select top 10 * from datatail20130410.dbo.categories where merchant_id = 2798
-select count(1) from datatail20130410.dbo.merchantprods where merchant_id = 2798 and productid in (625714)-- 
+select * from datatail20130410.dbo.merchantCollections where merchant_id = 1202 and collectionID = 22771
+select * from datatail20130410.dbo.merchantcats where merchant_id = 1202
+select top 10 * from datatail20130410.dbo.categories where merchant_id = 1202
+select count(1) from datatail20130410.dbo.merchantprods where merchant_id = 1202 and productid in (625714)-- 
 select * from shopify.shopifyProducts where  tailbaseid = 10028
 select * from shopify.shopifyProducts where handle like  '%ashley-berringer-dining-chair-d199-1%'
 select * from products where  model = 'd293-01'
 
-select * from shopify.shopifyProducts where merchantid = 2798 and tailbaseid  = '625714'
-select * from datatail20130410.dbo.merchantprods where merchant_id = 2798 and productid in (603870)
+select * from shopify.shopifyProducts where merchantid = 1202 and tailbaseid  = '625714'
+select * from datatail20130410.dbo.merchantprods where merchant_id = 1202 and productid in (603870)
 select * from shopify.ShopifyMerchantCollections where tailbaseid = 603870 an
-select  * from shopify.ShopifyProducts where MerchantId = 2798 and Handle = 'elran-canape-fixe-sadie-sadie-10226-fix-06-sofa'
-select  * from shopify.ShopifyProducts where MerchantId = 2798 and [TitleEn] = 'LG 4.2 cu. ft. Front Loading Washer WM2355CS'
-select  * from shopify.ShopifyProducts where MerchantId = 2798 and [ItemType] = 3
-select * from shopify.shopifyProducts where merchantid = 2798 and tailbaseid  in (603870)
+select  * from shopify.ShopifyProducts where MerchantId = 1202 and Handle = 'elran-canape-fixe-sadie-sadie-10226-fix-06-sofa'
+select  * from shopify.ShopifyProducts where MerchantId = 1202 and [TitleEn] = 'LG 4.2 cu. ft. Front Loading Washer WM2355CS'
+select  * from shopify.ShopifyProducts where MerchantId = 1202 and [ItemType] = 3
+select * from shopify.shopifyProducts where merchantid = 1202 and tailbaseid  in (603870)
 select top 10  * from shopify.ShopifyMerchantMetafields
-select * from shopify.shopifyProducts where merchantid = 2798 and tags like '%model%'
+select * from shopify.shopifyProducts where merchantid = 1202 and tags like '%model%'
 select * from shopify.ShopifyMerchantMetafields
  where ShopifyProductId  in (select id from shopify.shopifyProducts where merchantid = 1448)
 
