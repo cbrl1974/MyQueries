@@ -1,5 +1,10 @@
 select * from feeds.feeds where id = 9
 
+-- Update Template
+-- update top (1) feeds.feeds 
+-- set options = '{"FeedId":9,"ManufacturerIds":[1436,3181,3182,3184,4226,4227],"FeedInformations":{"InventoryAvailable":false,"PricingAvailable":false,"ProductCreationAvailable":false,"CollectionPricingAvailable":false,"SpecificationsUpdateAvailable":false,"RelatedProductsUpdateAvailable":false,"MediaUpdateAvailable":false,"CompositeDelimiter":null,"PricingPerMerchant":false,"UseManufIdentifierForActiveness":false,"UseLocationsForPricing":true,"AssociateFeedProductImage":false,"MaxImageSize":4000,"HasProductAvailabilityByMerchant":false,"UseGroupStatusProcessor":false,"HasCollectionActiveness":false},"DownloaderSettings":{},"ConverterSettings":null,"StatusProcessorSettings":{"ShowMissingProducts":true},"PricingModifierSettings":null,"BrandCategories":null,"IsActive":false,"DryRunActiveness":false,"PricingActive":false,"CollectionPricingActive":false,"DeleteMerchantProds":false,"AllBrandCatsActive":false,"AllowFeaturedItemsUpdate":false,"KeepMerchantProdWhenOutOfStock":false,"FeedName":null,"InventoryActive":false,"LocationName":null,"LocationNames":null,"AvailableLocations":[],"InventoryQtyOptions":{"IsActive":false,"MinimumQtyAvailable":0,"IncludeNextShipmentQty":false,"NextShipmentMaxDays":0},"AvailableCostTypes":[],"AvailablePricingTiers":[],"PricingTierId":null,"TierIdentifier":null,"TestingMerchantIdMappings":{}}'
+-- where id = 9
+
 select * from feeds.merchantFeeds where  feedid = 9 order by merchantid desc
 select * from feeds.merchantFeeds where merchantid =589 and feedid = 9
 select * from merchantfeeds where merchant_id = 1097
@@ -7,6 +12,18 @@ select * from merchantfeeds where merchant_id = 1097
 
 select * from feeds.FeedDumps 
 where  RunDate > convert(date,getdate()-1) 
+order by merchantid
+
+
+select top 20 * from feeds.FeedDumps 
+where  feedid = 9
+order by RunDate desc, merchantid
+
+
+--Delete records from today
+Delete from feeds.FeedDumps 
+where  RunDate > convert(date,getdate()-1) 
+and FeedId = 9
 
 select top 10 * from feeds.JobRun order by time desc
 
@@ -20,8 +37,8 @@ select top 50 * from feeds.FeedDumps
 --Get Products
 SELECT mp.ProductID FROM MerchantProds  mp
 INNER JOIN products p on p.Id_product = mp.ProductID
-WHERE 	mp.Merchant_ID = 1193
-and p.manufID in (6183,3181,3182,3184,4226,4227)
+WHERE 	mp.Merchant_ID = 3336
+and p.manufID in (1436,3181,3182,3184,4226,4227)
 
 
 -- **********Delete Products**********
@@ -31,7 +48,7 @@ and p.manufID in (6183,3181,3182,3184,4226,4227)
 --     SELECT mp.ProductID FROM MerchantProds  mp
 --         INNER JOIN products p on p.Id_product = mp.ProductID
 --     WHERE 	mp.Merchant_ID = 1193
---     and p.manufID in (6183,3181,3182,3184,4226,4227)
+--     and p.manufID in (1436,3181,3182,3184,4226,4227)
 -- )
 
 
@@ -41,7 +58,7 @@ inner join collections c on c.id = mc.collectionid
 inner join collection_product cp on cp.collectionID = c.id
 INNER JOIN products p on p.Id_product = cp.ProductID
 WHERE 	mc.Merchant_ID = 1193
-and p.manufID in (6183,3181,3182,3184,4226,4227)
+and p.manufID in (1436,3181,3182,3184,4226,4227)
 
 -- **********Delete Collections**********
 -- delete top (2440) FROM MerchantCollections
@@ -52,17 +69,17 @@ and p.manufID in (6183,3181,3182,3184,4226,4227)
 --     inner join collection_product cp on cp.collectionID = c.id
 --     INNER JOIN products p on p.Id_product = cp.ProductID
 --     WHERE 	mc.Merchant_ID = 1193
---     and p.manufID in (6183,3181,3182,3184,4226,4227)
+--     and p.manufID in (1436,3181,3182,3184,4226,4227)
 -- )
 
 
 -- **********Get Collections**********
 select * from  merchantBrands
 where merchant_id = 1193 
-and cieId in  (6183,3181,3182,3184,4226,4227)
+and cieId in  (1436,3181,3182,3184,4226,4227)
 
 
 --Delete Brands
 -- delete top (6) from merchantBrands 
 -- where merchant_id = 1193 
--- and cieId in  (6183,3181,3182,3184,4226,4227)
+-- and cieId in  (1436,3181,3182,3184,4226,4227)
