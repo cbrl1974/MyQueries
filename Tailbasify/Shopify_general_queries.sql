@@ -10,8 +10,9 @@ update top (1) MerchantExports
 set [status] = 1
 where merchantid = 2798
 
-select *
-from MerchantExports
+select  m.merchant, me.*
+from MerchantExports me
+ inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc
 
 
