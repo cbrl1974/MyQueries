@@ -34,52 +34,65 @@ select top 50 * from feeds.FeedDumps
 
 
 
---Get Products
-SELECT mp.ProductID FROM MerchantProds  mp
+--************Get Products*************
+DECLARE @MerchantId AS int = 3336;
+DECLARE @ProductCount AS  int = (
+SELECT count(mp.ProductID) as total FROM MerchantProds  mp
 INNER JOIN products p on p.Id_product = mp.ProductID
-WHERE 	mp.Merchant_ID = 3336
-and p.manufID in (1436,3181,3182,3184,4226,4227)
+WHERE 	mp.Merchant_ID = @MerchantId
+and p.manufID in (1436,3181,3182,3184,4226,4227));
+
+
+select @ProductCount
 
 
 -- **********Delete Products**********
--- delete top (7156) FROM MerchantProds
--- where merchant_id = 1193
+-- delete top (@ProductCount) FROM MerchantProds
+-- where merchant_id = @MerchantId 
 -- and productid in (
 --     SELECT mp.ProductID FROM MerchantProds  mp
 --         INNER JOIN products p on p.Id_product = mp.ProductID
---     WHERE 	mp.Merchant_ID = 1193
+--     WHERE 	mp.Merchant_ID = @MerchantId 
 --     and p.manufID in (1436,3181,3182,3184,4226,4227)
 -- )
 
-
--- **********Get Collections**********
-SELECT mc.CollectionId, c.brands FROM MerchantCollections  mc
+-- **********Collections management**********
+DECLARE @MerchantIdForCollections AS int = 3336;
+DECLARE @CollectionCountCount AS  int = (
+SELECT count(mc.collectionID) as total FROM MerchantCollections  mc
 inner join collections c on c.id = mc.collectionid
 inner join collection_product cp on cp.collectionID = c.id
 INNER JOIN products p on p.Id_product = cp.ProductID
-WHERE 	mc.Merchant_ID = 1193
-and p.manufID in (1436,3181,3182,3184,4226,4227)
+WHERE 	mc.Merchant_ID = @MerchantIdForCollections
+and p.manufID in (1436,3181,3182,3184,4226,4227))
 
--- **********Delete Collections**********
--- delete top (2440) FROM MerchantCollections
--- where merchant_id = 1193
+
+select @CollectionCountCount
+
+-- ************Delete Collections************
+-- delete top (@CollectionCountCount) FROM MerchantCollections
+-- where merchant_id =  @MerchantIdForCollections
 -- and collectionID in (
 --     SELECT mc.CollectionId FROM MerchantCollections  mc
 --     inner join collections c on c.id = mc.collectionid
 --     inner join collection_product cp on cp.collectionID = c.id
 --     INNER JOIN products p on p.Id_product = cp.ProductID
---     WHERE 	mc.Merchant_ID = 1193
+--     WHERE 	mc.Merchant_ID =  @MerchantIdForCollections
 --     and p.manufID in (1436,3181,3182,3184,4226,4227)
 -- )
 
 
--- **********Get Collections**********
-select * from  merchantBrands
-where merchant_id = 1193 
-and cieId in  (1436,3181,3182,3184,4226,4227)
+-- ************Brands management************
+DECLARE @MerchantIdForBrands AS int = 3336;
+DECLARE @BrandsCount AS  int = (
+select count(cieId) as total  from  merchantBrands
+where merchant_id = @MerchantIdForBrands 
+and cieId in  (1436,3181,3182,3184,4226,4227))
 
 
---Delete Brands
--- delete top (6) from merchantBrands 
--- where merchant_id = 1193 
+select @BrandsCount
+
+--************Delete Brands************
+-- delete top (@BrandsCount) from merchantBrands 
+-- where merchant_id = @MerchantIdForBrands  
 -- and cieId in  (1436,3181,3182,3184,4226,4227)

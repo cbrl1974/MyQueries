@@ -1,7 +1,13 @@
 -- Get Competition from merchant
-DECLARE @MerchantID as int = 1900;
+DECLARE @MerchantID as int = 675;
 select competition from merchants where id = @MerchantID
 
+select * from companies where id_cie in (19,156,25,155,27,28,994,21,225,160,31,47,307)
+select id, merchant, competition from merchants where competition is not null and active = 1
+ 
+-- update top (1) merchants
+-- set competition = '19,156,27,21,225,160,31'
+--  where id = 675
 
 select * from retailers where webtracking = 1 and countryid = 36
 select * from products where model like '%RF25HMIDBSR%'
