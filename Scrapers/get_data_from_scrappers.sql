@@ -195,11 +195,10 @@ select top 10 * from Tailbaseservices.dbo.WebTrackingProducts order by date desc
 
 
 
-select * from Tailbaseservices.dbo.ScrapersSettings
+select * from Tailbaseservices.dbo.ScrapersSettings where retailerid = 1100
 select  top 10 * from Tailbaseservices.dbo.HomeDepotCanadaBrandModels
-select top 10 * from Tailbaseservices.dbo.DebugInfoScraper
-select * from Tailbaseservices.dbo.WebTrackingCategories
-select top 10 * from Tailbaseservices.dbo.WebTrackingProducts order by date desc
+select * from Tailbaseservices.dbo.WebTrackingCategories where retailerid = 1100
+select top 10 * from Tailbaseservices.dbo.WebTrackingProducts where retailerid = 1100  order by date desc
 select * from Tailbaseservices.dbo.ApiClientConfigs
 
 
