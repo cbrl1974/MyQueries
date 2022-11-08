@@ -1,25 +1,35 @@
+
+select id, merchant, merchantpwd from merchants where id in (select MerchantId from feeds.merchantFeeds where feedid = 9)
 select * from feeds.feeds where id = 9
 
 
-select * from feeds.merchantFeeds where  feedid = 9 order by merchantid desc
-select * from feeds.merchantFeeds where merchantid =589 and feedid = 9
+select * from feeds.merchantFeeds where  feedid = 4 order by merchantid desc
+select * from feeds.merchantFeeds where merchantid =3336 and feedid = 9
 select * from merchantfeeds where merchant_id = 1097
+select * from products where manufmodel = 'A8010061'
 
-
+select * from companies where id_cie = 502
 select * from feeds.FeedDumps 
 where  RunDate > convert(date,getdate()-1) 
 order by merchantid
+
+select top 100 * from AsyncTasks
 
 
 select top 20 * from feeds.FeedDumps 
 where  feedid = 9
 order by RunDate desc, merchantid
 
+select  distinct feedid from feeds.ProductBasePrices where FeedId = 9
+select  top 100 * from feeds.ProductBasePrices where FeedId = 9
+select * from feeds.JobRun where id = 923741
+select * from feeds.JobRunReports where jobid = 923740
+
 
 --Delete records from today
--- Delete from feeds.FeedDumps 
--- where  RunDate > convert(date,getdate()-1) 
--- and FeedId = 9
+Delete from feeds.FeedDumps 
+where  RunDate > convert(date,getdate()-1) 
+and FeedId = 9
 
 select top 10 * from feeds.JobRun order by time desc
 

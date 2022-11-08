@@ -3,18 +3,19 @@
 -- Merchants
 select s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
 from shopify.shopifyMerchants s
-    inner join devTailbaseCore.dbo.merchants m on m.id = s.MerchantId
-where m.id = 1202
+    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+where m.id = 2456
+order by m.id
 
-select count(productid) from devTailbaseCore.dbo.merchantProds where merchant_id = 1202
+select count(productid) from datatail20130410.dbo.merchantProds where merchant_id = 2456
 
--- update top (1) MerchantExports
--- set [status] = 1
--- where merchantid = 1202
+update top (1) MerchantExports
+set [status] = 1
+where merchantid = 1956
 
 select  m.merchant, me.*
 from MerchantExports me
- inner join devTailbaseCore.dbo.merchants m on m.id = me.MerchantId
+ inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc
 
 
@@ -22,21 +23,19 @@ order by [Status] desc
 select top 50
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1202
+WHERE  merchantid = 1956
     AND module = 'Converter'
 order by LogTime desc
 
-SELECT *
-  FROM [Tailbasify].[Shopify].[ShopifyProducts]
-  where TailbaseId = 744424
+
 
 select
     top(10)
     *
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
-where h.MerchantId = 1202
-    and d.TailbaseId in (744424)
+where h.MerchantId = 2456
+    and d.TailbaseId in (380546)
 order by h.id desc
 
 
@@ -44,9 +43,9 @@ order by h.id desc
 select top(50)
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1202
+WHERE  merchantid = 2456
     AND module = 'Synchronizer'
---AND text like '%235625%'
+AND text like '%380546%'
 order by id desc
 
 --Sunc Report
@@ -55,44 +54,43 @@ select
     *
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 1202
-    and d.ShopifyProductId in (639104)
+where h.MerchantId = 2456
+    and d.ShopifyProductId in (715233)
 order by h.id desc
 
 select *
 from shopify.ShopifyMerchantMetafields
-where ShopifyProductId IN ( 623004,358235)
+where ShopifyProductId IN ( 715233)
 
 
 select *
-from devTailbaseCore.dbo.merchantProds
-where merchant_id = 1202 and
+from datatail20130410.dbo.merchantProds
+where merchant_id = 2456 
 
 
 select *
-from devTailbaseCore.dbo.merchantprods
-where merchant_id = 1202
+from datatail20130410.dbo.merchantprods
+where merchant_id = 2456
  and productid in (628629)
 
 select *
-from devTailbaseCore.dbo.merchantCollections
-where merchant_id = 1202 and collectionID = 22771
+from datatail20130410.dbo.merchantCollections
+where merchant_id = 2456 and collectionID = 25235
 
 select *
-from devTailbaseCore.dbo.merchantcats
-where merchant_id = 1202
+from datatail20130410.dbo.merchantcats
+where merchant_id = 2456
 
 
-
-select tailbaseid, TitleEn, TitleFr
-from shopify.shopifyProducts
-where merchantid = 1202 
-and tailbaseid  in (494842, 623406, 494851)
+SELECT *
+  FROM [Tailbasify].[Shopify].[ShopifyProducts]
+  where TailbaseId in (25235, 25150)
 
 
 select *
 from shopify.ShopifyMerchantCollections
-where MerchantId = 1202 and id = 6890
+where MerchantId = 2456 
+and tailbaseId in (select TailbaseId from shopify.shopifyProducts where ItemType = 2 and MerchantId = 2456)
 
 
 --Configs
@@ -145,7 +143,17 @@ where merchantid = 1448
 --Fix collections
 select *
 from shopify.ShopifyMerchantCollections
-where MerchantId = 1202 and id = 6890
+where MerchantId = 2456 and tailbaseID in (select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 2)
+and tailbaseID = 1081732
+
+select *
+from shopify.shopifyProducts
+where merchantid = 2456 
+and tailbaseid  in (25235)
+715233
+
+select * from datatail20130410.dbo.merchantRebates where merchant_id = 2456 and id_rebate =1081732
+and active = 1 order by DisplayEndDate desc
 
 select *
 from shopify.ShopifyCollectionRuleInputs
@@ -153,8 +161,8 @@ where ShopifyMerchantCollectionId = 6890
 --First Delete Rule
 -- delete top (1)  from shopify.ShopifyCollectionRuleInputs where ShopifyMerchantCollectionId =6890
 -- --Second Delete ShopifyMerchantCollections
--- delete top (1)  from shopify.ShopifyMerchantCollections where MerchantId = 1202 and id = 6890
+-- delete top (1)  from shopify.ShopifyMerchantCollections where MerchantId = 2456 and id = 6890
 
 select * from Shopify.ShopifyMediaContentTypes
 
-select * from shopify.ShopifyProductMedia where ShopifyProductId = 626050
+select * from shopify.ShopifyProductMedia where TailbaseId = 25235
