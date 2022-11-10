@@ -1,29 +1,30 @@
 
 
 -- Merchants
-select s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
+select 
+--m.merchant, s.*
+s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
 where m.id = 2456
-order by m.id
 
 select count(productid) from datatail20130410.dbo.merchantProds where merchant_id = 2456
 
-update top (1) MerchantExports
-set [status] = 1
-where merchantid = 1956
+-- update top (1) MerchantExports
+-- set [status] = 1
+-- where merchantid = 2456
 
 select  m.merchant, me.*
 from MerchantExports me
  inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
-order by [Status] desc
+order by [Status] desc, ModificationDate desc
 
 
 --Logs for Converter
 select top 50
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1956
+WHERE  merchantid = 2456
     AND module = 'Converter'
 order by LogTime desc
 
@@ -35,7 +36,7 @@ select
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
 where h.MerchantId = 2456
-    and d.TailbaseId in (380546)
+    --and d.TailbaseId in (380546)
 order by h.id desc
 
 
@@ -45,7 +46,7 @@ select top(50)
 from logs  WITH (NOLOCK)
 WHERE  merchantid = 2456
     AND module = 'Synchronizer'
-AND text like '%380546%'
+--AND text like '%380546%'
 order by id desc
 
 --Sunc Report
@@ -55,7 +56,7 @@ select
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
 where h.MerchantId = 2456
-    and d.ShopifyProductId in (715233)
+    and d.ShopifyProductId in (691018)
 order by h.id desc
 
 select *
@@ -83,8 +84,16 @@ where merchant_id = 2456
 
 
 SELECT *
-  FROM [Tailbasify].[Shopify].[ShopifyProducts]
-  where TailbaseId in (25235, 25150)
+  FROM [Shopify].[ShopifyProducts]
+  where merchantid  = 2456
+  and tailbaseid = 687689
+
+  update top (1) [Shopify].[ShopifyProducts]
+  set SyncStatusId  = 2
+    where merchantid  = 2456
+  and tailbaseid = 687689
+--   and ItemType = 1
+--   and tags like '%Protection%'
 
 
 select *
@@ -97,12 +106,15 @@ and tailbaseId in (select TailbaseId from shopify.shopifyProducts where ItemType
 select c.id, c.Configuration, sc.ConfigurationValue
 from shopify.ShopifyMerchantConfigurations sc
     inner join shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
-where ShopifyMerchantId = 6
+where ShopifyMerchantId = 4
+
+insert into shopify.ShopifyMerchantConfigurations values
+(4,9,'True')
 
 
 select *
 from shopify.ShopifyMerchantConfigurations
-where ShopifyConfigurationId = 8
+where ShopifyMerchantId = 3
 
 select *
 from shopify.ShopifyConfigurations
@@ -165,4 +177,39 @@ where ShopifyMerchantCollectionId = 6890
 
 select * from Shopify.ShopifyMediaContentTypes
 
-select * from shopify.ShopifyProductMedia where TailbaseId = 25235
+select TailbaseId from shopify.ShopifyProductMedia 
+where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
+--and MediaContentTypeId = 2
+and ShopifyGeneratedMediaId is null
+and OriginalSource is not null
+--and tailbaseid = 687689
+
+update top (1749) shopify.ShopifyProductMedia 
+set SyncStatusId = 2
+where id in (select id from shopify.ShopifyProductMedia 
+where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
+--and MediaContentTypeId = 2
+and ShopifyGeneratedMediaId is null
+and OriginalSource is not null)
+
+
+  update top (296)[Shopify].[ShopifyProducts]
+  set SyncStatusId  = 2
+    where merchantid  = 2456
+  and tailbaseid in (select TailbaseId from shopify.ShopifyProductMedia 
+where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
+--and MediaContentTypeId = 2
+and ShopifyGeneratedMediaId is null
+and OriginalSource is not null)
+
+
+  select tailbaseid  from[Shopify].[ShopifyProducts]
+  --set SyncStatusId  = 2
+    where merchantid  = 2456
+  and tailbaseid in (select TailbaseId from shopify.ShopifyProductMedia 
+where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
+--and MediaContentTypeId = 2
+and ShopifyGeneratedMediaId is null
+and OriginalSource is not null)
+
+
