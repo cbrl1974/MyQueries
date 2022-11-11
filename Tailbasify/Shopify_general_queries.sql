@@ -177,39 +177,40 @@ where ShopifyMerchantCollectionId = 6890
 
 select * from Shopify.ShopifyMediaContentTypes
 
-select TailbaseId from shopify.ShopifyProductMedia 
-where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
---and MediaContentTypeId = 2
+
+-- ***************Fix For Missing Images***********************
+select spm.OriginalSource, spm.ShopifyGeneratedMediaId, spm.TailbaseId, spm.SyncStatusId 
+from shopify.ShopifyProductMedia spm 
+inner join shopify.shopifyProducts sp on sp.id = spm.ShopifyProductId
+where sp.MerchantId = 2456
+and spm.ShopifyGeneratedMediaId is null
+and spm.OriginalSource is not null
+
+
+
+update top (527) shopify.ShopifyProductMedia 
+set SyncStatusId = 2
+--select * from shopify.ShopifyProductMedia 
+where ShopifyProductId in ( select id from shopify.shopifyProducts where MerchantId = 2456)
 and ShopifyGeneratedMediaId is null
 and OriginalSource is not null
---and tailbaseid = 687689
-
-update top (1749) shopify.ShopifyProductMedia 
-set SyncStatusId = 2
-where id in (select id from shopify.ShopifyProductMedia 
-where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
---and MediaContentTypeId = 2
-and ShopifyGeneratedMediaId is null
-and OriginalSource is not null)
 
 
-  update top (296)[Shopify].[ShopifyProducts]
-  set SyncStatusId  = 2
-    where merchantid  = 2456
-  and tailbaseid in (select TailbaseId from shopify.ShopifyProductMedia 
-where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
---and MediaContentTypeId = 2
-and ShopifyGeneratedMediaId is null
-and OriginalSource is not null)
 
 
-  select tailbaseid  from[Shopify].[ShopifyProducts]
-  --set SyncStatusId  = 2
-    where merchantid  = 2456
-  and tailbaseid in (select TailbaseId from shopify.ShopifyProductMedia 
-where TailbaseId in ( select TailbaseId from shopify.shopifyProducts where MerchantId = 2456 and ItemType = 1)
---and MediaContentTypeId = 2
-and ShopifyGeneratedMediaId is null
+
+select distinct sp.id, sp.tailbaseid, sp.handle, sp.SyncStatusId from [Shopify].[ShopifyProducts] sp
+inner join shopify.ShopifyProductMedia spm  on spm.shopifyProductId = sp.id
+where sp.merchantid  = 2456
+and  spm.ShopifyGeneratedMediaId is null
+and spm.OriginalSource is not null
+
+
+update top (161)[Shopify].[ShopifyProducts]
+set SyncStatusId  = 2
+where merchantid  = 2456
+and id in (select shopifyProductId from shopify.ShopifyProductMedia 
+where ShopifyGeneratedMediaId is null
 and OriginalSource is not null)
 
 
