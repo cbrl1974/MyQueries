@@ -30,13 +30,11 @@ order by LogTime desc
 
 
 
-select
-    top(10)
-    *
+select top(10) *
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
 where h.MerchantId = 2456
-    --and d.TailbaseId in (380546)
+    and d.TailbaseId in (686970)
 order by h.id desc
 
 
@@ -46,7 +44,7 @@ select top(50)
 from logs  WITH (NOLOCK)
 WHERE  merchantid = 2456
     AND module = 'Synchronizer'
---AND text like '%380546%'
+AND text like '%686970%'
 order by id desc
 
 --Sunc Report
@@ -56,23 +54,13 @@ select
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
 where h.MerchantId = 2456
-    and d.ShopifyProductId in (691018)
+    and d.ShopifyProductId in (686970)
 order by h.id desc
 
 select *
 from shopify.ShopifyMerchantMetafields
 where ShopifyProductId IN ( 715233)
 
-
-select *
-from datatail20130410.dbo.merchantProds
-where merchant_id = 2456 
-
-
-select *
-from datatail20130410.dbo.merchantprods
-where merchant_id = 2456
- and productid in (628629)
 
 select *
 from datatail20130410.dbo.merchantCollections
@@ -83,10 +71,12 @@ from datatail20130410.dbo.merchantcats
 where merchant_id = 2456
 
 
-SELECT *
-  FROM [Shopify].[ShopifyProducts]
+SELECT sp.*
+  FROM [Shopify].[ShopifyProducts] sp 
+  inner join datatail20130410.dbo.merchantprods mp on mp.productId = sp.TailbaseId 
+  and sp.MerchantId = mp.merchant_id
   where merchantid  = 2456
-  and tailbaseid = 687689
+  and tailbaseid = 285666
 
   update top (1) [Shopify].[ShopifyProducts]
   set SyncStatusId  = 2
@@ -102,7 +92,7 @@ where MerchantId = 2456
 and tailbaseId in (select TailbaseId from shopify.shopifyProducts where ItemType = 2 and MerchantId = 2456)
 
 
---Configs
+--**************************Configs
 select c.id, c.Configuration, sc.ConfigurationValue
 from shopify.ShopifyMerchantConfigurations sc
     inner join shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
@@ -162,7 +152,7 @@ select *
 from shopify.shopifyProducts
 where merchantid = 2456 
 and tailbaseid  in (25235)
-715233
+
 
 select * from datatail20130410.dbo.merchantRebates where merchant_id = 2456 and id_rebate =1081732
 and active = 1 order by DisplayEndDate desc
@@ -178,6 +168,9 @@ where ShopifyMerchantCollectionId = 6890
 select * from Shopify.ShopifyMediaContentTypes
 
 
+
+
+
 -- ***************Fix For Missing Images***********************
 select spm.OriginalSource, spm.ShopifyGeneratedMediaId, spm.TailbaseId, spm.SyncStatusId 
 from shopify.ShopifyProductMedia spm 
@@ -185,6 +178,13 @@ inner join shopify.shopifyProducts sp on sp.id = spm.ShopifyProductId
 where sp.MerchantId = 2456
 and spm.ShopifyGeneratedMediaId is null
 and spm.OriginalSource is not null
+
+select spm.*
+from shopify.ShopifyProductMedia spm 
+inner join shopify.shopifyProducts sp on sp.id = spm.ShopifyProductId
+where sp.MerchantId = 2456
+AND sp.TailbaseId =285666
+
 
 
 
@@ -199,11 +199,14 @@ and OriginalSource is not null
 
 
 
-select distinct sp.id, sp.tailbaseid, sp.handle, sp.SyncStatusId from [Shopify].[ShopifyProducts] sp
+select distinct sp.id, sp.tailbaseid, sp.handle, sp.SyncStatusId , sp.ShopifyGeneratedProductId
+from [Shopify].[ShopifyProducts] sp
 inner join shopify.ShopifyProductMedia spm  on spm.shopifyProductId = sp.id
 where sp.merchantid  = 2456
 and  spm.ShopifyGeneratedMediaId is null
 and spm.OriginalSource is not null
+
+update top (1) [Shopify].[ShopifyProducts] set SyncStatusId = 1 where id =686970
 
 
 update top (161)[Shopify].[ShopifyProducts]
