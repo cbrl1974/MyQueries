@@ -8,7 +8,7 @@ select * from feeds.merchantFeeds where merchantid =3336 and feedid = 9
 select * from merchantfeeds where merchant_id = 1097
 select * from products where manufmodel = 'A8010061'
 
-select * from companies where id_cie = 502
+
 select * from feeds.FeedDumps 
 where  RunDate > convert(date,getdate()-1) 
 order by merchantid
