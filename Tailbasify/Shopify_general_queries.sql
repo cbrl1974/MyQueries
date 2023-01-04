@@ -6,7 +6,7 @@ select
 s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-where m.id = 2456
+where m.id = 3209
 
 select count(productid) from datatail20130410.dbo.merchantProds where merchant_id = 2456
 
@@ -33,8 +33,8 @@ order by LogTime desc
 select top(10) *
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
-where h.MerchantId = 2456
-    and d.TailbaseId in (686970)
+where h.MerchantId = 3404
+    and d.TailbaseId in (729155)
 order by h.id desc
 
 
@@ -53,8 +53,8 @@ select
     *
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 2456
-    and d.ShopifyProductId in (686970)
+where h.MerchantId = 3404
+    and d.ShopifyProductId in (375709)
 order by h.id desc
 
 select *
@@ -71,19 +71,14 @@ from datatail20130410.dbo.merchantcats
 where merchant_id = 2456
 
 
-SELECT sp.*
+SELECT p.manufmodel, p.descriptiveTitle_2, p.model_2, mp.SpecificDescriptiveTitle_2, mp.SpecificModel_2, sp.*
   FROM [Shopify].[ShopifyProducts] sp 
   inner join datatail20130410.dbo.merchantprods mp on mp.productId = sp.TailbaseId 
+  inner join datatail20130410.dbo.products p on p.id_product = mp.productid
   and sp.MerchantId = mp.merchant_id
-  where merchantid  = 2456
-  and tailbaseid = 285666
+  where mp.merchant_id  = 3404
+  and mp.productid = 729155
 
-  update top (1) [Shopify].[ShopifyProducts]
-  set SyncStatusId  = 2
-    where merchantid  = 2456
-  and tailbaseid = 687689
---   and ItemType = 1
---   and tags like '%Protection%'
 
 
 select *
@@ -96,10 +91,12 @@ and tailbaseId in (select TailbaseId from shopify.shopifyProducts where ItemType
 select c.id, c.Configuration, sc.ConfigurationValue
 from shopify.ShopifyMerchantConfigurations sc
     inner join shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
-where ShopifyMerchantId = 4
+where ShopifyMerchantId = 15
 
-insert into shopify.ShopifyMerchantConfigurations values
-(4,9,'True')
+select c.id, c.Configuration, sc.ConfigurationValue
+from shopify.ShopifyMerchantConfigurations sc
+    inner join shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
+where ShopifyMerchantId = 4
 
 
 select *
