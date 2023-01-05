@@ -10,7 +10,7 @@ where m.id = 3335
 
 -- update top (1) MerchantExports
 -- set [status] = 1
--- where merchantid = 3335
+-- where merchantid = 3405
 
 select  m.merchant, me.*
 from MerchantExports me
@@ -37,21 +37,17 @@ order by h.id desc
 
 
 --Logs for Synchronizer
-select top(1000)
-    *
-from logs  WITH (NOLOCK)
+select top(50) * from logs  WITH (NOLOCK)  
 WHERE  merchantid = 3335
-    AND module = 'Synchronizer'
+AND module = 'Synchronizer'
 order by id desc
 
+
 --Sunc Report
-select
-    top(10)
-    *
-from Shopify.ShopifySyncReports h WITH (NOLOCK)
-    join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
+select top(10) * from Shopify.ShopifySyncReports h WITH (NOLOCK)
+join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
 where h.MerchantId = 3335
-    and d.ShopifyProductId in (776365)
+and d.ShopifyProductId in (774003)
 order by h.id desc
 
 --Different Catalog info
@@ -61,7 +57,7 @@ SELECT  sp.*
   inner join datatail20130410.dbo.products p on p.id_product = mp.productid
   and sp.MerchantId = mp.merchant_id
   where mp.merchant_id  = 3335
-  and sp.handle = 'mlily-oreiller-pour-lit-bliss-pillow-standard'
+  and sp.handle = 'yorkdale-matelas-tres-grand-madison-pillow-top-mattress-king'
   --and mp.productid = 729155
 
 
@@ -74,7 +70,7 @@ and tailbaseId in (select TailbaseId from shopify.shopifyProducts where ItemType
   
 select *
 from shopify.ShopifyMerchantMetafields
-where ShopifyProductId IN ( 715233)
+where ShopifyProductId IN ( 776365)
 
 
 
@@ -82,6 +78,9 @@ where ShopifyProductId IN ( 715233)
 
 select *
 from SyncStatus
+
+
+sel
 
 
 --Convert STATUS:
@@ -96,4 +95,10 @@ from SyncStatus
 -- 3	Delete
 -- 4	Synced
 -- 5	DeleteSynced
+
+
+--Translation Status
+    -- Translate = 1
+    -- Translated = 2
+    -- None = 3
 
