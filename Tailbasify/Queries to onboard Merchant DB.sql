@@ -33,7 +33,7 @@ select * from [dbo].[MerchantExports]
 --********** configs
 
 --Get example
-DECLARE @NewShopifyMerchantId AS INT = 34;
+DECLARE @NewShopifyMerchantIdForConfigs AS INT = 34;
 
 select *
 from shopify.ShopifyConfigurations
@@ -41,9 +41,9 @@ order by id
 
 --Add Config Record
 insert into shopify.ShopifyMerchantConfigurations (shopifyMerchantid, ShopifyConfigurationId, ConfigurationValue) values
-(@NewShopifyMerchantId,4,'English'), -- PrimaryLanguage
-(@NewShopifyMerchantId,8,'True'),  -- PriceQualifier
-(@NewShopifyMerchantId,3,'True')  -- AssociatedProducts
+(@NewShopifyMerchantIdForConfigs,4,'English'), -- PrimaryLanguage
+(@NewShopifyMerchantIdForConfigs,8,'True'),  -- PriceQualifier
+(@NewShopifyMerchantIdForConfigs,3,'True')  -- AssociatedProducts
 
 --Check Entry
 select c.id, c.Configuration, sc.ConfigurationValue
@@ -68,3 +68,33 @@ where ShopifyMerchantId = @NewShopifyMerchantId
 -- 14	SendLegacyInventoryTag
 -- 15	Warranties
 -- 16	Installations
+
+
+--===================================================================================================
+
+-- *****Not important but in the case a merchant has inventory then yes but you can add it anyway****
+
+--Step 1 Run this graphQl query on the Client Shopify Console:
+-- This query will give some required information to insert after like the location id
+
+    {
+        locations(first:10) {
+            nodes {
+            id
+            name
+            }
+        }
+    }
+
+-- Step2
+--Get merchantstores from tailbase
+  select * from datatail20130410.dbo.merchantstores where merchantid = 3039
+
+  --Add record on ShopifyMerchantStoreLocations
+DECLARE @NewShopifyMerchantIdForLocations AS INT = 34;
+insert into Shopify.ShopifyMerchantStoreLocations
+    (Name, ShopifyMerchantId, ShopifyGeneratedLocationId, MerchantStoreId, StorePickup)
+    values
+    ('Vancouver Store', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/77574734099', 6259, 0),
+    ('Squamish Store', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/77751550227', 6440, 0),
+    ('Distribution Center', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/77751615763', 6559, 0)
