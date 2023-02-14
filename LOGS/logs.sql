@@ -1,4 +1,6 @@
-SELECT TOP (100) [LogID]
+SELECT 
+TOP (100)
+ [LogID]
       ,[Project]
       ,[Category]
       ,[Text]
@@ -8,8 +10,15 @@ SELECT TOP (100) [LogID]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
   where category = 'feeds'
+  and logid >= 26292400
+  --and text = 'Starting full feed run for feed 7.'
+  and text like '%System.ArgumentOutOfRangeException%'
   order by [time] desc
 
 
+--For Datatail
+ select top 100 * from 
+  Log_retail 
+  order by id desc
 
-Using the first API key we found, merchant[589], ApiKey[5AF700257D5F4A4F8A22F96D18]
+
