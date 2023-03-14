@@ -1,11 +1,12 @@
 use tailbasify
-DECLARE @MerchantId AS INT = 2384;
+DECLARE @MerchantId AS INT = 1817;
 DECLARE @NewShopifyMerchantId AS INT;
-DECLARE @shopifyMerchantUrl AS varchar(max) = 'landeros-furniture-outlet.myshopify.com';
+DECLARE @shopifyMerchantUrl AS varchar(max) = 'skeros-furniture.myshopify.com';
 DECLARE @TailbasifyAppURL AS varchar(max) = 'lanfur.tailbasify.com';
 DECLARE @shopifyMerchantApiVersion AS varchar(10) = 'v2';
-DECLARE @ShopifyApiKey as nvarchar(max) = '648dbfab411b22190aa0df99acca762d'
-DECLARE @ShopifySecretKey as nvarchar(max) = 'eeea5cfa7a9f53f0aac03619bdb27449'
+--You will Get this when you create the new app on Shopify apps
+DECLARE @ShopifyApiKey as nvarchar(max) = ''
+DECLARE @ShopifySecretKey as nvarchar(max) = ''
 
 -- Check Merchants for any existing merchant
 select 
@@ -95,27 +96,28 @@ where ShopifyMerchantId = @NewShopifyMerchantIdForConfigs
 
 -- Step2
 --Get merchantstores from tailbase
-  select * from datatail20130410.dbo.merchantstores where merchantid = 2384
+  select * from datatail20130410.dbo.merchantstores where merchantid = 1817
 
-  select * from datatail20130410.dbo.MerchantStoresInventory  where merchantid = 2384
+  select * from datatail20130410.dbo.MerchantStoresInventory  where merchantid = 1817
 
   --Add record on ShopifyMerchantStoreLocations
-DECLARE @NewShopifyMerchantIdForLocations AS INT = 36;
--- insert into Shopify.ShopifyMerchantStoreLocations
---     (Name, ShopifyMerchantId, ShopifyGeneratedLocationId, MerchantStoreId, StorePickup)
---     values
---     ('Landeros Furniture Outlet', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/78201880879', 5625, 1)
--- ,('Squamish Store', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/77751550227', 6440, 0)
--- ,('Distribution Center', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/77751615763', 6559, 0)
+DECLARE @NewShopifyMerchantIdForLocations AS INT = 11;
+ insert into tailbasify.Shopify.ShopifyMerchantStoreLocations
+     (Name, ShopifyMerchantId, ShopifyGeneratedLocationId, MerchantStoreId, StorePickup)
+     values
+     ('Skero''s Furniture and Mattress Center', @NewShopifyMerchantIdForLocations, 'gid://shopify/Location/66463203467', 5768, 1)
+
 
 
 --Chech entry 
-select * from Shopify.ShopifyMerchantStoreLocations
-where ShopifyMerchantId =  @NewShopifyMerchantIdForLocations
+select * from tailbasify.Shopify.ShopifyMerchantStoreLocations
+where ShopifyMerchantId =  11
+
+
 
 
 --In Case of an update
 
-update top (1) Shopify.ShopifyMerchantStoreLocations
-set StorePickup = 1 
-where id = 111
+--update top (1) Shopify.ShopifyMerchantStoreLocations
+--set StorePickup = 1 
+--where id = 111
