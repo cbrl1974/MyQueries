@@ -76,51 +76,47 @@ and textcode like '%payment%'
 
 --************Products with prices******************
 DECLARE @MerchantIdforProdsWithPrices AS INT = 1903;
-select  productid, price, reducedPrice from merchantprods
+select top 1 productid, price, reducedPrice from merchantprods
 where merchant_id = @MerchantIdforProdsWithPrices
 and price is not null
-
-DECLARE @MerchantIdforProdsWithNoStoreOnlyTagPrices AS INT = 1903;
-select  productid, price, reducedPrice from merchantprods
-where merchant_id = @MerchantIdforProdsWithNoStoreOnlyTagPrices
-and storeonly = 0
 
 
 
  --********************Shipping********************
+
 DECLARE @MerchantIdforShipping AS INT = 1903;
+DECLARE @ShippingType as varchar(200) = 
+	( 
+		select featureValue from merchantWebsiteFeatures 
+		where merchant_id = @MerchantIdforShipping 
+		and featurecode = 'shippingOptionTypes'
+	);
+
+
 select * from merchantshipping where merchant_id =@MerchantIdforShipping
 
 
+IF @ShippingType like '%merchantShippingByCartTotalItemsValueRange%'
+	select * from MerchantShippingPricesByValueRanges
+	where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShipping)
 
-DECLARE @MerchantIdforShippingShippingPricesBYValueRanges AS INT = 1903;
-select * from MerchantShippingPricesByValueRanges
-where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShippingShippingPricesBYValueRanges)
+else if  @ShippingType like '%merchantShippingByCartTotalItemQuantities%'
+	select * from MerchantShippingPricesByQuantity
+	where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShipping)
 
- 
-DECLARE @MerchantIdforShippingShippingPricesByQuantity AS INT = 1903;
-select * from MerchantShippingPricesByQuantity
-where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShippingShippingPricesByQuantity)
+else if  @ShippingType like '%merchantShippingByStoreLocationRings%'
+	select * from MerchantShippingPricesByStoreLocRings
+	where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShipping)
 
+else if  @ShippingType like '%merchantShippingByStoreLocationRadio%'
+	select * from MerchantShippingPricesByStoreLocRadio
+	where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShipping)
 
-DECLARE @MerchantIdforShippingPricesByStoreLocRings AS INT = 1903;
-select * from MerchantShippingPricesByStoreLocRings
-where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShippingPricesByStoreLocRings)
+else if  @ShippingType like '%merchantShippingByItem3%'
+	select * from MerchantShippingPrices
+	where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShipping)
 
-
-
-
-DECLARE @MerchantIdforShippingPricesByStoreLocRadio AS INT = 1903;
-select * from MerchantShippingPricesByStoreLocRadio
-where merchantshippingid in (select id from merchantshipping where merchant_id =@MerchantIdforShippingPricesByStoreLocRadio)
-
-
---Deprecated
-DECLARE @MerchantIdforShippingPricesShippingPrices AS INT = 1903;
-select * from MerchantShippingPrices
-where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShippingPricesShippingPrices)
-
-
+--=========================================================================================================================
 
 DECLARE @merchantshippingIncluderules AS INT = 1903;
 select c.category, ms.name_1, msir.* from merchantshippingIncluderules msir
@@ -231,3 +227,4 @@ select distinct featureValue from merchantWebsiteFeatures
 where featurecode = 'shoppingCartType'
 
 
+select
