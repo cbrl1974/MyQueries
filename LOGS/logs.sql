@@ -10,9 +10,6 @@ TOP (100)
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
   where category = 'feeds'
-  and logid >= 26304898
-and text like '%System.ArgumentOutOfRangeException%'
-  --and text = 'Starting full feed run for feed 7.'
   order by [time] desc
 
 

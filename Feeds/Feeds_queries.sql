@@ -1,14 +1,21 @@
 
 select id, merchant, merchantpwd from merchants where id in (select MerchantId from devTailbaseCore.feeds.merchantFeeds where feedid = 9)
-select * from devTailbaseCore.feeds.feeds where id =9
+select * from devTailbaseCore.feeds.feeds where id = 9
 
-select distinct feedid from devTailbaseCore.feeds.merchantFeeds --where  feedid = 1 
-where FeedOptionsJson like '%"InventoryQtyOptions":{"IsActive"%'
+select  * from devTailbaseCore.feeds.merchantFeeds where  feedid = 9 
+
 and merchantid =1097  order by merchantid desc
 select * from devTailbaseCore.feeds.merchantFeeds where  feedid = 9
+3181
 select  top 100 * from devTailbaseCore.feeds.ProductBasePrices where FeedId = 9  and productid = 465275 order by ProductBasePriceId desc
+
 select * from merchantfeeds where merchant_id = 3336
+
 select * from products where manufmodel = 'A8010118'
+select * from categories where id_category = 298
+select * from devTailbaseCore.dbo.merchantProds where merchant_id = 1448 and productid = 465275
+select * from merchants where id = 1448
+
 select manufmodel from devTailbaseCore.dbo.products where Id_product = 552829 
 
  SELECT mp.productid, p.manufmodel, mp.cost, mp.price, mp.reducedPrice FROM devTailbaseCore.dbo.MerchantProds  mp
@@ -25,24 +32,23 @@ order by merchantid
 
 
 ----Delete records from today
---Delete from devTailbaseCore.feeds.FeedDumps 
---where  RunDate > convert(date,getdate()-1) 
---and FeedId = 9
-
-
+Delete from devTailbaseCore.feeds.FeedDumps 
+where  RunDate > convert(date,getdate()-1) 
+and FeedId = 9
 
 
 select * from devTailbaseCore.feeds.ProductBasePrices 
 where FeedId = 9
---and productid in (select id_product from products where manufmodel = 'A8000198')
+--and merchantid = 1448
+and productid = 465275
 order by ProductBasePriceId desc
 
-
+use devtailbasecore
 
 
 --****************** Today 16494
 delete  from devTailbaseCore.feeds.ProductBasePrices where FeedId = 9  
-and productid = 465275 order by ProductBasePriceId desc
+
 
 select * from devTailbaseCore.feeds.ProductBasePrices where FeedId = 1   and merchantid is null
 

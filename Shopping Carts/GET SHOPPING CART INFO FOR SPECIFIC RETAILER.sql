@@ -65,7 +65,6 @@ where merchantid = @MerchantIdforDebugForCartConfigurations
 
 
 
-
  --********************texts********************
 DECLARE @MerchantIdfortexts AS INT = 1903;
 select * from merchantWebsitetexts
@@ -95,8 +94,9 @@ DECLARE @ShippingType as varchar(200) =
 
 select * from merchantshipping where merchant_id =@MerchantIdforShipping
 
+Select @ShippingType as 'ShippingType'
 
-IF @ShippingType like '%merchantShippingByCartTotalItemsValueRange%'
+IF @ShippingType like '%merchantShippingByCartTotalItemsValueRange%' 
 	select * from MerchantShippingPricesByValueRanges
 	where merchantshippingid in (select id from merchantshipping where merchant_id = @MerchantIdforShipping)
 
@@ -132,6 +132,7 @@ inner join merchantshipping ms on ms.id = mser.MerchantShippingId
 inner join categories c on c.id_category = mser.catid and c.id_langue = 1
 where mser.merchantshippingid in (select id from merchantshipping where merchant_id = @merchantshippingexcludeRules)
 
+
 DECLARE @MERCHANTIDFORE0XCLUSIONS as int = 1903;
 select * from MerchantShippingExclusions
 where MerchantShippingId in (select id from merchantshipping where merchant_id = @MERCHANTIDFORE0XCLUSIONS)
@@ -165,14 +166,13 @@ select * from merchanttaxes where merchant_id =@MerchantIdforTaxes
 select * from MerchantStoresTaxes
 where merchantTaxId in (select id from merchanttaxes where merchant_id =@MerchantIdforTaxes)
 
-select * from merchantstores
-where merchantid =@MerchantIdforTaxes 
 
 select * from MerchantTaxZones
 where merchantTaxId in (select id from merchanttaxes where merchant_id =@MerchantIdforTaxes)
 
 DECLARE @MerchantIdforTaxesEXemption AS INT = 1903;
 select * from MerchantTaxExemptItems where merchantid = @MerchantIdforTaxesEXemption
+
 
 --*********************Installations*****************************************
 DECLARE @MerchantIdforInstallations AS INT = 1903;
@@ -225,6 +225,3 @@ where featureCode    in ('hasShippingOptionsOnItems'))
 
 select distinct featureValue from merchantWebsiteFeatures
 where featurecode = 'shoppingCartType'
-
-
-select
