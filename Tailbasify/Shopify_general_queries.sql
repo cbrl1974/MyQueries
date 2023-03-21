@@ -4,22 +4,22 @@
 select
     --m.merchant, s.*
     s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
-from devTailbasify.shopify.shopifyMerchants s
-    inner join devTailbasecore.dbo.merchants m on m.id = s.MerchantId
-where m.id = 1448
+from tailbasify.shopify.shopifyMerchants s
+    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+where m.id = 3398
 
 --===============================================================================================
 
 update top (1) MerchantExports
  set [status] = 1
- where merchantid = 1448
+ where merchantid = 3398
 
 --===============================================================================================
 
 
 select m.merchant, me.*
-from devTailbasify.dbo.MerchantExports me
-    inner join devTailbasecore.dbo.merchants m on m.id = me.MerchantId
+from tailbasify.dbo.MerchantExports me
+    inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc, ModificationDate desc
 
 --===============================================================================================
@@ -28,7 +28,7 @@ order by [Status] desc, ModificationDate desc
 select top 50
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1448
+WHERE  merchantid = 3398
     AND module = 'Converter'
 order by LogTime desc
 
@@ -38,7 +38,7 @@ select top(10)
     *
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
-where h.MerchantId = 1448
+where h.MerchantId = 3398
     and d.TailbaseId in (526940)
 order by h.id desc
 
@@ -48,7 +48,7 @@ order by h.id desc
 select top(50)
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1448
+WHERE  merchantid = 3398
     AND module = 'Synchronizer'
 order by id desc
 
@@ -59,17 +59,21 @@ from shopify.ShopifyProductVariants
 where ShopifyProductID in (
     select id
         from shopify.shopifyProducts
-    where merchantid = 1448 and itemtype = 1
+    where merchantid = 3398 and itemtype = 1
 )
 
 --===============================================================================================
 
 select *
 from shopify.shopifyProducts
-where merchantid = 1448 
+where merchantid = 3398 
 and Handle = 'nspire-table-de-salle-a-manger-sydney-avec-pied-central-201-378'
 
 --===============================================================================================
+
+
+select * from datatail20130410.dbo.merchantProds where merchant_id = 3398
+select * from datatail20130410.dbo.merchantCollections where merchant_id = 3398
 
 
 --Sunc Report
@@ -77,7 +81,7 @@ select top(10)
     *
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 1448
+where h.MerchantId = 3398
     and d.ShopifyProductId in (770145)
 order by h.id desc
 
@@ -86,10 +90,10 @@ order by h.id desc
 --Different Catalog info
 SELECT sp.*
 FROM [Shopify].[ShopifyProducts] sp
-    inner join devTailbasecore.dbo.merchantprods mp on mp.productId = sp.TailbaseId
-    inner join devTailbasecore.dbo.products p on p.id_product = mp.productid
+    inner join datatail20130410.dbo.merchantprods mp on mp.productId = sp.TailbaseId
+    inner join datatail20130410.dbo.products p on p.id_product = mp.productid
         and sp.MerchantId = mp.merchant_id
-where mp.merchant_id  = 1448
+where mp.merchant_id  = 3398
     --and sp.TailbaseId  = 1094756
     AND itemtype = 3
 --and sp.handle = 'frigidaire-41-cu-ft-top-loading-washer-fftw4120sw'
@@ -98,8 +102,8 @@ where mp.merchant_id  = 1448
 --===============================================================================================
 
 SELECT *
-    FROM devTailbasify.shopify.ShopifyProducts
-WHERE merchantid = 1448
+    FROM tailbasify.shopify.ShopifyProducts
+WHERE merchantid = 3398
 
 
 --===============================================================================================
@@ -107,26 +111,26 @@ WHERE merchantid = 1448
 
 select *
 from shopify.ShopifyMerchantCollections
-where MerchantId = 1448
+where MerchantId = 3398
 and tailbaseId in 
 (
     select TailbaseId
         from shopify.shopifyProducts
-    where MerchantId = 1448
+    where MerchantId = 3398
 )
 
 --===============================================================================================
 
 select *
-    from devTailbasecore.dbo.merchantrebates
-where merchant_id = 1448 
+    from datatail20130410.dbo.merchantrebates
+where merchant_id = 3398 
 and id_rebate in (1094611,1094660)
 
 --===============================================================================================
 
 select *
 from shopify.ShopifyMerchantMetafields
-where ShopifyProductId IN ( select id from Shopify.ShopifyProducts where merchantid = 1448)
+where ShopifyProductId IN ( select id from Shopify.ShopifyProducts where merchantid = 3398)
 
 --===============================================================================================
 
@@ -138,7 +142,7 @@ where m.TailbaseId in
 (
     select tailbaseid
         from shopify.ShopifyProducts
-    where MerchantId = 1448
+    where MerchantId = 3398
 )
 
 

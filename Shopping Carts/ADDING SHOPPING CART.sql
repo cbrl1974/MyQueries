@@ -467,6 +467,8 @@ select * from merchantstores where merchantid = 2795
 
 select top 10 * from MerchantShippingPricesByStoreLocRadio
 
+select * from merchantstores where id =  2320
+select * from merchantwebsitefeatures where merchant_id = 534
 
 --Trends Furniture	408 S. Douglas Hwy Suite 2	Gillette	WY	82716	USA
 --=====================================================================================================================================
