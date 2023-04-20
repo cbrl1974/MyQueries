@@ -4,8 +4,8 @@
 select
     --m.merchant, s.*
     s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
-from tailbasify.shopify.shopifyMerchants s
-    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+from shopify.shopifyMerchants s
+    inner join devTailbasecore.dbo.merchants m on m.id = s.MerchantId
 where m.id = 3398
 
 --===============================================================================================
@@ -18,8 +18,8 @@ update top (1) MerchantExports
 
 
 select m.merchant, me.*
-from tailbasify.dbo.MerchantExports me
-    inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
+from MerchantExports me
+    inner join devTailbasecore.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc, ModificationDate desc
 
 --===============================================================================================
@@ -42,6 +42,7 @@ where h.MerchantId = 3398
     and d.TailbaseId in (526940)
 order by h.id desc
 
+
 --===============================================================================================
 
 --Logs for Synchronizer
@@ -51,30 +52,11 @@ from logs  WITH (NOLOCK)
 WHERE  merchantid = 3398
     AND module = 'Synchronizer'
 order by id desc
+SELECT *
+  FROM [Tailbasify].[Shopify].[ShopifyCollectionSyncReportsDetail]
+  where ShopifyCollectionId = 12323
 
 --===============================================================================================
-
-select *
-from shopify.ShopifyProductVariants
-where ShopifyProductID in (
-    select id
-        from shopify.shopifyProducts
-    where merchantid = 3398 and itemtype = 1
-)
-
---===============================================================================================
-
-select *
-from shopify.shopifyProducts
-where merchantid = 3398 
-and Handle = 'nspire-table-de-salle-a-manger-sydney-avec-pied-central-201-378'
-
---===============================================================================================
-
-
-select * from datatail20130410.dbo.merchantProds where merchant_id = 3398
-select * from datatail20130410.dbo.merchantCollections where merchant_id = 3398
-
 
 --Sunc Report
 select top(10)
@@ -82,35 +64,52 @@ select top(10)
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
 where h.MerchantId = 3398
-    and d.ShopifyProductId in (770145)
+    and d.ShopifyProductId in (1024171)
 order by h.id desc
 
 --===============================================================================================
+select * from datata
 
---Different Catalog info
-SELECT sp.*
-FROM [Shopify].[ShopifyProducts] sp
-    inner join datatail20130410.dbo.merchantprods mp on mp.productId = sp.TailbaseId
-    inner join datatail20130410.dbo.products p on p.id_product = mp.productid
-        and sp.MerchantId = mp.merchant_id
-where mp.merchant_id  = 3398
-    --and sp.TailbaseId  = 1094756
-    AND itemtype = 3
---and sp.handle = 'frigidaire-41-cu-ft-top-loading-washer-fftw4120sw'
---and mp.productid = 729155
+select 
+*
+	--id, tailbaseid, itemtype, titleEn, TitleFr, DescriptionEn, DescriptionFr, SyncStatusId
+from shopify.shopifyProducts
+where merchantid = 2887  
+	--and itemtype = 1 
+	--and itemtype = 2 
+	--and itemtype = 3 
+	--and itemtype = 4 
+	--and itemtype = 5 
+	and tailbaseid = 1096099
+	
+update top (1) shopify.shopifyProducts
+set translationStatusID = 1
+where id = 1024171
+
+
+select * from devTailbasecore.dbo.merchantprods 
+where merchant_id = 3398 and productid = 753143
+
+
+
+
+--Product = 1,
+--Collection = 2,
+--Rebate = 3,
+--Warranty = 4,
+--Installation = 5
+
+select * from devTailbasecore.dbo.merchantINstallations where merchantid = 3398
+
 
 --===============================================================================================
 
-SELECT *
-    FROM tailbasify.shopify.ShopifyProducts
-WHERE merchantid = 3398
 
-
---===============================================================================================
-
-
-select *
+select 
+*
+--id, TailbaseID, SyncStatusId, TitleEn, TitleFr, DescriptionHtmlEn, DescriptionHtmlFr
 from shopify.ShopifyMerchantCollections
+where id = 12323
 where MerchantId = 3398
 and tailbaseId in 
 (
@@ -119,36 +118,62 @@ and tailbaseId in
     where MerchantId = 3398
 )
 
---===============================================================================================
-
-select *
-    from datatail20130410.dbo.merchantrebates
-where merchant_id = 3398 
-and id_rebate in (1094611,1094660)
+select * from datatail20130410.dbo.merchantrebates where merchant_id = 2887 and id_rebate = 1096099
 
 --===============================================================================================
 
-select *
+select 
+*
+--ShopifyProductId, SyncStatusId, ValueEn, ValueFr, DescriptionEn, DescriptionFr
+--top 100 *
 from shopify.ShopifyMerchantMetafields
-where ShopifyProductId IN ( select id from Shopify.ShopifyProducts where merchantid = 3398)
+--where ShopifyProductId  = 1024171
+where ShopifyProductId in
+ ( 
+    select id 
+    from Shopify.ShopifyProducts 
+    where merchantid = 3398
+)
+and KeyName like '%feature%'
+
+
 
 --===============================================================================================
 
 
-select mt.MediaContentType, m.*
+select m.TailbaseId,m.OriginalSource, m.TailbaseIdType, m.SyncStatusId, m.ShopifyGeneratedMediaId, m.LastModificationDate, m.ShopifyMediaStatusId
     from Shopify.ShopifyProductMedia m
-    inner join shopify.ShopifyMediaContentTypes mt on mt.Id = m.MediaContentTypeId
-where m.TailbaseId in 
+where m.shopifyProductID in 
 (
-    select tailbaseid
+    select id
         from shopify.ShopifyProducts
     where MerchantId = 3398
 )
+and m.SyncStatusId <> 3
+
+update Shopify.ShopifyProductMedia
+set SyncStatusId = 3,
+ShopifyMediaStatusId = NULL
+where shopifyProductID in 
+(
+    select id
+        from shopify.ShopifyProducts
+    where MerchantId = 3398
+)
+and SyncStatusId <> 3
+
+select * from devTailbasecore.dbo.merchantprods where merchant_id = 3398 and ProductID = 706528
 
 
+--===============================================================================================
 
-select * from shopify.ShopifyMediaContentTypes
-
+select *
+from shopify.ShopifyProductVariants
+where ShopifyProductID in (
+    select id
+        from shopify.shopifyProducts
+        where merchantid = 3398 
+)
 
 --===============================================================================================
 
