@@ -1,32 +1,56 @@
 use datatail20130410
 
-DECLARE @MerchantIdinstallations AS INT = 1733;
+DECLARE @MerchantIdinstallations AS INT = 1958;
 select * from merchantinstallations
 where merchantid = @MerchantIdinstallations
 
-DECLARE @MerchantIdinstallationsPrices AS INT = 1733;
+select *
+from tailbasify.shopify.shopifyProducts
+where merchantid = 1958  
+and itemtype = 5 
+
+
+DECLARE @MerchantIdinstallationsPrices AS INT = 1958;
 select * from MerchantInstallationPrices
 where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantIdinstallationsPrices)
 
+--Shopify
+select * from tailbasify.shopify.ShopifyProductVariants 
+where ShopifyProductID in
+(
+	select 	id
+	from tailbasify.shopify.shopifyProducts 
+	where merchantid = 1958
+	and itemtype = 5	
+)
 
-DECLARE @MerchantIdinstallationsFilters AS INT = 1733;
+
+DECLARE @MerchantIdinstallationsFilters AS INT = 1958;
 select * from MerchantInstallationFilters
 where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantIdinstallationsFilters)
 
-DECLARE @MerchantIdinstallationsZones AS INT = 1733;
+select * from merchantprods where merchant_id = 1958 and productid = 553825
+
+DECLARE @MerchantIdinstallationsZones AS INT = 1958;
 select * from MerchantInstallationZones
 where merchantinstallationID in (select id from merchantinstallations
 where merchantid = @MerchantIdinstallationsZones)
 
-DECLARE @MerchantIdZones AS INT = 1733;
+DECLARE @MerchantIdZones AS INT = 1958;
 select * from merchantzones where merchant_id = @MerchantIdZones
 
-DECLARE @MerchantId AS INT = 1733;
-update top (13) MerchantInstallationZones set merchantzoneid = 1162
-where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantId)
+--DECLARE @MerchantId AS INT = 1958;
+--update top (13) MerchantInstallationZones set merchantzoneid = 1162
+--where merchantinstallationID in (select id from merchantinstallations where merchantid = @MerchantId)
 
-DECLARE @MerchantIdZoneCodes AS INT = 1733;
-select * from merchantZoneCodes where merchantZoneId in (select id from merchantzones where merchant_id = @MerchantIdZoneCodes)
+DECLARE @MerchantIdZoneCodes AS INT = 1958;
+select * from merchantZoneCodes 
+where merchantZoneId in (select id from merchantzones where merchant_id = @MerchantIdZoneCodes)
+
+DECLARE @MerchantIdZoneRadiusesFromStores AS INT = 1958;
+select * from MerchantZoneRadiusesFromStores 
+where merchantZoneId in (select id from merchantzones where merchant_id = @MerchantIdZoneRadiusesFromStores)
+
 
 
 
@@ -72,21 +96,13 @@ select * from merchantZoneCodes where merchantzoneid = 334
 
 select * from merchantinstallations where merchantid = 2415
 select * from MerchantInstallationZones where merchantinstallationid = 187
-delete top (1) from MerchantInstallationZones where merchantinstallationid = 187
-insert into MerchantInstallationZones values
-(187,391,null,75.00),
-(187,392,null,75.00),
+
 
 select * from MerchantInstallationFilters where merchantinstallationID in (254,255,256,257,258,259,260) and catid = 316
 select * from merchantinstallations where merchantid = 2415
 --insert into MerchantInstallationFilters (merchantinstallationID,catID) values
 (260,447)
 
---delete top(1) from  MerchantInstallationFilters where catid = 316 and  merchantinstallationID = 254
-
---insert into MerchantInstallationFilters (merchantinstallationID,subcatID) values
-(259,2525)
---insert into MerchantInstallationFilters (merchantinstallationID,productID) values
 
 select catid from merchantcats where merchant_id = 1097
 select id,catid, id_spec, spec from specs where catid = 41 and Id_langue = 1 order by spec
@@ -99,7 +115,6 @@ where mp.merchant_id = 2468
 and mp.productid in (select productid from SpecsProd where specsID_1 = 15818 and SpecValue_1  in ('23" to 28.9"', '29" to 31.9"', '32" to 34.9"', '35" to 37.9"', '38" or more'))
 
 select * from categories where category like '%table%' and id_langue = 1
-
 
 
 select * from subcategories where subcategory like '%coffee%' and id_langue = 1
