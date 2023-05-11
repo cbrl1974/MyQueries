@@ -1,5 +1,3 @@
-use tailbasify
-declare @MerchantId int = 2179
 declare @StartTime datetime = getDAte()
 declare @EndTime datetime = DATEADD(DAY, 1, @StartTime)
 declare @OnlyIfRunning bit = 0
@@ -82,5 +80,4 @@ from (
         ) a
     ) b
     join Shopify.ShopifyMerchants sm on b.ShopifyMerchantId = sm.ID
-	where sm.MerchantId = @MerchantId
 ) c
