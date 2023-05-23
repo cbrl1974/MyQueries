@@ -25,29 +25,24 @@ SELECT  *
 FROM Tailbasify.shopify.ShopifyMerchantCollections mc
 where SyncStatusId  = 6
 and ShopifyGeneratedCollectionId is null
-and merchantid = 3096 
-
-update top (1) Tailbasify.shopify.ShopifyMerchantCollections
-set SyncStatusId = 1
-where MerchantId = 1956
-and id = 11237
-
-
---
-update top (172) Tailbasify.shopify.ShopifyMerchantCollections
-set SyncStatusId = 1
-where SyncStatusId  = 6
-and MerchantId = 1956
-and ShopifyGeneratedCollectionId is null
+and merchantid = 1956 
 
 
 
 --First Delete Rule
 delete from Tailbasify.shopify.ShopifyCollectionRuleInputs
-where ShopifyMerchantCollectionId in (8195,7864,7867,7881,7878,7871,7870,7868,7873,7874,7866,7876,7875,7872,7880,8194,7865,7879,7877)
+where ShopifyMerchantCollectionId in (
+            SELECT  id
+        FROM Tailbasify.shopify.ShopifyMerchantCollections mc
+        where SyncStatusId  = 6
+        and ShopifyGeneratedCollectionId is null
+        and merchantid = 1956 
+    )
 
 
 -- Second Delete ShopifyMerchantCollections
 delete from Tailbasify.shopify.ShopifyMerchantCollections
-where id in (8195,7864,7867,7881,7878,7871,7870,7868,7873,7874,7866,7876,7875,7872,7880,8194,7865,7879,7877)
+where  SyncStatusId  = 6
+and ShopifyGeneratedCollectionId is null
+and merchantid = 1956 
 
