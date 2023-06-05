@@ -2,20 +2,20 @@
 --Convert = 2 
 --Synchronize = 3
 
-Declare @action as int = 1
+Declare @action as int = 3;
 
 -- Merchants
 select
     s.MerchantId,
 	case
-	when @action = 1  then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Update/' + s.SecurityStamp 
-	WHEN  @action = 2 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Converter/Convert/' + s.SecurityStamp 
-	WHEN  @action = 3 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Synchronizer/Synchronize/' + s.SecurityStamp 
+	when @action = 1  then 'https://api.tailbasify.com/'+ s.ApiVersion + '/api/Shopify/Update/' + s.SecurityStamp 
+	WHEN  @action = 2 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/api//Converter/Convert/' + s.SecurityStamp 
+	WHEN  @action = 3 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/api//Synchronizer/Synchronize/' + s.SecurityStamp 
 	  END AS EndPoint,
 	s.id, m.merchant, s.ShopUrl, s.SecurityStamp
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-where m.id = 3242
+order by m.id
 
 
 --===============================================================================================
