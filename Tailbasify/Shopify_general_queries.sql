@@ -1,27 +1,30 @@
 
-use tailbasify
+
 -- Merchants
 select
     --m.merchant, s.*
     s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
 from shopify.shopifyMerchants s
-    inner join devTailbaseCore.dbo.merchants m on m.id = s.MerchantId
-where m.id = 1448
+    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+where m.id = 1931
 
 
 --===============================================================================================
 
-update top (1) MerchantExports
+update MerchantExports
  set [status]  = 1
- where merchantid  = 1448
+ --where merchantid  in (3441)
+  where [status] <> 1
 
 --===============================================================================================
 
-use Tailbasify
+
 select m.merchant, me.*
 from MerchantExports me
-    inner join devTailbaseCore.dbo.merchants m on m.id = me.MerchantId
+    inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc, ModificationDate desc
+
+select top 100  *  from logs  WITH (NOLOCK) order by LogTime desc 
 
 
 --===============================================================================================
@@ -30,21 +33,18 @@ order by [Status] desc, ModificationDate desc
 select top 50
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1448
+WHERE  merchantid = 3441
     AND module = 'Converter'
-	--and text like '%timeout%'
+	--and text like '%getby%'
 order by LogTime desc
 
 
-
-
 --Logs for Converter
 select top 50
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1448
-    AND module = 'Converter'
-	and text like '%timeout%'
+    where module = 'BaseTailbasifyRepositoryModule'
+	and text like '%getby%'
 order by LogTime desc
 
 --===============================================================================================
@@ -62,17 +62,13 @@ order by h.id desc
 
 
 --===============================================================================================
-use Tailbasify
 --Logs for Synchronizer
-select top(50)
+select top(250)
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1448
+WHERE  merchantid = 2339
     AND module = 'Synchronizer'
 order by id desc
-
-
-
 
 
 --===============================================================================================
@@ -82,19 +78,31 @@ select top(10)
     *
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 1448
+where h.MerchantId = 2384
 --and GraphQLCallInfo is not null
     and d.ShopifyProductId in (1092388)
 order by h.id desc
 
-in(1151205, 1151203,  1151204)
+
 --===============================================================================================
 
-select 
-*
-	--id, tailbaseid, itemtype, titleEn, TitleFr, DescriptionEn, DescriptionFr, SyncStatusId
+SELECT TOP 10 * FROM Shopify.ShopifySyncReports WHERE MerchantId = 2339 ORDER BY ID DESC
+
+
+SELECT * FROM Shopify.ShopifyProducts
+WHERE ID IN (SELECT ShopifyProductId FROM Shopify.ShopifyProductSyncReportsDetail WHERE SyncReportId IN (306695))
+AND MerchantId = 2339
+--AND SyncStatusId IN (2,3)
+AND ShopifyGeneratedProductId IS NULL
+
+
+
+
+--===============================================================================================
+select *
 from shopify.shopifyProducts
-where merchantid = 3039  
+where merchantid = 1956
+and id in (1208247,937,16062,2187,9294,15064,21410,66884,554552,66833,906085,948707)
 	--and itemtype = 1 
 	--and itemtype = 2 
 	--and itemtype = 3 
@@ -116,31 +124,32 @@ where merchantid = 3039
 select 
 *
 from shopify.ShopifyMerchantCollections
-where MerchantId = 1448
+where MerchantId = 2384
 --and TitleEn like '%Jennair%'
 and ShopifyGeneratedCollectionId is null
 and handle  like '%salon%'
 
--- update top (1) shopify.ShopifyMerchantCollections
--- set syncStatusid = 2,
--- ShopifyGeneratedCollectionId = 'gid://shopify/Collection/277847998627'
--- where  merchantid = 1448
--- and id = 11705
--- and ShopifyGeneratedCollectionId is null 
+
+select *
+FROM shopify.ShopifyMerchantCollections mc
+where merchantid = 1956 
+and SyncStatusId = 6
+and  tailbaseid in (1083289,1083290,1083296)
+ and ShopifyGeneratedCollectionId is null
+
+
+
 
 
 --===============================================================================================
 
--- update Shopify.ShopifyProducts 
--- set syncStatusID = 2
--- where merchantid = 1448
--- and id in (
--- 	select ShopifyProductId
--- 	from shopify.ShopifyMerchantMetafields
--- 	where itemtypeid = 2
--- 	and ShopifyGeneratedMetafieldId is null
--- )
--- and ItemType = 2
+select * from shopify.ShopifyMerchantMetafields 
+--where ShopifyProductId = 824735
+where ShopifyProductId in (
+	select id from shopify.ShopifyProducts
+	where merchantid = 1956
+	and id =1208247
+)
 
 
 --===============================================================================================
@@ -152,8 +161,9 @@ where m.shopifyProductID in
 (
     select id
         from shopify.ShopifyProducts
-    where MerchantId = 1448
+    where MerchantId = 2384
 )
+and TailbaseId = 679201
 and m.SyncStatusId <> 3
 
 -- update Shopify.ShopifyProductMedia
@@ -163,7 +173,7 @@ and m.SyncStatusId <> 3
 -- (
 --     select id
 --         from shopify.ShopifyProducts
---     where MerchantId = 1448
+--     where MerchantId = 2384
 -- )
 -- and SyncStatusId <> 3
 
@@ -171,24 +181,25 @@ and m.SyncStatusId <> 3
 
 -- update shopify.ShopifyProducts
 -- set SyncStatusId = 2
---   where MerchantId = 1448
+--   where MerchantId = 2384
 -- 	and ItemType in (1,2)
 --  select id
 --         from shopify.ShopifyProducts
---     where MerchantId = 1448
+--     where MerchantId = 2384
 -- 	and ItemType in (1,2)
 
 --===============================================================================================
 
 select *
 from shopify.ShopifyProductVariants
-where ShopifyProductID = 1126204
-not in (
+where ShopifyProductID 
+ in (
     select id
         from shopify.shopifyProducts
-        where merchantid = 1911 
+        where merchantid = 3209 
 		--and SyncStatusId = 3
 )
+order by SyncStatusId
 
 
 --===============================================================================================
