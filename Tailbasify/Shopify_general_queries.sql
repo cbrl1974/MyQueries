@@ -1,12 +1,16 @@
-Declare @action as varchar(200) = 'convert' 
+--Update = 1
+--Convert = 2 
+--Synchronize = 3
+
+Declare @action as int = 1
 
 -- Merchants
 select
     s.MerchantId,
 	case
-	when @action = 'update'  then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Update/' + s.SecurityStamp 
-	WHEN  @action = 'convert' then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Converter/Convert/' + s.SecurityStamp 
-	WHEN  @action = 'synchronize' then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Synchronizer/Synchronize/' + s.SecurityStamp 
+	when @action = 1  then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Update/' + s.SecurityStamp 
+	WHEN  @action = 2 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Converter/Convert/' + s.SecurityStamp 
+	WHEN  @action = 3 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Synchronizer/Synchronize/' + s.SecurityStamp 
 	  END AS EndPoint,
 	s.id, m.merchant, s.ShopUrl, s.SecurityStamp
 from shopify.shopifyMerchants s
