@@ -1,20 +1,25 @@
-
+Declare @action as varchar(200) = 'convert' 
 
 -- Merchants
 select
-    --m.merchant, s.*
-    s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
+    s.MerchantId,
+	case
+	when @action = 'update'  then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Update/' + s.SecurityStamp 
+	WHEN  @action = 'convert' then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Converter/Convert/' + s.SecurityStamp 
+	WHEN  @action = 'synchronize' then 'https://api.tailbasify.com/'+ s.ApiVersion + '/Shopify/Synchronizer/Synchronize/' + s.SecurityStamp 
+	  END AS EndPoint,
+	s.id, m.merchant, s.ShopUrl, s.SecurityStamp
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-where m.id = 1931
+where m.id = 3242
 
 
 --===============================================================================================
 
 update MerchantExports
  set [status]  = 1
- --where merchantid  in (3441)
-  where [status] <> 1
+ where merchantid  = 3096
+  --where [status] <> 1
 
 --===============================================================================================
 
@@ -23,6 +28,8 @@ select m.merchant, me.*
 from MerchantExports me
     inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc, ModificationDate desc
+
+
 
 select top 100  *  from logs  WITH (NOLOCK) order by LogTime desc 
 
@@ -33,9 +40,8 @@ select top 100  *  from logs  WITH (NOLOCK) order by LogTime desc
 select top 50
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 3441
+WHERE  merchantid = 571
     AND module = 'Converter'
-	--and text like '%getby%'
 order by LogTime desc
 
 
@@ -66,11 +72,15 @@ order by h.id desc
 select top(250)
     *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 2339
+WHERE  merchantid = 1958
     AND module = 'Synchronizer'
 order by id desc
 
 
+3040600
+Ad_3040600
+Furniture1
+03
 --===============================================================================================
 
 --Sunc Report
@@ -86,13 +96,13 @@ order by h.id desc
 
 --===============================================================================================
 
-SELECT TOP 10 * FROM Shopify.ShopifySyncReports WHERE MerchantId = 2339 ORDER BY ID DESC
+SELECT TOP 10 * FROM Shopify.ShopifySyncReports WHERE MerchantId = 1842 ORDER BY ID DESC
 
 
 SELECT * FROM Shopify.ShopifyProducts
-WHERE ID IN (SELECT ShopifyProductId FROM Shopify.ShopifyProductSyncReportsDetail WHERE SyncReportId IN (306695))
-AND MerchantId = 2339
---AND SyncStatusId IN (2,3)
+WHERE ID IN (SELECT ShopifyProductId FROM Shopify.ShopifyProductSyncReportsDetail WHERE SyncReportId IN (308795))
+AND MerchantId = 1842
+AND SyncStatusId IN (2,3)
 AND ShopifyGeneratedProductId IS NULL
 
 
