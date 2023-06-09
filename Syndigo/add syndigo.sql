@@ -10,7 +10,7 @@ insert into MerchantWebsiteFeatures values
 
 
 select * from TailbaseServices.dbo.ApiClientConfigs where assemblyname = 'DataExportSyndigo'
-and clientid in (3459,3458,3467)
+and clientid in (3431)
 
 
 select count(1) from merchantProds where merchant_id = 3459
@@ -20,7 +20,12 @@ select count(1) from merchantProds where merchant_id = 3431
 
 select * from MerchantWebsiteFeatures
 where featureCode = 'syndigoBrands'
-and merchant_id in (3459,3458,3467,3431,3457)
+and merchant_id in (3459)
+
+--Execute storedProcedure tailbase websites
+EXECUTE [dbo].[SP_SyndigoWebsitesProducts]
+@merchantId = 3431,
+@manufIds = '9,12,38,439,440,462,463,476,500,501,502,505,1024,1354,1409,1414,1436,1454,1470,1529,1818,1832,1945,1946,2185,2577,2620,2843,3025,3055,3143,3181,3182,3184,3408,3582,4226,4227,4394,4985,5139,7482'
 
 
 
