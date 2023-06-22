@@ -26,6 +26,8 @@ update MerchantExports
   --where [status] <> 1
 
 --===============================================================================================
+
+----**************EXPORT STATUS**************
 use Tailbasify
 
 select m.merchant, me.*
@@ -33,7 +35,9 @@ from MerchantExports me WITH (NOLOCK)
     inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 order by [Status] desc, ModificationDate desc
 
+--===============================================================================================
 
+----**************LOGS**************
 select  distinct top 100 *  from logs  WITH (NOLOCK) 
 order by LogTime desc 
 
@@ -42,6 +46,7 @@ WHERE  merchantid = 1911
 order by LogTime desc 
 
 --===============================================================================================
+
 --**************DB STATS**************
 
 select count(1) from datatail20130410.dbo.MerchantProds where Merchant_ID = 1448 --29127
@@ -56,7 +61,9 @@ select * from datatail20130410.dbo.MerchantRebates where Merchant_ID = 1911 and 
 
 
 --===============================================================================================
+
 --**************CONVERT REPORTS**************
+
 select top(10)
     *
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
@@ -83,7 +90,9 @@ order by h.id desc
 
 
 --===============================================================================================
+
 --**************DEBUG**************
+
 SELECT TOP 20 * FROM Shopify.ShopifySyncReports WHERE MerchantId = 1911 ORDER BY ID DESC
 
 
@@ -125,6 +134,7 @@ where merchantid = 1911
 
 
 --===============================================================================================
+
 --**************COLLECTIONS**************
 
 select *
@@ -139,6 +149,7 @@ and mc.TailbaseId = 489477
 
 
 --===============================================================================================
+--**************METAFIELDS**************
 
 select  m.* from shopify.ShopifyMerchantMetafields m
 inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
@@ -150,7 +161,6 @@ and m.ShopifyProductId = 1247362
 --===============================================================================================
 
 --**************MEDIA**************
-
 
 select m.*
     from Shopify.ShopifyProductMedia m
@@ -168,7 +178,9 @@ select * from datatail20130410.dbo.merchantProds where merchant_id =  1911 and p
 
 
 --===============================================================================================
+
 --**************VARIANTS**************
+
 select v.*
 from shopify.ShopifyProductVariants v
 	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
@@ -178,7 +190,9 @@ and v.ShopifyProductID = 510379
 
 
 --===============================================================================================
+
 --**************SyncStatus**************
+
 select *
 from SyncStatus
 
