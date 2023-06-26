@@ -1,16 +1,16 @@
 SELECT
 STUFF((SELECT ',' + CAST(cieID AS VARCHAR(10))
         FROM merchantBrands
-        WHERE merchant_id = 3431
+        WHERE merchant_id = 3450
         FOR XML PATH('')), 1, 1, '') AS cieIDs;
 
 
 insert into MerchantWebsiteFeatures values 
-(3431,'syndigoBrands','9,12,38,439,440,462,463,476,500,501,502,505,1024,1354,1409,1414,1436,1454,1470,1529,1818,1832,1945,1946,2185,2577,2620,2843,3025,3055,3143,3181,3182,3184,3408,3582,4226,4227,4394,4985,5139,7482')
+(3450,'syndigoBrands', NULL)
 
 
 select * from TailbaseServices.dbo.ApiClientConfigs where assemblyname = 'DataExportSyndigo'
-and clientid in (3431)
+and clientid in (3431,3450)
 
 
 select count(1) from merchantProds where merchant_id = 3459
@@ -20,12 +20,17 @@ select count(1) from merchantProds where merchant_id = 3431
 
 select * from MerchantWebsiteFeatures
 where featureCode = 'syndigoBrands'
-and merchant_id in (3459)
+and merchant_id in (3450)
 
 --Execute storedProcedure tailbase websites
 EXECUTE [dbo].[SP_SyndigoWebsitesProducts]
-@merchantId = 3431,
-@manufIds = '9,12,38,439,440,462,463,476,500,501,502,505,1024,1354,1409,1414,1436,1454,1470,1529,1818,1832,1945,1946,2185,2577,2620,2843,3025,3055,3143,3181,3182,3184,3408,3582,4226,4227,4394,4985,5139,7482'
+@merchantId = 3450,
+@manufIds = NULL
+
+--or
+https://api.tailbase.com/data/ExportWebsitesData/ <Apikey> --V3
+
+https://api.tailbase.com/data/ExportShopifyData/ <Apikey> --Tailbasify
 
 
 
