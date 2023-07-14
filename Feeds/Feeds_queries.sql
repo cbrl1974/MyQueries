@@ -7,18 +7,20 @@ select * from devTailbaseCore.feeds.MerchantFeeds where FeedId = 9 and MerchantI
 --Compare with Old
 select * from merchantfeeds where merchant_id = 3336
 
+select * from devtailbasecore.dbo.products where model like '%D199-01%'
+--46464
 
 
-select * from devTailbaseCore.feeds.FeedDumps
+select top 10  * from devTailbaseCore.feeds.FeedDumps 
 where  RunDate > convert(date,getdate()-1) 
 --and MerchantId = 3336
-order by merchantid
+order by RunDate desc, merchantid
 
 
 --Delete records from today
---  Delete from devTailbaseCore.feeds.FeedDumps 
---  where  RunDate > convert(date,getdate()-1) 
---  and FeedId = 9
+ DELETE FROM DEVTAILBASECORE.FEEDS.FEEDDUMPS 
+ WHERE  RUNDATE > CONVERT(DATE,GETDATE()-1) 
+ AND FEEDID = 9
 
 
 
@@ -35,6 +37,7 @@ and b.ProductId = 340663
 select * from devTailbaseCore.feeds.feeds where id = 9
 select * from devTailbaseCore.feeds.MerchantFeeds where FeedId = 9 and MerchantId = 3336
 select * from feeds.ProductBasePrices where merchantid = 3336 and ProductId = 340663
+select * from feeds.PriceTypes
 select * from products where manufmodel = '1090012'
 select * from merchants where id = 3336
 
@@ -68,13 +71,15 @@ select  * from productsPrices where  productID = 172786  and id = 14031
 --************Get Products*************
 DECLARE @MerchantId AS int = 3336;
 DECLARE @ProductCount AS  int = (
-SELECT mp.productid, mp.price, mp.reducedPrice FROM MerchantProds  mp
+SELECT count(mp.productid) FROM MerchantProds  mp
 INNER JOIN products p on p.Id_product = mp.ProductID
 WHERE 	mp.Merchant_ID = @MerchantId
 and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227));
 
 
 select @ProductCount
+
+
 
 
 -- **********Delete Products**********
@@ -142,4 +147,7 @@ and cieId in  (1436,3181,3182,3184,4226,4227))
 
 
 select @BrandsCount
+
+select * from companies where id_cie in (3181,3182,3184,4226,4227,1436)
+select * from companies where id_cie = 1436
 
