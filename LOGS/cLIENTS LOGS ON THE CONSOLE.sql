@@ -1,21 +1,29 @@
-select top 500  * from firewall.dbo.LoggerClientEvents
-WHERE MERCHANTID = 1781
-AND EventTime between '2022-04-01' and '2022-04-26'
-and UrlPath like '%cmtx%'
-order by eventtime desc
+Declare @merchantId as int = 3468;
+Declare @productid int = 761576;
+Declare @today as date = getdate();
+Declare @past as date = DATEADD(day, -10, GETDATE()) ;
 
---Check history of price change per product and merchant
-select top 100 * from MerchantProds_ChangeTracking
- WHERE MERCHANTID = 1781
- and [changetime] between '2022-04-01' and '2022-04-26'
- order by ChangeTime 
 
  select top 5  * from MerchantProducts_ChangeTrackingArchive
- WHERE MERCHANTID = 1781
- and [changetime] between '2022-03-31' and '2022-04-26'
- and productid =641062
+ WHERE MERCHANTID = @merchantId
+ and [changetime] between @past and @today
+ and productid =@productid
  
 
+
+
+--select top 50  * from firewall.dbo.LoggerClientEvents
+--WHERE MERCHANTID = @merchantId
+--AND EventTime between @past and @today
+----and UrlPath like '%cmtx%'
+--order by eventtime desc
+
+--Check history of price change per product and merchant
+--select top 100 * from MerchantProds_ChangeTracking
+-- WHERE MERCHANTID = @merchantId
+-- and [changetime] between @past and @today
+-- and ProductId = @productid
+-- order by ChangeTime 
 
 
 select * from firewall.dbo.
@@ -23,7 +31,7 @@ select * from firewall.dbo.
 
 select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
  where url_string like '%liquidationelectromenagers.com%'
- and [timestamp] between '2022-05-02 20:30:47.873' and '2022-05-02 21:22:13.630'
+ and [timestamp] between @past and @today
  and ipaddress = '2605:8d80:544:5fc7:ed3c:849b:2a38:79b3'
   order by [timestamp] desc
 
