@@ -1,16 +1,45 @@
 Declare @merchantId as int = 3468;
-Declare @productid int = 761576;
+Declare @productid int = 362891;
 Declare @today as date = getdate();
 Declare @past as date = DATEADD(day, -10, GETDATE()) ;
 
-
- select top 5  * from MerchantProducts_ChangeTrackingArchive
+ select  * from MerchantProducts_ChangeTrackingArchive
  WHERE MERCHANTID = @merchantId
  and [changetime] between @past and @today
  and productid =@productid
- 
+  order by changetime desc
+
+  --Debugging
+DECLARE @MerchantIdforDebugForLogs AS INT = 3468;
+select * from merchantwebsiteeventlogs 
+where merchantid = @MerchantIdforDebugForLogs
+and text like '%liquidation%'
+order by time desc
+
+DECLARE @MerchantIdforDebugForLogs AS INT = 3468;
+select * from merchantwebsiteeventlogs 
+where merchantid = @MerchantIdforDebugForLogs
+and time between '2023-07-13 13:36:37.207' and '2023-08-07 15:10:35.317'
+and server != 'servername'
+order by time desc
 
 
+2023-08-07 10:20:51.557
+2023-08-02 17:03:04.127
+2023-08-02 12:00:18.053
+2023-08-01 15:29:56.843
+2023-08-01 18:38:26.923
+2023-07-13 13:36:37.207
+
+select * from merchantwebsitetexts where merchant_id = 3468
+select * from merchantWebsiteFeatures where featurecode like '%storeIdTypeIdToProcessInventory%'
+hasLanguageDetection
+languages
+preferredLanguage
+select * from merchantWebsiteFeatures where merchant_id = 3468
+select * from merchantStoresInventory where merchantid = 3468
+insert into merchantWebsiteFeatures values
+(3468,'preferredLanguage','fr')
 
 --select top 50  * from firewall.dbo.LoggerClientEvents
 --WHERE MERCHANTID = @merchantId
