@@ -1,12 +1,12 @@
-Declare @merchantId as int = 3468;
+Declare @merchantId as int = 3383;
 Declare @productid int = 362891;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -10, GETDATE()) ;
+Declare @past as date = DATEADD(day, -60, GETDATE()) ;
 
- select  * from MerchantProducts_ChangeTrackingArchive
+ select  * from MerchantProducts_
  WHERE MERCHANTID = @merchantId
- and [changetime] between @past and @today
- and productid =@productid
+ --and [changetime] between @past and @today
+ --and productid =@productid
   order by changetime desc
 
   --Debugging
