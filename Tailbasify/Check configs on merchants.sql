@@ -13,8 +13,8 @@ where ShopifyMerchantId = @ShopifyMerchantId
 --  where ShopifyMerchantId = @ShopifyMerchantId
 --  and ShopifyConfigurationId = 18
 
--- insert into shopify.ShopifyMerchantConfigurations values
--- (5,18, 'True')
+ insert into shopify.ShopifyMerchantConfigurations values
+ (5,19, 'True')
 
 
 

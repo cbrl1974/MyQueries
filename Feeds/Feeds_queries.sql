@@ -5,7 +5,7 @@ select * from feeds.feeds where id = 9
 select * from devTAilbaseCore.feeds.MerchantFeeds where FeedId = 9 and MerchantId = 3336
 
 --Compare with Old
-select * from merchantfeeds where merchant_id = 3336
+select * from merchantfeeds where merchant_id = 1448
 
 select * from dbo.products where model like '%D199-01%'
 --46464
@@ -28,7 +28,7 @@ order by RunDate desc, merchantid
  SELECT mp.productid, p.manufmodel, mp.cost, b.Price as CostFromFeed, b.AdditionalPricingData, mp.price, mp.reducedPrice FROM dbo.MerchantProds  mp
 INNER JOIN dbo.products p on p.Id_product = mp.ProductID
 left join feeds.ProductBasePrices b on b.MerchantId = mp.Merchant_ID and b.ProductId = mp.ProductID
-WHERE 	mp.Merchant_ID = 3336
+WHERE 	mp.Merchant_ID = 1448
 and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227)
 and mp.ProductID in (select ProductID from feeds.ProductBasePrices where merchantid = 3336)
 and b.ProductId = 629101
@@ -97,7 +97,7 @@ order by ProductBasePriceId desc
 select productid, price, reducedPrice, realPrice, reducedPriceEndDate, createdByapp from merchantProds where merchant_id = 589
 and productid = 172786
 
-select  * from productsPrices where  productID = 172786  and id = 14031 
+select  * from feeds.productbasePrices where  productID = 155451  and id = 14031 
 
 
 --delete top (7041) dbo.MerchantProds 
@@ -113,15 +113,20 @@ select  * from productsPrices where  productID = 172786  and id = 14031
 
 
 --************Get Products*************
-DECLARE @MerchantId AS int = 589;
+DECLARE @MerchantId AS int = 1448;
 DECLARE @ProductCount AS  int = (
-SELECT count(mp.productid) FROM MerchantProds  mp
+SELECT count(1) FROM MerchantProds  mp
 INNER JOIN products p on p.Id_product = mp.ProductID
 WHERE 	mp.Merchant_ID = @MerchantId
 and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227));
 
 
 select @ProductCount
+
+SELECT productid  FROM MerchantProds mp WITH (NOLOCK)  
+INNER JOIN products p on p.Id_product = mp.ProductID
+WHERE 	mp.Merchant_ID = 1448
+and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227)
 
 
 
@@ -137,7 +142,30 @@ select @ProductCount
  )
 
 -- **********Collections management**********
-DECLARE @MerchantIdForCollections AS int = 3336;
+
+
+
+--Get Collection for a merchant
+--SELECT distinct mc.collectionID, mc.specificBrand, c.collection_1, mc.price, mc.reducedPrice, mc.advPrice, mc.realPrice
+-- FROM MerchantCollections  mc
+--inner join collections c on c.id = mc.collectionid
+--inner join collection_product cp on cp.collectionID = c.id
+--INNER JOIN products p on p.Id_product = cp.ProductID
+--WHERE 	mc.Merchant_ID = 1448
+--and p.manufID in (1436,3181,3182,3184,4226,4227)
+
+
+----Current Query to get Combined Products
+--select p.id_product,p.model,p.manufid,p.manufmodel,mp.lock,mp.featured,mp.reducedPrice,mp.price,mp.cost,c.category,d.dept 
+--from products p
+--inner join merchantProds mp on mp.productid = p.id_product and mp.merchant_id = 3336
+--inner join categories c on c.id_category = p.catid and c.id_langue = 1
+--inner join departments d on d.id_dept = c.deptID and d.id_langue = 1		    
+--where p.manufid in (1436,3181,3182,3184,4226,4227)
+--and p.manufmodel like '%/%'
+
+-- ************Delete Collections************
+DECLARE @MerchantIdForCollections AS int = 1448;
 DECLARE @CollectionCountCount AS  int = (
 SELECT count(mc.collectionID) as total FROM MerchantCollections  mc
 inner join collections c on c.id = mc.collectionid
@@ -149,27 +177,6 @@ and p.manufID in (1436,3181,3182,3184,4226,4227))
 
 select @CollectionCountCount
 
-
---Get Collection for a merchant
-SELECT distinct mc.collectionID, mc.specificBrand, c.collection_1, mc.price, mc.reducedPrice, mc.advPrice, mc.realPrice
- FROM MerchantCollections  mc
-inner join collections c on c.id = mc.collectionid
-inner join collection_product cp on cp.collectionID = c.id
-INNER JOIN products p on p.Id_product = cp.ProductID
-WHERE 	mc.Merchant_ID = 3336
-and p.manufID in (1436,3181,3182,3184,4226,4227)
-
-
---Current Query to get Combined Products
-select p.id_product,p.model,p.manufid,p.manufmodel,mp.lock,mp.featured,mp.reducedPrice,mp.price,mp.cost,c.category,d.dept 
-from products p
-inner join merchantProds mp on mp.productid = p.id_product and mp.merchant_id = 3336
-inner join categories c on c.id_category = p.catid and c.id_langue = 1
-inner join departments d on d.id_dept = c.deptID and d.id_langue = 1		    
-where p.manufid in (1436,3181,3182,3184,4226,4227)
-and p.manufmodel like '%/%'
-
--- ************Delete Collections************
 DELETE TOP (@COLLECTIONCOUNTCOUNT) FROM MERCHANTCOLLECTIONS
 WHERE MERCHANT_ID =  @MERCHANTIDFORCOLLECTIONS
 AND COLLECTIONID IN (
@@ -189,8 +196,11 @@ select count(cieId) as total  from  merchantBrands
 where merchant_id = @MerchantIdForBrands 
 and cieId in  (1436,3181,3182,3184,4226,4227))
 
-
 select @BrandsCount
+
+delete top ( @BrandsCount) from  merchantBrands
+where merchant_id = @MerchantIdForBrands
+and  cieId in  (1436,3181,3182,3184,4226,4227)
 
 select * from companies where id_cie in (3181,3182,3184,4226,4227,1436)
 select * from companies where id_cie = 1436
