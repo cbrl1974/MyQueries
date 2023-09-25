@@ -1,8 +1,17 @@
 use datatail20130410
 
+--Custom order to display product in stock first by using Sinray as examples
+Declare @merchantId as int = 3142; --
+Declare @merchantIdToChange as int = 3468; --
+insert into  merchantWebsitefeatures (merchant_id, featurecode, featureValue) 
+select @merchantIdToChange, featurecode, featureValue
+from merchantWebsitefeatures
+where merchant_id = @merchantId
+and featurecode like '%sort%'
+
 select m.id, m.merchant, mf.* from merchantwebsitefeatures mf
 join merchants m on m.id = mf.merchant_id
-where mf.featurecode like '%sort%'
+where mf.featurecode like '%defaultSort%'
 and  mf.merchant_id in (select merchant_id  from merchantwebsitefeatures
 where featurevalue    in ('tbplatinum') and featureCode = 'template')
 order by mf.featurecode
@@ -10,8 +19,6 @@ order by mf.featurecode
 --Check if feature already exists
 Declare @merchantId as int = 3361;
 select * from merchantwebsitefeatures where merchant_id = @merchantId AND Featurecode like '%sort%'
-
-
 -- Insert feature
 Declare @merchantIdForFeatures as int = 3361;
 insert into merchantwebsitefeatures values
