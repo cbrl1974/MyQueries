@@ -2,77 +2,70 @@
 select 
 s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
 from shopify.shopifyMerchants s
-    inner join devTailbasecore.dbo.merchants m on m.id = s.MerchantId
-where m.id = 1448
+    inner join devTailbaseCore.dbo.merchants m on m.id = s.MerchantId
+where m.id = 2798
 
--- Get MerchantExports status
-select  m.merchant, me.*
-from MerchantExports me
- inner join devTailbasecore.dbo.merchants m on m.id = me.MerchantId
-order by [Status] desc, ModificationDate desc
+select  distinct top 100 *  from logs  WITH (NOLOCK) 
+WHERE  merchantid = 2798
+order by LogTime desc 
 
--- Get MerchantExports status if stucked
-update top (1) MerchantExports
-set [status] = 1
-where merchantid = 1448
-
--- Get logs info Converter
-select top 10 * from logs  WITH (NOLOCK)
-WHERE  merchantid = 1448
-    AND module = 'Converter'
-order by LogTime desc
-
-
--- Get logs info Synchronizer
-select top(50) * from logs  WITH (NOLOCK)  
-WHERE  merchantid = 1448
-AND module = 'Synchronizer'
-order by id desc
+select top 100 *    
+from Shopify.ShopifySyncReports h WITH (NOLOCK)
+    join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
+where h.MerchantId = 2798
+    and d.ShopifyProductId in (802546)
+order by h.id desc
 
 
 
---Check the values on the db shopify.shopifyProducts table
-select id, tailbaseid, handle, SyncStatusId, InventorySyncStatusId 
-from shopify.shopifyProducts 
-where merchantid = 1448 
-and handle = 'whirlpool-lave-vaisselle-integre-de-24-po-avec-cycle-de-lavage-1-heure-wdf330pahb'
-and id = 768857
+select  l.* from devTailbaseCore.dbo.MerchantStores ms 
+left join Shopify.ShopifyMerchantStoreLocations l  on l.MerchantStoreId = ms.id
+where ms.MerchantID = 2798
 
---Check the values on the db shopify.ShopifyProductVariants  table
-select *
-from shopify.ShopifyProductVariants 
-where ShopifyProductID  = 768857
+select * from devTailbaseCore.dbo.merchantstoresInventory where merchantid = 2798
+select * from devTailbaseCore.dbo.MerchantInventoryTypes order by MerchantId
 
---Inventory table
---Check the current Inventory for the merchant
-select * from devtailbasecore.dbo.merchantstoresInventory where merchantid = 1448
+insert into Shopify.ShopifyMerchantStoreLocations (ShopifyMerchantId, ShopifyGeneratedLocationId, MerchantStoreId, IncludeInventoryAsTags, IncludeInventory, OnlineStockThreshold)
+VALUES
+(2798, 'gid://shopify/Location/60953231528', 6031, 1,1,4),
+(2798, 'gid://shopify/Location/63336612008', 6032, 1,1,4)
 
---add Inventory
-insert into devtailbasecore.dbo.merchantstoresInventory values
-(1448,409669,1, 5141, 7,5)
 
---remove Inventory
-DELETE FROM devtailbasecore.dbo.merchantstoresInventory
-WHERE merchantid = 1448 
+exec dbo.GetBrandsForTailbaseWebsite
 
---Configs
---Check Configs for the merchant
-select c.*, sc.*
-from shopify.ShopifyMerchantConfigurations sc
-    inner join shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
-where ShopifyMerchantId = 5
+-- update top (2) Shopify.ShopifyMerchantStoreLocations
+-- set IncludeInventoryAsTags = 1
+-- where ShopifyMerchantId = 4
 
---Delete Configs
-delete top (1) shopify.ShopifyMerchantConfigurations where  shopifyMerchantId = 5 and ShopifyconfigurationId = 2
+select * from devTailbaseCore.dbo.MerchantStores where merchantid =   2798
 
---Insert Configs
-insert into shopify.ShopifyMerchantConfigurations values
-(5,1,'False'), -- Inventory
-(5,2,'False') -- Sell OutOfStock
+select * from devTailbaseCore.dbo.merchantstoresInventory where merchantid = 2798
+select * from devTailbaseCore.dbo.MerchantInventoryStore where merchant_id = 2798
 
---Update Configs
-update top (2) shopify.ShopifyMerchantConfigurations 
-set configurationvalue = 'True'
-where shopifyMerchantId = 5
-and ShopifyconfigurationId in (1,2)
+-- update top (1) devTailbaseCore.dbo.merchantstoresInventory
+-- set Quantity = 2
+-- where id = 13541219
+
+select * from devTailbaseCore.dbo.merchantProds where merchant_id = 2798 and productid =   44160
+
+
+select sp.MerchantId, sp.id,  sp.TailbaseID, sp.handle, sp.tags, sp.SyncStatusId,sp.ModificationDate, si.Quantity, mt.InventoryType from shopify.shopifyProducts sp 
+    inner join devTailbaseCore.dbo.merchantstoresInventory si on si.MerchantId = sp.MerchantId 
+    and si.ItemId = sp.TailbaseId and si.ItemType = 1
+    inner join devTailbaseCore.dbo.MerchantInventoryTypes mt on mt.Id = si.MerchantInventoryTypeId and mt.MerchantId = sp.MerchantId
+where sp.MerchantId = 2798
+and sp.ItemType = 1 
+and sp.tailbaseid in (44160,76142,43888)
+
+SELECT * from shopify.ShopifyProductVariants where shopifyProductid = 802546
+
+
+
+
+
+
+
+
+
+
 
