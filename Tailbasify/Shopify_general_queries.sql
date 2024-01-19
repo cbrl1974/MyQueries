@@ -14,7 +14,7 @@ select
 	s.id, m.merchant, s.ShopUrl, s.SecurityStamp, s.AccessToken, ApiKey
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-	and s.MerchantId = 2798
+	and s.MerchantId = 571
 order by m.id
 
 select * from shopify.shopifyMerchants where merchantid = 2798
@@ -26,7 +26,7 @@ select * from shopify.shopifyMerchants where merchantid = 2232
 
 update MerchantExports
  set [status]  = 1
- where merchantid  = 2339
+ where merchantid  = 2186
   --where [status] <> 1
 
 --===============================================================================================
@@ -46,7 +46,7 @@ select  distinct top 100 *  from logs  WITH (NOLOCK)
 order by LogTime desc 
 
 select  distinct top 100 *  from logs  WITH (NOLOCK) 
-WHERE  merchantid = 3477
+WHERE  merchantid = 571
 order by LogTime desc 
 
 --===============================================================================================
@@ -60,6 +60,8 @@ select count(1) from datatail20130410.dbo.MerchantINstallations where MerchantID
 select count(1) from datatail20130410.dbo.MerchantWarranties where MerchantID = 571 --1
 select * from datatail20130410.dbo.MerchantRebates where Merchant_ID = 571 and active = 1 and DisplayEndDate >= GETDATE() --68
 --total of 31292
+
+
 
 
 
@@ -119,11 +121,24 @@ where merchantid = 571
 
 
 --===============================================================================================
+update top (2) shopify.shopifyProducts
+set SyncStatusId = 2
+where merchantid = 2569
+and tailbaseid in (771517,771514)
+ 
+
+ select productid, Elasticsearch_CustomTerm from datatail20130410.dbo.merchantProds where merchant_id = 2724 and Elasticsearch_CustomTerm <> ''
+
+ update top (1) datatail20130410.dbo.merchantProds
+ set Elasticsearch_CustomTerm = 'en_Electric'
+ where merchant_id = 2724
+ and ProductID = 727682
 
 --**************PRODUCTS**************
-select *
+select  *
 from shopify.shopifyProducts
-where merchantid = 3478
+where merchantid = 2724
+and tailbaseid = 727682
 --and id = 802544 
 	--and syncStatusID = 2
 	--and itemtype = 1 
@@ -132,11 +147,11 @@ where merchantid = 3478
 	--and itemtype = 3 
 	--and itemtype = 4 
 	--and itemtype = 5 
-	and tailbaseid in (657320)
+	--and tailbaseid in (771517,771514)
 	--and handle = 'amana-44cuft-top-load-washer-ntw4519jw'
 	--and id in (1089844)
-	--and tags like '%reduced%'
-	and titleEn like '%UM7300PUA%'
+
+	--and titleEn like '%UM7300PUA%'
 
 	select * from datatail20130410.dbo.merchantProds where merchant_id = 2798 and productid in (510292,510297,530622)
 
@@ -183,16 +198,16 @@ and keyname = 'VariantGroups'
 select m.*
     from Shopify.ShopifyProductMedia m
 	inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-where sp.merchantid = 3478
-and m.SyncStatusId <> 4
+where sp.merchantid = 2569
+and m.ShopifyProductId in (1567779,1567780)
 order by m.MediaContentTypeId,m.tailbaseid, m.DisplayOrder
 
-select * from shopify.shopifyproducts where id in (511641,611642)
+update top (7) Shopify.ShopifyProductMedia
+set SyncStatusId = 1,
+ShopifyGeneratedMediaId = null
+where ShopifyProductId in (1567779,1567780)
 
-select top 10 * from datatail20130410.dbo.ItemImagesHd order by ItemID desc
-select * from shopify.shopifyProducts where MerchantId  = 571 and tailbaseid = 489477
-select * from shopify.shopifyProducts where  id = 510379
-select * from datatail20130410.dbo.merchantProds where merchant_id =  571 and productid = 489477
+select
 
 
 delete top (6) from Shopify.ShopifyProductMedia where id in (6335493,6335494,6335495,6335496,6335497,6335498)
