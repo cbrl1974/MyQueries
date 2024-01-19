@@ -1,13 +1,15 @@
-Declare @merchantId as int = 3383;
-Declare @productid int = 362891;
+Declare @merchantId as int = 3423;
+Declare @productid int = 664230;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -60, GETDATE()) ;
+Declare @past as date = DATEADD(day, -30, GETDATE()) ;
+
+
 
 --For Products
  select  * from MerchantProducts_ChangeTrackingArchive
  WHERE MERCHANTID = @merchantId
- --and [changetime] between @past and @today
- --and productid =@productid
+ and [changetime] between @past and @today
+ and productid =@productid
   order by changetime desc
 
  select  * from MerchantProducts_ChangeTracking
@@ -70,17 +72,17 @@ select * from firewall.dbo.
 
 
 select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
- where url_string like '%liquidationelectromenagers.com%'
+ where url_string like '%www.haneyapplianceandsound.ca%'
  and [timestamp] between @past and @today
  and ipaddress = '2605:8d80:544:5fc7:ed3c:849b:2a38:79b3'
   order by [timestamp] desc
 
- select  distinct ipaddress from firewall.dbo.historical
- where url_string like '%liquidationelectromenagers.com%'
- and [timestamp] between '2022-05-02 08:00:03.290' and '2022-05-02 09:15:03.290'
- and url_string like '%HER30F5CSS%'
- group by ipaddress
- --order by [timestamp] 
+select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
+ where url_string like '%www.haneyapplianceandsound.ca%'
+ and [timestamp] between '2024-01-02 00:00:03.290' and '2024-01-02 16:00:03.290'
+ and ipaddress = '209.121.60.42'
+  order by [timestamp] desc
+
 
 
 
@@ -97,3 +99,10 @@ select top 100 * from firewall.dbo.online where ipaddress = '70.69.9.5'
 
 
 
+use devtailbasecore
+select photo from products where id_product = 356299
+
+select * from specsProd where productid = 356299 order by specsID_1
+
+delete top (7) from specsProd 
+where  productid = 356299

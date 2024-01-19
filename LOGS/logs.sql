@@ -1,5 +1,5 @@
 SELECT 
-TOP (100)
+TOP (500)
  [LogID]
       ,[Project]
       ,[Category]
@@ -9,7 +9,9 @@ TOP (100)
       ,[Module]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
-  where category = 'feeds'
+  where category like '%services%'
+  and module = 'CameleonImport'
+  --and text like '%571%'
   order by [time] desc
 
 
@@ -18,5 +20,8 @@ TOP (100)
   Log_retail 
   where logindate >= DATEADD(MONTH, -14, CAST(GETDATE() AS DATE))
   order by id desc
+
+
+  select top 10 *  from CatalogApiLogs order by id desc
 
 
