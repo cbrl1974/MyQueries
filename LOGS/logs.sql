@@ -25,3 +25,6 @@ TOP (500)
   select top 10 *  from CatalogApiLogs order by id desc
 
 
+  select top 10  * from InternalEventLogs order by id desc
+
+
