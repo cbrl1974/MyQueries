@@ -1,5 +1,5 @@
 SELECT 
-TOP (500)
+TOP (100)
  [LogID]
       ,[Project]
       ,[Category]
@@ -8,11 +8,13 @@ TOP (500)
       ,[Severity]
       ,[Module]
       ,[Location]
-  FROM [EventReactor].[dbo].[Logs]
-  where category like '%services%'
-  and module = 'CameleonImport'
+  FROM [stagingEventReactor].[dbo].[Logs]
+  where project like '%UpdatePosCatalog%'
+  --and module = 'CameleonImport'
   --and text like '%571%'
   order by [time] desc
+
+  select distinct project from [stagingEventReactor].[dbo].[Logs]
 
 
 --For Datatail - last 14 months
@@ -26,5 +28,8 @@ TOP (500)
 
 
   select top 10  * from InternalEventLogs order by id desc
+
+  select top 10  * from MerchantPosLogs order by id desc
+
 
 
