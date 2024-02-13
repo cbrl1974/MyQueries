@@ -1,3 +1,5 @@
+use Tailbasify
+
 --Update = 1
 --Synchronize = 3
 
@@ -5,20 +7,22 @@ Declare @action as int = 1;
 
 -- Merchants
 select
-    s.MerchantId,
+    s.MerchantId, s.id, m.merchant,
 	case
 	when @action = 1  then 'https://api.tailbasify.com/'+ s.ApiVersion + '/api/Shopify/Update/' + s.SecurityStamp 
 	WHEN  @action = 2 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/api/Converter/Convert/' + s.SecurityStamp 
 	WHEN  @action = 3 then 'https://api.tailbasify.com/'+ s.ApiVersion + '/api/Synchronizer/Synchronize/' + s.SecurityStamp 
 	  END AS EndPoint,
-	s.id, m.merchant, s.ShopUrl, s.SecurityStamp, s.AccessToken, ApiKey
+	 s.ShopUrl, s.SecurityStamp, s.AccessToken, ApiKey
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-	and s.MerchantId = 571
-order by m.id
+	and s.merchantid = 3230
+	--and s.ApiVersion = 'v1'
+order by s.id
 
 select * from shopify.shopifyMerchants where merchantid = 2798
-select * from shopify.shopifyMerchants where merchantid = 2232
+
+
 
 
 
@@ -26,18 +30,17 @@ select * from shopify.shopifyMerchants where merchantid = 2232
 
 update MerchantExports
  set [status]  = 1
- where merchantid  = 2186
+ where merchantid  = 3475
   --where [status] <> 1
 
 --===============================================================================================
 
 ----**************EXPORT STATUS**************
-use Tailbasify
-
-select m.merchant, me.*
+select  me.MerchantId,merchant, me.Status, me.ModificationDate, me.ShopifyMerchantId
 from MerchantExports me WITH (NOLOCK)
     inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
-order by [Status] desc, ModificationDate desc
+	--and m.id = 3478
+order by [Status] desc, me.ModificationDate desc
 
 --===============================================================================================
 
@@ -45,9 +48,25 @@ order by [Status] desc, ModificationDate desc
 select  distinct top 100 *  from logs  WITH (NOLOCK) 
 order by LogTime desc 
 
-select  distinct top 100 *  from logs  WITH (NOLOCK) 
-WHERE  merchantid = 571
+select distinct top 500 *  from logs  WITH (NOLOCK) 
+WHERE  merchantid = 3065
+and LogTime > convert(date,getdate()-1)
+--and logtime between '2024-02-10' and '2024-02-11'
 order by LogTime desc 
+
+select distinct top 10 *  from logs  WITH (NOLOCK) 
+WHERE  merchantid = 3065
+and category = 'Statistics'
+and module = 'Converter'
+order by LogTime desc 
+
+select m.id, m.merchant, s.id, c.ShopifyConfigurationId, c.ConfigurationValue from shopify.shopifyMerchants s
+    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+	inner join Shopify.ShopifyMerchantConfigurations c on c.ShopifyMerchantId = s.ID
+where c.ShopifyConfigurationId = 1
+and c.ConfigurationValue = 'false'
+and s.ApiVersion = 'v2'
+
 
 --===============================================================================================
 
@@ -58,13 +77,12 @@ select count(1) from datatail20130410.dbo.MerchantCollections where Merchant_ID 
 select count(1) from datatail20130410.dbo.MerchantRebates where Merchant_ID = 571 and active = 1 --68
 select count(1) from datatail20130410.dbo.MerchantINstallations where MerchantID = 571 --2
 select count(1) from datatail20130410.dbo.MerchantWarranties where MerchantID = 571 --1
-select * from datatail20130410.dbo.MerchantRebates where Merchant_ID = 571 and active = 1 and DisplayEndDate >= GETDATE() --68
+select * from datatail20130410.dbo.MerchantRebates where Merchant_ID = 1190 and active = 1 and DisplayEndDate >= GETDATE() --68
 --total of 31292
 
-
-
-
-
+select * from datatail20130410.dbo.MerchantProds where Merchant_ID = 3209 and productid =789931
+ 
+select * from datatail20130410.dbo.products where id_product =  789931
 
 --===============================================================================================
 
@@ -74,13 +92,9 @@ select top(10)
     *
 from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     join Shopify.ShopifyConvertProductReportsDetail d on h.id = d.ConvertReportId
-where h.MerchantId = 571
-    and d.TailbaseId in (489477)
+where h.MerchantId = 3388
+    and d.TailbaseId in (51148)
 order by h.id desc
-
-
-
-
 
 --===============================================================================================
 
@@ -89,79 +103,57 @@ order by h.id desc
 select top 100 *    
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 3478
---and text = 'User Errors Detected - Media User Error'
-    and d.ShopifyProductId in (1408445)
+where h.MerchantId = 3388
+--where text like '%video%'
+    and d.ShopifyProductId in (1621412)
 order by h.id desc
+
+
+select  *
+from shopify.shopifyProducts
+where ItemType = 3 
+and syncStatusId =1
+
 
 
 --===============================================================================================
 
 --**************DEBUG**************
 
-SELECT TOP 20 * FROM Shopify.ShopifySyncReports WHERE MerchantId = 571 ORDER BY ID DESC
+SELECT TOP 46 * FROM Shopify.ShopifySyncReports WHERE MerchantId = 3388 ORDER BY ID DESC
 
 
 SELECT * FROM Shopify.ShopifyProducts
-WHERE ID IN (SELECT ShopifyProductId FROM Shopify.ShopifyProductSyncReportsDetail WHERE SyncReportId IN (321658))
-AND MerchantId = 571
-AND SyncStatusId IN (1)
-AND ShopifyGeneratedProductId IS NULL
-
-
-
-select * from datatail20130410.dbo.merchantProds where merchant_id = 571 and productid in (
-select tailbaseid
-from shopify.shopifyProducts
-where merchantid = 571
-	and syncStatusID = 1
-	and itemtype = 1 
-)
-
+WHERE ID IN (SELECT ShopifyProductId FROM Shopify.ShopifyProductSyncReportsDetail 
+WHERE SyncReportId IN (576376))
+AND MerchantId = 3388
+--AND SyncStatusId IN (2)
+--AND ShopifyGeneratedProductId IS NULL
 
 
 --===============================================================================================
-update top (2) shopify.shopifyProducts
-set SyncStatusId = 2
-where merchantid = 2569
-and tailbaseid in (771517,771514)
- 
+--update top (2) shopify.shopifyProducts
+--set SyncStatusId = 2
+--where merchantid = 2569
+--and tailbaseid in (771517,771514)
 
- select productid, Elasticsearch_CustomTerm from datatail20130410.dbo.merchantProds where merchant_id = 2724 and Elasticsearch_CustomTerm <> ''
-
- update top (1) datatail20130410.dbo.merchantProds
- set Elasticsearch_CustomTerm = 'en_Electric'
- where merchant_id = 2724
- and ProductID = 727682
-
+select * from datatail20130410.dbo.itemvideos where itemid = 142005
 --**************PRODUCTS**************
 select  *
 from shopify.shopifyProducts
-where merchantid = 2724
-and tailbaseid = 727682
+where merchantid = 3388
+	and syncStatusID != 4
+--and tailbaseid = 789931
 --and id = 802544 
-	--and syncStatusID = 2
-	--and itemtype = 1 
+	--and itemtype = 1 --products
 	--and ShopifyGeneratedProductId is not null
-	--and itemtype = 2 
-	--and itemtype = 3 
-	--and itemtype = 4 
-	--and itemtype = 5 
+	--and itemtype = 2 --bundles(Collections)
+	--and itemtype = 3 --rebates
+	--and itemtype = 4 --Warranty
+	--and itemtype = 5 --installation
 	--and tailbaseid in (771517,771514)
 	--and handle = 'amana-44cuft-top-load-washer-ntw4519jw'
 	--and id in (1089844)
-
-	--and titleEn like '%UM7300PUA%'
-
-	select * from datatail20130410.dbo.merchantProds where merchant_id = 2798 and productid in (510292,510297,530622)
-
-select v.*
-from shopify.ShopifyProductVariants v
-	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 2798
-and v.ShopifyProductID in (165088,
-165090,
-166640)
 
 
 --===============================================================================================
@@ -171,12 +163,14 @@ and v.ShopifyProductID in (165088,
 select *
 FROM shopify.ShopifyMerchantCollections mc
 inner join shopify.shopifyProducts sp on sp.TailbaseId = mc.TailbaseId
-where mc.merchantid = 571 
-and mc.TailbaseId = 489477
---and sp.SyncStatusId = 2
-
-
-
+where mc.merchantid = 3388 
+--and sp.TitleEn like '%rebates%'
+--and mc.TailbaseId = 489477
+and sp.id in (select  id
+from shopify.shopifyProducts
+where merchantid = 3388
+	and syncStatusID != 4)
+and mc.SyncStatusId != 4
 
 
 --===============================================================================================
@@ -184,11 +178,14 @@ and mc.TailbaseId = 489477
 
 select  m.* from shopify.ShopifyMerchantMetafields m
 inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-where sp.merchantid = 2798
-and m.ShopifyProductId in (165088,
-165090,
-166640)
-and keyname = 'VariantGroups'
+where sp.merchantid = 3388
+--and m.ShopifyProductId = 568501
+and m.ShopifyProductId in (select id
+from shopify.shopifyProducts
+where merchantid = 3388
+and SyncStatusId != 4)
+and m.SyncStatusId != 4
+--and keyname = 'VariantGroups'
 
 
 --===============================================================================================
@@ -198,22 +195,26 @@ and keyname = 'VariantGroups'
 select m.*
     from Shopify.ShopifyProductMedia m
 	inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-where sp.merchantid = 2569
-and m.ShopifyProductId in (1567779,1567780)
+where sp.merchantid = 3388
+and m.ShopifyProductId in (select  id
+from shopify.shopifyProducts
+where merchantid = 3388
+	and syncStatusID != 4
+)
+and m.SyncStatusId != 4
 order by m.MediaContentTypeId,m.tailbaseid, m.DisplayOrder
 
-update top (7) Shopify.ShopifyProductMedia
-set SyncStatusId = 1,
-ShopifyGeneratedMediaId = null
-where ShopifyProductId in (1567779,1567780)
 
-select
+--update top (7) Shopify.ShopifyProductMedia
+--set SyncStatusId = 1,
+--ShopifyGeneratedMediaId = null
+--where ShopifyProductId in (select id
+--from shopify.shopifyProducts
+--where merchantid = 3388
+--and SyncStatusId != 4)
 
 
-delete top (6) from Shopify.ShopifyProductMedia where id in (6335493,6335494,6335495,6335496,6335497,6335498)
 
-update top (6) from Shopify.ShopifyProductMedia 
-set syncstatus
 
 --===============================================================================================
 
@@ -222,23 +223,12 @@ set syncstatus
 select v.*
 from shopify.ShopifyProductVariants v
 	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 571
-and v.ShopifyProductID = 1090072
-
-select  * from  shopify.ShopifyProductVariants where ShopifyProductID in (select id
+where sp.merchantid = 3388
+and v.ShopifyProductID in (select id
 from shopify.shopifyProducts
-where merchantid = 571
-	and itemtype = 1 
-	and ShopifyGeneratedProductId is not null)
-
-	update top (591) shopify.ShopifyProductVariants
-	set SyncStatusId = 2 
-	where ShopifyProductID in (select id
-from shopify.shopifyProducts
-where merchantid = 571
-	and itemtype = 1 
-	and ShopifyGeneratedProductId is not null)
-
+where merchantid = 3388
+and SyncStatusId != 4)
+and v.SyncStatusId != 4
 
 
 

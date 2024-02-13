@@ -1,5 +1,5 @@
 --**************************Configs
-DECLARE @MerchantId as int = 3388;
+DECLARE @MerchantId as int = 3065;
 DECLARE @ShopifyMerchantId as int =  (select s.id from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
 where m.id = @MerchantId);
