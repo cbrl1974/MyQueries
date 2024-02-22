@@ -1,15 +1,29 @@
 --Delete Specific Products Shopify
 
 -- *** Make sure that the product or collection are deleted also from the console first if exists.
-DECLARE @shopifyproductid AS INT = 
+
+declare @merchantId int = 3405;
+declare @shopifyProductid int = 1607902;
 BEGIN TRANSACTION
-  delete top (1) from shopify.shopifyproductvariants where shopifyproductid  = @shopifyproductid
-  delete top (1) from shopify.shopifyproductmedia where shopifyproductid  = @shopifyproductid
-  delete top (1) from shopify.shopifyproductsyncreportsdetail where shopifyproductid  = @shopifyproductid
-  delete top (1) from shopify.shopifymerchantmetafields where shopifyproductid  = @shopifyproductid
-  delete top (1) from shopify.shopifymerchantproductmedia where shopifyproductid  = @shopifyproductid
-  delete top (1) from shopify.shopifyproducts where id  = 
+delete from shopify.ShopifyMerchantMetafields where ShopifyProductId in
+(select id from shopify.ShopifyProducts where MerchantId=@merchantId and id = @shopifyProductid ) 
+
+delete from shopify.ShopifyProductVariants where ShopifyProductID in
+(select id from shopify.ShopifyProducts where MerchantId=@merchantId and id = @shopifyProductid ) 
+
+delete from shopify.ShopifyProductVariantMetafields where ShopifyProductVariantId in
+(select id from shopify.ShopifyProductVariants where ShopifyProductID in
+(select id from shopify.ShopifyProducts where MerchantId=@merchantId and id = @shopifyProductid))
+
+delete from shopify.ShopifyProductMedia where ShopifyProductID in
+(select id from shopify.ShopifyProducts where MerchantId=@merchantId and id = @shopifyProductid)
+
+delete from shopify.ShopifyMerchantProductMedia where ShopifyProductID in
+(select id from shopify.ShopifyProducts where MerchantId=@merchantId and id = @shopifyProductid)
+
+delete from  shopify.ShopifyProducts where MerchantId=@merchantId and id = @shopifyProductid
 COMMIT TRANSACTION
+
 
 
 DECLARE @shopifycollectionID AS INT = 
