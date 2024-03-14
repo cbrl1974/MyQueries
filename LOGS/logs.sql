@@ -8,10 +8,8 @@ TOP (100)
       ,[Severity]
       ,[Module]
       ,[Location]
-  FROM [stagingEventReactor].[dbo].[Logs]
-  where project like '%UpdatePosCatalog%'
-  --and module = 'CameleonImport'
-  --and text like '%571%'
+  FROM [EventReactor].[dbo].[Logs]
+  where category = 'Feeds'
   order by [time] desc
 
   select distinct project from [stagingEventReactor].[dbo].[Logs]
