@@ -4,6 +4,12 @@ Declare @today as date = getdate();
 Declare @past as date = DATEADD(day, -30, GETDATE()) ;
 
 
+SELECT TOP (100) *
+  FROM [firewall].[dbo].[LoggerClientEvents]
+  where merchantid = 1448
+  order by EventId desc
+
+
 
 --For Products
  select  * from MerchantProducts_ChangeTrackingArchive
