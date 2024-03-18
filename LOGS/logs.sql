@@ -8,8 +8,9 @@ TOP (100)
       ,[Severity]
       ,[Module]
       ,[Location]
-  FROM [EventReactor].[dbo].[Logs]
+  FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
   where category = 'Feeds'
+  and text like '%Ashley%'
   order by [time] desc
 
   select distinct project from [stagingEventReactor].[dbo].[Logs]
