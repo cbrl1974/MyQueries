@@ -1,8 +1,9 @@
-SELECT  productid
-from merchantProducts 
-where merchant_id = 1931
-GROUP BY productid
-HAVING COUNT(productid) > 1
+SELECT merchant_id, collectionID
+from merchantCollections 
+GROUP BY merchant_id, collectionID
+HAVING COUNT(collectionID) > 1
+
+select * from merchantCollections where collectionid = 2055
 
 WITH CTE AS
 (
@@ -11,7 +12,7 @@ from merchantzonecodes
 where merchantzoneid = 1051
 )
 
-DELETE FROM CTE WHERE RN<>1
+--DELETE FROM CTE WHERE RN<>1
 
 --Delete collections duplicated per merchant 
 WITH CTE AS (
