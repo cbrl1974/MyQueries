@@ -1,22 +1,27 @@
 SELECT
 STUFF((SELECT ',' + CAST(cieID AS VARCHAR(10))
         FROM merchantBrands
-        WHERE merchant_id = 3450
+        WHERE merchant_id = 3487
         FOR XML PATH('')), 1, 1, '') AS cieIDs;
 
 
+select * from MerchantWebsiteFeatures where merchant_id = 3528
 insert into MerchantWebsiteFeatures values 
-(3450,'syndigoBrands', NULL)
+(3496,'syndigoBrands', NULL)
 
 
 select * from TailbaseServices.dbo.ApiClientConfigs where assemblyname = 'DataExportSyndigo'
-and clientid in (3431,3450)
+and clientid in (3487,3496,3500,3506,3508,3528)
 
 
-select count(1) from merchantProds where merchant_id = 3459
-select count(1) from merchantProds where merchant_id = 3458
-select count(1) from merchantProds where merchant_id = 3467
-select count(1) from merchantProds where merchant_id = 3431
+
+select * from merchantwebsitetexts where merchant_id = 3528
+
+
+insert into merchantwebsitetexts (merchant_id, textcode, content_1, content_2, id_langue, availableInMerchantBean) values
+(3528, 'syndigositeid', 'a9e8953c-a681-5c3a-1283-73bc2098c8e9','ee42ef73-0476-4e65-bcbf-ba1420ed1b1a',1,1)
+
+
 
 select * from MerchantWebsiteFeatures
 where featureCode = 'syndigoBrands'
@@ -24,7 +29,7 @@ and merchant_id in (3450)
 
 --Execute storedProcedure tailbase websites
 EXECUTE [dbo].[SP_SyndigoWebsitesProducts]
-@merchantId = 3450,
+@merchantId = 3487,
 @manufIds = NULL
 
 --or
