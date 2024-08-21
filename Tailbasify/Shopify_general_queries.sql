@@ -27,7 +27,6 @@ inner join datatail20130410.dbo.merchants m on m.id = sm.MerchantId
 where m.active = 1
 
 
---===============================================================================================
 
 ----**************EXPORT STATUS**************
 select  me.MerchantId,merchant, me.Status, me.ModificationDate, me.ShopifyMerchantId
@@ -42,7 +41,6 @@ update MerchantExports
  where merchantid  = 3527
 
 
---===============================================================================================
 
 ----**************LOGS**************
 select * from logsType
@@ -68,7 +66,6 @@ and category = 'Statistics'
 order by LogTime desc 
 
 
---===============================================================================================
 
 --**************DB STATS**************
 
@@ -105,7 +102,7 @@ from Shopify.ShopifyConvertReports h WITH (NOLOCK)
     and d.TailbaseId in (789363)
 order by h.id desc
 
---===============================================================================================
+
 
 --**************SYNC REPORTS**************
 
@@ -113,16 +110,22 @@ select *
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
 where h.MerchantId = 3478
---and text like '%error%'
     and d.ShopifyProductId in (1757720)
 order by h.id desc
 
 select top 50 * from Shopify.ShopifySyncReports h WITH (NOLOCK) where h.MerchantId = 3388 order by h.id desc
 
+ 
+
+ --**************COLLECTION REPORTS**************
+ select top 10  * from Shopify.ShopifyCollectionSyncReportsDetail 
+    where SyncReportId in (select id from Shopify.ShopifySyncReports where merchantid = 1448 and CAST(StartTime AS DATE) = '2024-08-21') 
+    and ShopifyCollectionId = 18646 order by id desc; 
 
 
 
---===============================================================================================
+
+
 
 --**************DEBUG**************
 
@@ -139,9 +142,6 @@ AND MerchantId = 3478
 --AND ShopifyGeneratedProductId IS NULL
 
 
---===============================================================================================
-select * from datatail20130410.dbo.MerchantProds where Merchant_ID = 3478 and productid = 642319
-
 
 --**************PRODUCTS**************
 select  id, tailbaseid, handle, SyncStatusId
@@ -151,7 +151,7 @@ and itemtype = 1
 
 
 
---===============================================================================================
+
 
 --**************COLLECTIONS**************
 
@@ -175,7 +175,7 @@ order by id desc
 
 
 
---===============================================================================================
+
 --**************METAFIELDS**************
 
 select m.* from shopify.ShopifyMerchantMetafields m 
@@ -200,7 +200,6 @@ select distinct keyname from shopify.ShopifyMerchantMetafields m
 
 
 
---===============================================================================================
 
 --**************MEDIA**************
 
@@ -227,7 +226,6 @@ order by m.MediaContentTypeId,m.tailbaseid, m.DisplayOrder
 
 
 
---===============================================================================================
 
 --**************VARIANTS**************
 
@@ -248,14 +246,13 @@ order by v.cost desc
 -- and v.ShopifyProductID in (select  id from shopify.shopifyProducts where merchantid = 2339 and SyncStatusId =2)
 -- and v.ShopifyGeneratedVariantId is null)
 
---===============================================================================================
 
 --**************SyncStatus**************
 
 select *
 from SyncStatus
 
---===============================================================================================
+
 
 --Convert STATUS:
 -- ConvertedOnly = 1,
