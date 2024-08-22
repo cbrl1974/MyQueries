@@ -3,6 +3,8 @@ select id, merchant, merchantpwd from merchants where id in (select MerchantId f
 select id, merchant, merchantpwd from merchants where id = 1448
 select * from feeds.feeds where id = 9
 
+select * from feeds.merchantfeeds where feedid = 10
+
 
 
 select * from MerchantFeeds where merchant_id = 1448 and brand = 'Ashley'
