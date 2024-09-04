@@ -46,7 +46,7 @@ ORDER BY
     totalofproducts DESC;
 
 --Get Statistics
-select top 5 * from SpecsTranslationSnapshot order by id desc
+select top 4 * from SpecsTranslationSnapshot order by id desc
 
 --Get  state
 select * from SpecsTranslatorState
@@ -65,5 +65,9 @@ inner join products p on p.id_product = sp.productid
         SELECT DISTINCT brandid
         FROM productCreationToolSettings 
     )
-    and p.catid = 607
+    and p.catid = 194
     and DATALENGTH(sp.SpecValue_1) > 0
+    order by sp.productid desc
+
+
+    select * from SpecTranslationDictionary where CategoryId = 257 and SpecEng like '%Closed back%'
