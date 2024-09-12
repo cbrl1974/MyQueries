@@ -1,29 +1,59 @@
 
 select id, merchant, merchantpwd from merchants where id in (select MerchantId from feeds.merchantFeeds where feedid = 9)
 select id, merchant, merchantpwd from merchants where id = 1448
-select * from feeds.feeds where id = 9
 
-select * from feeds.merchantfeeds where feedid = 10
+select * from feeds.feeds
+ where id = 4
+
+Select distinct UpdateFrequency from feeds.feeds
+ where id=4
+
+SELECT 
+id, options, updatefrequency,
+    JSON_VALUE(Options, '$.DownloaderSettings.ProductFilename') AS ProductFilename,
+    JSON_VALUE(Options, '$.DownloaderSettings.InventoryFilename') AS InventoryFilename,
+    JSON_VALUE(Options, '$.DownloaderSettings.MerchantFilename') AS MerchantFilename,
+    JSON_VALUE(Options, '$.DownloaderSettings.PricingFileName') AS PricingFileName
+FROM feeds.feeds
+union all
+SELECT 
+    id, [Options], updatefrequency,
+    JSON_VALUE(Options, '$.downloaderSettings.productFilename') AS ProductFilename,
+    JSON_VALUE(Options, '$.downloaderSettings.inventoryFilename') AS InventoryFilename,
+    JSON_VALUE(Options, '$.downloaderSettings.merchantFilename') AS MerchantFilename,
+    JSON_VALUE(Options, '$.downloaderSettings.pricingFileName') AS PricingFileName
+FROM feeds.feeds
 
 
 
-select * from MerchantFeeds where merchant_id = 1448 and brand = 'Ashley'
+
+
+
+-- update top (1) feeds.feeds
+-- set active  = 0
+-- where id = 17
+--Old feed
+select * from feeds.merchantfeeds where feedid = 19 order by merchantid
+select * from feeds.merchantfeeds where merchantid = 2858 order by merchantid
+
+
+
+select * from MerchantFeeds where merchant_id = 2858 and brand = 'Ashley'
 select * from MerchantFeeds where merchant_id = 2312 and brand = 'Ashley'
 
 
-delete top (1) from MerchantFeeds where merchant_id = 2312 and brand = 'Ashley'
-
-
-select top 10  * from feeds.FeedDumps  WITH (NOLOCK)
+select   * from feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1) 
 --and MerchantId = 2798
-order by RunDate desc, merchantid
+ and FEEDID = 4
+order by RunDate desc
+, merchantid
 
 
 -- --Delete records from today
-  DELETE top (4) FROM FEEDS.FEEDDUMPS 
+  DELETE top (1) FROM FEEDS.FEEDDUMPS 
   WHERE  RUNDATE > CONVERT(DATE,GETDATE()-1) 
-  AND FEEDID = 9
+  AND FEEDID = 4
   and merchantid = 1448
 
    
