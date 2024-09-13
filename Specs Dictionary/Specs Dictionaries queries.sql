@@ -1,4 +1,13 @@
 
+--Get Statistics
+select top 4 * from SpecsTranslationSnapshot order by id desc
+
+--Get  state
+select * from SpecsTranslatorState
+
+--delete top (1)  from SpecsTranslatorState
+
+
 -- Specs created on the past day
 select id_product, model, catid, SpecsModifDate, specsModifier
 from products 
@@ -45,16 +54,6 @@ GROUP BY
 ORDER BY 
     totalofproducts DESC;
 
---Get Statistics
-select top 4 * from SpecsTranslationSnapshot order by id desc
-
- --select top (1) * from SpecsTranslationSnapshot order by id desc
-
---Get  state
-select * from SpecsTranslatorState
-
---delete top (1)  from SpecsTranslatorState
-
 
 -- Specs for specific category
 select sp.productid, sp.SpecValue_1, sp.SpecValue_2
@@ -69,13 +68,13 @@ inner join products p on p.id_product = sp.productid
         SELECT DISTINCT brandid
         FROM productCreationToolSettings 
     )
-    and p.catid = 312
+    and p.catid = 587
     --WHERE CAST(p.SpecsModifDate AS DATE) = CAST(DATEADD(DAY, -1, GETDATE()) AS DATE)
     and DATALENGTH(sp.SpecValue_1) > 0
     order by sp.productid desc
 
 
-    select * from SpecTranslationDictionary where CategoryId = 257 and SpecEng like '%Closed back%'
+    select * from SpecTranslationDictionary where CategoryId = 587 and SpecEng = 'Silver, Warm Gray'
 
 
     select * from SpecTranslationDictionary 
@@ -83,6 +82,8 @@ inner join products p on p.id_product = sp.productid
     union 
     select * from SpecTranslationDictionary 
     where ModificationDate is not null and CAST(modificationDate  AS DATE) = CAST(DATEADD(DAY, -1, GETDATE()) AS DATE) 
+
+
 
 
     
