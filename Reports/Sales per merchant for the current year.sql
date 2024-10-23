@@ -22,5 +22,9 @@ select m.id
 AND co.orderTimeStamp BETWEEN DATEADD(YEAR, -1, GETDATE()) AND GETDATE()
     and ml.txnService not like '%SANDBOX TEST%'
     and mwi.infoValue like '%Cantrex%'
+    and co.[status] !=  'CANCELLED'
 GROUP BY m.id, m.merchant, m.merchant_url, mwi.infoValue
 ORDER BY total_order_sum DESC
+
+
+select distinct status from CustomerOrders
