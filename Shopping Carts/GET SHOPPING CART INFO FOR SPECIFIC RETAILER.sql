@@ -61,6 +61,11 @@ order by id desc
 --Get the ip address here from teh paymentData json
 select top 50 * from customerOrderRequests where merchantid = 3450 order by CreationTimestamp desc
 
+-- <cfset this.ORDER_STATUS_CREATED = "C">
+-- <cfset this.ORDER_STATUS_PENDING = "P">
+-- <cfset this.ORDER_STATUS_SUCCESS = "S">
+-- <cfset this.ORDER_STATUS_FAILED = "F">
+
 
 --Historical, --use  ip address here from the paymentData on the customerOrderRequests table to filtre the results.
 select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
@@ -69,6 +74,7 @@ select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
  and ipaddress = '2a09:bac3:1b5f:1973::289:77'
   order by [timestamp] desc
 
+select * from 
 
 DECLARE @MerchantIdforDebugForCartConfigurations AS INT = 3450;
 select * from MerchantShoppingCartConfigurations
@@ -78,7 +84,7 @@ where merchantid = @MerchantIdforDebugForCartConfigurations
  --********************FEATURES********************
  DECLARE @MerchantIdforFeatures AS INT = 3450;
  select * from merchantWebsiteFeatures where merchant_id = @MerchantIdforFeatures
- select * from merchantWebsiteFeatures where featurecode like '%items%'
+ select distinct featureCode from merchantWebsiteFeatures where featureCode like '%items%'
 
 
 
@@ -87,6 +93,9 @@ DECLARE @MerchantIdfortexts AS INT = 3450;
 select * from merchantWebsitetexts
 where merchant_id = @MerchantIdfortexts
 and textcode like '%payment%'
+
+0223879d-bf67-49d6-91db-e9271311f9cf
+DoDirectPayment|Server_URL~https://onlineapi.flexiti.fi/flexiti/online-api/oauth/token|initURL~https://onlineapi.flexiti.fi/flexiti/online-api/online/v2/client-id/eastcoast-prd/systems/init|calculatorURL~https://onlineapi.flexiti.fi/flexiti/online-api/online/v2/client-id/eastcoast-prd/systems/payment-calculator|applyNowURL~https://onlineapi.flexiti.fi/flexiti/online-api/online/client-id/eastcoast-prd/systems/learn-more|notificationURL~https://onlineapi.flexiti.fi/flexiti/online-api/online/client-id/eastcoast-prd/notifications/order-id/<<orderID>>|clientID~eastcoast-prd|clientSecret~0223879d-bf67-49d6-91db-e9271311f9cf
 
 
 --************Products with prices******************
