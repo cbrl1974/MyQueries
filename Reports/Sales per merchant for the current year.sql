@@ -1,8 +1,5 @@
-select top 10
-    *
-from CustomerOrders where merchant_id = 3486
 
-SELECT m.id, m.merchant, m.merchant_url,
+SELECT m.id, m.merchant, m.merchant_url, max(co.orderTimeStamp) as lastOrder,
  mwi.infoValue,  -- for cantrex
  SUM(co.total) AS total_order_sum
 FROM merchants m
@@ -18,13 +15,13 @@ select m.id
         and m.merchant_url not like '%tailbase%'
         and m.merchant not like '%tailbase%'
         and m.merchant not like   '%old%'
+        and m.id != 1479
 )
 AND co.orderTimeStamp BETWEEN DATEADD(YEAR, -1, GETDATE()) AND GETDATE()
     and ml.txnService not like '%SANDBOX TEST%'
-    and mwi.infoValue like '%Cantrex%'
+    and mwi.infoValue not like '%Tailbasify%'
     and co.[status] !=  'CANCELLED'
 GROUP BY m.id, m.merchant, m.merchant_url, mwi.infoValue
-ORDER BY total_order_sum DESC
+ORDER BY total_order_sum desc, lastOrder
 
 
-select distinct status from CustomerOrders
