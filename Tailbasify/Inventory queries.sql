@@ -20,15 +20,17 @@ order by h.id desc
 
 select  l.* from datatail20130410.dbo.MerchantStores ms 
 inner join Shopify.ShopifyMerchantStoreLocations l  on l.MerchantStoreId = ms.id
-where ms.MerchantID = 3065
+where ms.MerchantID = 3230
 
-select * from datatail20130410.dbo.merchantstoresInventory where merchantid = 1202
+
+select * from datatail20130410.dbo.merchantstoresInventory where merchantid = 3230
 select * from datatail20130410.dbo.MerchantInventoryTypes order by MerchantId
+select * from datatail20130410.dbo.merchantStores where MerchantID = 3230
+select * from Shopify.ShopifyMerchantStoreLocations   where shopifyMerchantId = 57
 
---insert into Shopify.ShopifyMerchantStoreLocations (ShopifyMerchantId, ShopifyGeneratedLocationId, MerchantStoreId, IncludeInventoryAsTags, IncludeInventory, OnlineStockThreshold)
---VALUES
---(3388, 'gid://shopify/Location/60953231528', 6031, 1,1,4),
---(3388, 'gid://shopify/Location/63336612008', 6032, 1,1,4)
+insert into Shopify.ShopifyMerchantStoreLocations (ShopifyMerchantId, [name], ShopifyGeneratedLocationId, MerchantStoreId, IncludeInventoryAsTags, IncludeInventory, StorePickup, OnlineStockThreshold)
+VALUES
+(57, 'Tempe Location', 'gid://shopify/Location/100014588210', 6841, 0,0,1,null)
 
 
 
@@ -36,14 +38,10 @@ select * from datatail20130410.dbo.MerchantInventoryTypes order by MerchantId
 -- set IncludeInventoryAsTags = 1
 -- where ShopifyMerchantId = 4
 
-select * from datatail20130410.dbo.MerchantStores where merchantid =   3388
+select * from datatail20130410.dbo.MerchantStores where merchantid =   3230
 
-select * from datatail20130410.dbo.merchantstoresInventory where merchantid = 3388
-select * from datatail20130410.dbo.MerchantInventoryStore where merchant_id = 3388
-
--- update top (1) datatail20130410.dbo.merchantstoresInventory
--- set Quantity = 2
--- where id = 13541219
+select * from datatail20130410.dbo.merchantstoresInventory where merchantid = 3230
+select * from datatail20130410.dbo.MerchantInventoryStore where merchant_id = 3230
 
 
 select sp.MerchantId, sp.id,  sp.TailbaseID, sp.handle, sp.tags, sp.SyncStatusId,sp.ModificationDate, si.Quantity, mt.InventoryType from shopify.shopifyProducts sp 
