@@ -84,8 +84,6 @@ inner join products p on p.id_product = sp.productid
     select * from SpecTranslationDictionary 
     where ModificationDate is not null and CAST(modificationDate  AS DATE) = CAST(DATEADD(DAY, -1, GETDATE()) AS DATE) 
 
-    UPDATE top (250) SpecTranslationDictionary
-    set CreationDate = '2024-09-23 13:09:45.390'
-    where id >= 157250
+
 
 
