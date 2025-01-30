@@ -2,7 +2,7 @@
 DECLARE @MerchantID as int = 675;
 select competition from merchants where id = @MerchantID
 
-select * from companies where id_cie in (19,156,25,155,27,28,994,21,225,160,31,47,307)
+select * from companies where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307)
 select id, merchant, competition from merchants where competition is not null and active = 1
  
 -- update top (1) merchants
@@ -22,22 +22,31 @@ SELECT TOP (100) [LogID]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
   where Category = 'scrapers'
+ --and module = 'TheBrickScraper'
   order by [Time] desc
 
-  select distinct category  FROM [EventReactor].[dbo].[Logs]
+
+select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
+where RetailerID = 21
+--and parse =1
+order by DateModified desc 
+
+-- update  TailbaseServices.dbo.WebTrackingCategories
+-- set parse = 1,
+-- Usable = 1 
+-- where retailerid = 21 
+-- and id in (27663,27664,27665,27666,27667,27668,27669)
 
 
 
-select retailerid, sku, modelNo, RegularPrice, AdvertisedPrice, [date]
-  from TailbaseServices.dbo.WebTrackingProducts
-where retailerid = 26
-and [date] between '2022-01-12' and '2022-01-17'
-and modelNo like '%RF25HMIDBSR%'
+select top 150  * from TailbaseServices.dbo.WebTrackingProducts  WITH (NOLOCK)         
+where RetailerID = 21
+ order by date desc 
 
 
+select * from companies where id_cie in (19,21,2753)
 
 --This checks if the total of products per merchant on a specific day. To check if the scrapper did ran
-
 exec dbo.ScraperDataReport
 
 --OR
@@ -45,18 +54,46 @@ select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as P
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2022-04-30'
+where cast(a.date as date)  = '2025-01-30'
 group by a.retailerid, b.cie,date
 order by b.cie
 
+select * from companies where id_cie in (21,19)
+
+
 --Check the state of a scraper
-select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%scraper%'
+select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
+where AssemblyClass like '%scraper%'
+and AssemblyMethodName = 'ScrapeProducts'
  order by  [state] , LastIntervalExecution desc
 
 --This checks  the state of a scraper
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName = 'ScrapeProducts'
+
+
+UPDATE top (1) Tailbaseservices.dbo.AsyncTasks 
+SET
+  interval = 10080
+where AssemblyClass like '%thebrick%' and AssemblyMethodName = 'ScrapeProducts'
+GO
+
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName like 'ScrapeProducts%'
 select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%bestbuy%' and AssemblyMethodName = 'ScrapeProducts'
 
 ----- *****************This runs an indicidual scrapper********************
+
+--********TheBrickScraper
+--Products
+update top (1) Tailbaseservices.dbo.asynctasks
+set State = 1
+where id = 'F2227F48-7997-446C-BF34-9DBDB069D9CE'
+
+--Categories
+update top (1) Tailbaseservices.dbo.asynctasks
+set State = 1
+where id = 'F2227F48-7997-446C-BF34-9DBDB069D9CE'
+
+
 
 --BestBuyCanadaScraper
 update top (1) Tailbaseservices.dbo.asynctasks
@@ -116,13 +153,6 @@ where id = 'BBF0B852-5967-4278-B302-A9D3747F7C87'
 update top (1) Tailbaseservices.dbo.asynctasks
 set state = 1
 where id = '9CA939FF-B5E8-42CE-A9F0-AD04BEFDE670'
-
-
-
---TheBrickScraper
-update top (1) Tailbaseservices.dbo.asynctasks
-set State = 1
-where id = 'F2227F48-7997-446C-BF34-9DBDB069D9CE'
 
 
 --CAS Morning
@@ -190,13 +220,11 @@ select top 10 * from Tailbaseservices.dbo.WebTrackingProducts order by date desc
 
 
 
-
-
-
-
-
-select * from Tailbaseservices.dbo.ScrapersSettings where retailerid = 1100
+select * from Tailbaseservices.dbo.ScrapersSettings where retailerid = 21
 select  top 10 * from Tailbaseservices.dbo.HomeDepotCanadaBrandModels
+select  top 500 * from Tailbaseservices.dbo.ScrapersModelsMappings where retailerid = 21 order by CreatedOn desc
+select top 100 * from Tailbaseservices.dbo.DebugInfoScraper
+select top 100 * from Tailbaseservices.dbo.ScrapersSkuInfos
 select * from Tailbaseservices.dbo.WebTrackingCategories where retailerid = 1100
 select top 10 * from Tailbaseservices.dbo.WebTrackingProducts where retailerid = 1100  order by date desc
 select * from Tailbaseservices.dbo.ApiClientConfigs
