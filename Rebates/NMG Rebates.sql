@@ -2,16 +2,13 @@
  select * from merchantWebsiteFeatures where merchant_id = @MerchantIdforFeatures
  and featurecode like '%rebates%'
 
+select * from merchants where id = 2456
+select rebate from merchantcms where merchant_id = 2456
+
 --Get the nmgid(DealerId)
  select id, merchant, nmgid, NmgLocationID from merchants where id in (3560)
 
- insert into RebateFeedClients values 
-(1138839,51348),
-(1138840,51348),
-(1138841,51348),
-(1138842,51348),
-(1139268,51348),
-(1126781,51348)
+
 
 select top 10 * from RebateGroups
 select  top 10 * from RebateFeeds where rebategroupid = 1 order by RebateFeedID desc
@@ -64,5 +61,55 @@ select top 10 * from RebateFeedClients
   where nmgid is not null order by id desc
   )
 
+select * from merchantrebates 
+where merchant_id =2456
+and active = 1
+--and name_1 like '%RED HOT SAVINGS%'
+--and DisplayStartDate = getdate()
+order by DisplayEndDate desc
+
+update top (1) merchantrebates
+set active = 1
+where id_rebate in (1147394)
+and merchant_id = 2456
+
+select * from tailbasify.shopify.ShopifyProducts 
+where merchantid = 2456
+and tailbaseid = 256216
+
+select * from tailbasify.shopify.ShopifyProducts 
+where merchantid = 2456
+and tailbaseid in 
+	(
+		select id_rebate from merchantrebates 
+		where merchant_id = 2456
+		and active = 1
+		and name_1 like '%RED HOT SAVINGS%'
+	)
+
+	select  rp.* from merchantprods mp 
+	inner join MerchantRebateProducts rp on rp.ProductID = mp.productid 
+	where mp.Merchant_ID = 2456
+	and rp.RebateID in 
+	(
+		select id_rebate from merchantrebates 
+		where merchant_id = 2456
+		and active = 1
+		and id_rebate = 1147394
+	)
 
 
+
+DECLARE @easternNow DATETIME = getdate();
+
+SELECT *
+FROM MerchantRebates mr
+JOIN MerchantRebateProducts mrp ON mr.Id_Rebate = mrp.RebateId
+WHERE 
+    mr.Merchant_Id = 2456
+    AND mr.Active IS NOT NULL
+    AND mr.Active = 1
+    AND mr.DisplayStartDate < @easternNow
+    AND mr.DisplayEndDate > @easternNow
+    AND mr.Name_1 IS NOT NULL
+    AND mr.Name_1 <> '';
