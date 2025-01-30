@@ -22,25 +22,32 @@ SELECT TOP (100) [LogID]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
   where Category = 'scrapers'
- --and module = 'TheBrickScraper'
+ and module = 'TheBrickScraper'
   order by [Time] desc
 
 
 select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
 where RetailerID = 21
---and parse =1
-order by DateModified desc 
+-- and url like '%electronics%'
+-- and not  url like '%gaming%'
+and parse =1
+order by DateModified, Parse desc
 
--- update  TailbaseServices.dbo.WebTrackingCategories
--- set parse = 1,
--- Usable = 1 
--- where retailerid = 21 
--- and id in (27663,27664,27665,27666,27667,27668,27669)
+
+update  TailbaseServices.dbo.WebTrackingCategories
+set parse = 1,
+Usable = 1 
+where retailerid = 21 
+--and id in (27716)
+and url like '%electronics%'
+and not  url like '%gaming%'
 
 
 
 select top 150  * from TailbaseServices.dbo.WebTrackingProducts  WITH (NOLOCK)         
 where RetailerID = 21
+--and TailbaseId = 756879
+and date > convert(date,getdate()-1)
  order by date desc 
 
 
@@ -48,6 +55,8 @@ select * from companies where id_cie in (19,21,2753)
 
 --This checks if the total of products per merchant on a specific day. To check if the scrapper did ran
 exec dbo.ScraperDataReport
+
+--128
 
 --OR
 select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as PRODUCT_COUNT
@@ -64,8 +73,8 @@ select * from companies where id_cie in (21,19)
 --Check the state of a scraper
 select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
 where AssemblyClass like '%scraper%'
-and AssemblyMethodName = 'ScrapeProducts'
- order by  [state] , LastIntervalExecution desc
+--and AssemblyMethodName = 'ScrapeProducts'
+ order by  LastIntervalExecution desc, [state]   
 
 --This checks  the state of a scraper
 select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName = 'ScrapeProducts'
