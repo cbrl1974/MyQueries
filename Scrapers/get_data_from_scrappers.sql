@@ -2,8 +2,9 @@
 DECLARE @MerchantID as int = 675;
 select competition from merchants where id = @MerchantID
 
-select * from companies where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307)
+select * from companies where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307,1100,2756)
 select id, merchant, competition from merchants where competition is not null and active = 1
+select * from companies where cie like '%lowe%'
  
 -- update top (1) merchants
 -- set competition = '19,156,27,21,225,160,31'
@@ -28,19 +29,25 @@ SELECT TOP (100) [LogID]
 
 select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
 where RetailerID = 21
--- and url like '%electronics%'
--- and not  url like '%gaming%'
-and parse =1
+and Department = ''
+and url like '%electronics%'
+and not  url like '%gaming%'
+--and parse =1
+--and url like '%appliances%'
 order by DateModified, Parse desc
 
 
 update  TailbaseServices.dbo.WebTrackingCategories
 set parse = 1,
-Usable = 1 
+Usable = 1
 where retailerid = 21 
---and id in (27716)
+and Department = ''
 and url like '%electronics%'
 and not  url like '%gaming%'
+--and id = 2753
+-- --and id in (27716)
+--and url like '%appliances%'
+-- and not  url like '%gaming%'
 
 
 
@@ -63,7 +70,7 @@ select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as P
 from Tailbaseservices.dbo.WebTrackingProducts a
 inner join [datatail20130410].dbo.companies b
 on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2025-01-30'
+where cast(a.date as date)  = '2025-01-31'
 group by a.retailerid, b.cie,date
 order by b.cie
 
@@ -71,23 +78,14 @@ select * from companies where id_cie in (21,19)
 
 
 --Check the state of a scraper
-select assemblyclass, [state], LastIntervalExecution, [Interval] from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
-where AssemblyClass like '%scraper%'
+select assemblyclass, [state], LastIntervalExecution, [Interval], AssemblyMethodName from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
+where AssemblyMethodName like 'Scrape%'
 --and AssemblyMethodName = 'ScrapeProducts'
- order by  LastIntervalExecution desc, [state]   
+ order by  [state] ,LastIntervalExecution desc 
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName = 'ScrapeProducts'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName like 'Scrape%'
 
-
-UPDATE top (1) Tailbaseservices.dbo.AsyncTasks 
-SET
-  interval = 10080
-where AssemblyClass like '%thebrick%' and AssemblyMethodName = 'ScrapeProducts'
-GO
-
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName like 'ScrapeProducts%'
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%bestbuy%' and AssemblyMethodName = 'ScrapeProducts'
 
 ----- *****************This runs an indicidual scrapper********************
 
