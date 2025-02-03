@@ -3,7 +3,7 @@ SELECT
     cie AS BrandName,
     (CASE 
         WHEN Id_cie IN (1436,2768,3437,2434,2584,3181,3182,3184,4226,4227,2067,1920,2565,2982,3038,7860,2982,7793,2424,7789,4340,7793,2611) THEN 'feed'
-        WHEN HasAutomatedPricing = 1 THEN 'automatedPricing'
+        WHEN HasAutomatedPricing = 1 THEN 'automated Pricing'
         WHEN maintained = 1 THEN 'maintained' 
         WHEN (SELECT COUNT(*) FROM Products WHERE manufID = Id_cie AND active = 1 AND discontinued = 0) > 4 THEN 'standard'
         WHEN (SELECT COUNT(*) FROM Products WHERE manufID = Id_cie AND active = 1 AND discontinued = 0) <= 4 THEN 'niche'
