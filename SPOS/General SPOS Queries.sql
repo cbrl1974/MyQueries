@@ -10,9 +10,10 @@ select * from MerchantPosConfigs where merchantId = @merchantID
 --  '{"ProcessProducts": true, "ProcessInventory": true, "ProcessMerchantItemTags": false, "ProcessAdditionalInformation": false}'
 -- )
 
-select * from MerchantPosConfigs where merchantId = @merchantID
+select * from MerchantPosConfigs 
 
 
-select top 250 * from MerchantPosLogs
-order by time desc
+select top 250  m.id, m.merchant, pos.* from MerchantPosLogs pos
+inner join merchants m on m.id = pos.MerchantId
+order by  time desc, MerchantId
  
