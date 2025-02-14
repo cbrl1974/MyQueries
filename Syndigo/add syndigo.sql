@@ -5,21 +5,22 @@ STUFF((SELECT ',' + CAST(cieID AS VARCHAR(10))
         FOR XML PATH('')), 1, 1, '') AS cieIDs;
 
 
-select * from MerchantWebsiteFeatures where merchant_id = 3528
-insert into MerchantWebsiteFeatures values 
-(3496,'syndigoBrands', NULL)
+select * from MerchantWebsiteFeatures where merchant_id = 3528 and featurecode = 'syndigoBrands'
+-- insert into MerchantWebsiteFeatures values 
+-- (3496,'syndigoBrands', NULL)
 
 
 select * from TailbaseServices.dbo.ApiClientConfigs where assemblyname = 'DataExportSyndigo'
-and clientid in (3487,3496,3500,3506,3508,3528)
+and clientid in (3528)
 
 
 
-select * from merchantwebsitetexts where merchant_id = 3528
+select * from merchantwebsitetexts where merchant_id in (3496,3528,3468) and textcode = 'syndigositeid'
 
 
-insert into merchantwebsitetexts (merchant_id, textcode, content_1, content_2, id_langue, availableInMerchantBean) values
-(3528, 'syndigositeid', 'a9e8953c-a681-5c3a-1283-73bc2098c8e9','ee42ef73-0476-4e65-bcbf-ba1420ed1b1a',1,1)
+
+-- insert into merchantwebsitetexts (merchant_id, textcode, content_1, content_2, id_langue, availableInMerchantBean) values
+-- (3528, 'syndigositeid', 'a9e8953c-a681-5c3a-1283-73bc2098c8e9','ee42ef73-0476-4e65-bcbf-ba1420ed1b1a',1,1)
 
 
 
