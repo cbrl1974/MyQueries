@@ -29,16 +29,17 @@ from PaymentCodes
 select *
 from messages
 
-delete from sales where AVANGATE_CUSTOMER_REFERENCE = '121212121'
-delete from CustomerInformation where id =  121212121
-delete from Subscriptions where AVANGATE_CUSTOMER_REFERENCE = '121212121'
-delete from SubscriptionsUsers where CUSTOMER_ID = '121212121'
-delete from WebHooksLogs
+select *  from WebHooksLogs
+where creationDate > convert(date,getdate()-1)
+order by creationDate desc
 
---select * from CustomerInformation where id =  888888888
---select * from Subscriptions where AVANGATE_CUSTOMER_REFERENCE = '888888888'
---select *  from SubscriptionsUsers where CUSTOMER_ID = '888888888'
---select *  from WebHooksLogs
+--delete from sales where AVANGATE_CUSTOMER_REFERENCE = '121212121'
+--delete from CustomerInformation where id =  121212121
+--delete from Subscriptions where AVANGATE_CUSTOMER_REFERENCE = '121212121'
+--delete from SubscriptionsUsers where CUSTOMER_ID = '121212121'
+--delete from WebHooksLogs
+
+
 
 
 
