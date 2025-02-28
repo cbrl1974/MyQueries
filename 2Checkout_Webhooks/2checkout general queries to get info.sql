@@ -1,3 +1,6 @@
+use Copernic_verifone
+
+
 select top 10
     *
 from sales
@@ -31,6 +34,7 @@ from messages
 
 select *  from WebHooksLogs
 where creationDate > convert(date,getdate()-1)
+--and severity <> 0
 order by creationDate desc
 
 --delete from sales where AVANGATE_CUSTOMER_REFERENCE = '121212121'

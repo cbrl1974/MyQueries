@@ -3,5 +3,6 @@
 select * from datatail20130410.dbo.MerchantPosConfigs
 
 --CheckLogs
-select top 250 * from datatail20130410.dbo.MerchantPosLogs 
+select  * from datatail20130410.dbo.MerchantPosLogs 
+where time > convert(date,getdate()-1)
 order by time desc

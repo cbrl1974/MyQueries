@@ -1,3 +1,5 @@
+use datatail20130410
+
 -- Get Competition from merchant
 DECLARE @MerchantID as int = 675;
 select competition from merchants where id = @MerchantID
@@ -30,20 +32,20 @@ SELECT TOP (100) [LogID]
 select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
 where RetailerID = 21
 and Department = ''
-and url like '%electronics%'
-and not  url like '%gaming%'
+and url like '%furniture%'
+-- and not  url like '%gaming%'
 --and parse =1
 --and url like '%appliances%'
 order by DateModified, Parse desc
 
 
 update  TailbaseServices.dbo.WebTrackingCategories
-set parse = 1,
-Usable = 1
+set parse = 0,
+Usable = 0
 where retailerid = 21 
 and Department = ''
-and url like '%electronics%'
-and not  url like '%gaming%'
+and url like '%furniture%'
+--and not  url like '%gaming%'
 --and id = 2753
 -- --and id in (27716)
 --and url like '%appliances%'
@@ -60,10 +62,9 @@ and date > convert(date,getdate()-1)
 
 select * from companies where id_cie in (19,21,2753)
 
---This checks if the total of products per merchant on a specific day. To check if the scrapper did ran
+-- ***********This checks if the total of products per merchant on a specific day. To check if the scrapper did ran*************
 exec dbo.ScraperDataReport
 
---128
 
 --OR
 select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as PRODUCT_COUNT
@@ -74,7 +75,6 @@ where cast(a.date as date)  = '2025-01-31'
 group by a.retailerid, b.cie,date
 order by b.cie
 
-select * from companies where id_cie in (21,19)
 
 
 --Check the state of a scraper

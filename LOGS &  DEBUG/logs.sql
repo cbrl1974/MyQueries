@@ -47,3 +47,9 @@ select top 150  * from MerchantTransactionLog
 where merchant_id = @MerchantIdforDebug
 order by id desc
 
+SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME
+FROM INFORMATION_SCHEMA.COLUMNS
+WHERE COLUMN_NAME = 'cieid'
+AND (TABLE_SCHEMA LIKE '%Tracktail%' OR TABLE_NAME LIKE '%Tracktail%');
+
+
