@@ -1,5 +1,8 @@
 use datatail20130410
 
+-- ***********This checks if the total of products per merchant on a specific day. To check if the scrapper did ran*************
+exec dbo.ScraperDataReport
+
 -- Get Competition from merchant
 DECLARE @MerchantID as int = 675;
 select competition from merchants where id = @MerchantID
@@ -62,8 +65,7 @@ and date > convert(date,getdate()-1)
 
 select * from companies where id_cie in (19,21,2753)
 
--- ***********This checks if the total of products per merchant on a specific day. To check if the scrapper did ran*************
-exec dbo.ScraperDataReport
+
 
 
 --OR
