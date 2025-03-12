@@ -1,7 +1,14 @@
 use datatail20130410
 
+
+--Check the state of a scraper
+select assemblyclass, [state], LastIntervalExecution, [Interval], AssemblyMethodName from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
+where AssemblyMethodName like 'Scrape%'
+and AssemblyMethodName = 'ScrapeProducts'
+ order by  [state] ,LastIntervalExecution desc 
+
 -- ***********This checks if the total of products per merchant on a specific day. To check if the scrapper did ran*************
-exec dbo.ScraperDataReport
+exec datatail20130410.dbo.ScraperDataReport
 
 -- Get Competition from merchant
 DECLARE @MerchantID as int = 675;
@@ -28,31 +35,18 @@ SELECT TOP (100) [LogID]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
   where Category = 'scrapers'
- and module = 'TheBrickScraper'
+ --and module = 'TheBrickScraper'
   order by [Time] desc
 
 
 select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
 where RetailerID = 21
-and Department = ''
-and url like '%furniture%'
+--and Department = ''
+--and url like '%furniture%'
 -- and not  url like '%gaming%'
---and parse =1
+and parse =1
 --and url like '%appliances%'
 order by DateModified, Parse desc
-
-
-update  TailbaseServices.dbo.WebTrackingCategories
-set parse = 0,
-Usable = 0
-where retailerid = 21 
-and Department = ''
-and url like '%furniture%'
---and not  url like '%gaming%'
---and id = 2753
--- --and id in (27716)
---and url like '%appliances%'
--- and not  url like '%gaming%'
 
 
 
@@ -63,33 +57,13 @@ and date > convert(date,getdate()-1)
  order by date desc 
 
 
-select * from companies where id_cie in (19,21,2753)
 
-
-
-
---OR
-select a.retailerid as RETAILER_ID, b.cie AS RETAILER_NAME, date , count(*) as PRODUCT_COUNT
-from Tailbaseservices.dbo.WebTrackingProducts a
-inner join [datatail20130410].dbo.companies b
-on a.RetailerID = b.Id_cie
-where cast(a.date as date)  = '2025-01-31'
-group by a.retailerid, b.cie,date
-order by b.cie
-
-
-
---Check the state of a scraper
-select assemblyclass, [state], LastIntervalExecution, [Interval], AssemblyMethodName from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
-where AssemblyMethodName like 'Scrape%'
---and AssemblyMethodName = 'ScrapeProducts'
- order by  [state] ,LastIntervalExecution desc 
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%thebrick%' and AssemblyMethodName like 'Scrape%'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%homedepot%' and AssemblyMethodName like 'Scrape%'
 
 
------ *****************This runs an indicidual scrapper********************
+----- *****************This runs an individual scrapper********************
 
 --********TheBrickScraper
 --Products
