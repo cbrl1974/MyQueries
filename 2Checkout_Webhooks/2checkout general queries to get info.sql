@@ -2,22 +2,22 @@ use Copernic_verifone
 
 select top 50
     *
-from sales
+from Copernic_verifone.dbo.sales
 where saledate > convert(date,getdate()-1)
 order by saledate desc
 
 --total sale per day
-SELECT 
-    CONVERT(DATE, SALEDATE) AS SALEDATE, 
+SELECT
+    CONVERT(DATE, SALEDATE) AS SALEDATE,
     Format(SUM(IPN_TOTAL * FX_RATE), 'N2') AS totalSale
-FROM sales
+FROM Copernic_verifone.dbo.sales
 GROUP BY CONVERT(DATE, SALEDATE)
 ORDER BY SALEDATE DESC;
 
 
 
 select id, FIRSTNAME, LASTNAME, ADDRESS1, city, [STATE], ZIPCODE, country, COUNTRYCODE
-from CustomerInformation
+from Copernic_verifone.dbo.CustomerInformation
 order by creationdate desc
 
 
@@ -25,22 +25,24 @@ order by creationdate desc
 
 
 select *
-from Subscriptions
+from Copernic_verifone.dbo.Subscriptions
 where AVANGATE_CUSTOMER_REFERENCE in (557180423)
 
 
 select *
-from SubscriptionsUsers
+from Copernic_verifone.dbo.SubscriptionsUsers
 where CUSTOMER_ID in (557180423)
 
 
 select *
-from PaymentCodes
+from Copernic_verifone.dbo.PaymentCodes
 select *
 from messages
 
+
+
 select *
-from WebHooksLogs
+from Copernic_verifone.dbo.WebHooksLogs
 where creationDate > convert(date,getdate()-1)
 --and severity <> 0
 order by creationDate desc

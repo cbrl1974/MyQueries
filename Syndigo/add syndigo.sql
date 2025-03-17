@@ -11,7 +11,12 @@ select * from MerchantWebsiteFeatures where merchant_id = 3528 and featurecode =
 
 
 select * from TailbaseServices.dbo.ApiClientConfigs where assemblyname = 'DataExportSyndigo'
-and clientid in (3528)
+and clientid in (3468)
+
+update top (1) TailbaseServices.dbo.ApiClientConfigs
+set FtpServerIp = 'sftp-pcc.syndigo.com'
+where assemblyname = 'DataExportSyndigo'
+and clientid in (3468)
 
 
 
