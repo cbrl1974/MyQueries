@@ -4,7 +4,7 @@ from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
 order by RunDate desc
 
-
+--Delete top (5) datatail20130410.feeds.FeedDumps where id in (5957,5962,5969)
 
 SELECT
     top 50
