@@ -2,9 +2,26 @@
 select *
 from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-order by RunDate desc
+and feedid = 9
+order by merchantid,RunDate desc
+
+
+DELETE TOP (12)
+FROM datatail20130410.feeds.FeedDumps
+WHERE id IN (
+    SELECT id 
+    FROM datatail20130410.feeds.FeedDumps WITH (NOLOCK)
+    WHERE RunDate > CONVERT(date, GETDATE() - 1)
+    GROUP BY id, merchantid, CurrentIndex, totalCount 
+    HAVING totalcount = 0 
+);
+
+
+
 
 --Delete top (5) datatail20130410.feeds.FeedDumps where id in (5957,5962,5969)
+
+
 
 SELECT
     top 50
@@ -30,7 +47,7 @@ where id = 8
 
 select *
 from datatail20130410.feeds.MerchantFeeds
-where feedid = 8 and merchantid = 589
+where feedid = 9 and merchantid = 589
 order by merchantid
 
 
@@ -234,3 +251,7 @@ union all
     from datatail20130410.dbo.products p
         inner join datatail20130410.dbo.companies co on co.id_cie = p.manufid
     where p.modelKey like @model
+
+
+
+

@@ -12,18 +12,18 @@ exec datatail20130410.dbo.ScraperDataReport
 
 -- Get Competition from merchant
 DECLARE @MerchantID as int = 675;
-select competition from merchants where id = @MerchantID
+select competition from datatail20130410.dbo.merchants where id = @MerchantID
 
-select * from companies where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307,1100,2756)
-select id, merchant, competition from merchants where competition is not null and active = 1
-select * from companies where cie like '%lowe%'
+select * from datatail20130410.dbo.companies where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307,1100,2756)
+select id, merchant, competition from datatail20130410.dbo.merchants where competition is not null and active = 1
+select * from datatail20130410.dbo.companies where cie like '%lowe%'
  
 -- update top (1) merchants
 -- set competition = '19,156,27,21,225,160,31'
 --  where id = 675
 
-select * from retailers where webtracking = 1 and countryid = 36
-select * from products where model like '%RF25HMIDBSR%'
+select * from datatail20130410.dbo.retailers where webtracking = 1 and countryid = 36
+select * from datatail20130410.dbo.products where model like '%RF25HMIDBSR%'
 
 SELECT TOP (100) [LogID]
       ,[Project]
