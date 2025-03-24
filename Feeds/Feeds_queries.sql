@@ -6,14 +6,14 @@ and feedid = 9
 order by merchantid,RunDate desc
 
 
-DELETE TOP (12)
+DELETE TOP (6)
 FROM datatail20130410.feeds.FeedDumps
 WHERE id IN (
     SELECT id 
     FROM datatail20130410.feeds.FeedDumps WITH (NOLOCK)
     WHERE RunDate > CONVERT(date, GETDATE() - 1)
     GROUP BY id, merchantid, CurrentIndex, totalCount 
-    HAVING totalcount = 0 
+    HAVING totalcount = 0
 );
 
 
@@ -24,7 +24,7 @@ WHERE id IN (
 
 
 SELECT
-    top 50
+    top 10
     [LogID]
       , [Project]
       , [Category]
@@ -35,6 +35,7 @@ SELECT
       , [Location]
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where category = 'feeds'
+and text like '%Ashley API - Wrong Credentials for merchant%'
 --and time between '2024-11-27 14:44:14.377' and '2024-11-27 14:46:14.377'
 order by [time] desc
 
