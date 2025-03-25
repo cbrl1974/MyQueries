@@ -1,17 +1,33 @@
 
-select *
+select 
+*
 from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
 and feedid = 9
+--and merchantid = 3445
 order by merchantid,RunDate desc
 
 
-DELETE TOP (6)
+--delete top (10) from datatail20130410.feeds.FeedDumps  where id in (6212)
+
+select distinct merchantid,RunDate,feedid, count(merchantid)
+from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
+where  RunDate > convert(date,getdate()-1)
+and feedid = 9
+group by merchantid,RunDate,feedid
+order by count(merchantid),merchantid,RunDate,feedid desc
+
+select * from merchantwebsitefeatures where merchant_id = 3558
+select * from merchantwebsitefeatures where merchant_id = 3227
+
+
+DELETE TOP (10)
 FROM datatail20130410.feeds.FeedDumps
 WHERE id IN (
     SELECT id 
     FROM datatail20130410.feeds.FeedDumps WITH (NOLOCK)
     WHERE RunDate > CONVERT(date, GETDATE() - 1)
+	and feedid = 9
     GROUP BY id, merchantid, CurrentIndex, totalCount 
     HAVING totalcount = 0
 );
@@ -24,7 +40,7 @@ WHERE id IN (
 
 
 SELECT
-    top 10
+    top 20
     [LogID]
       , [Project]
       , [Category]
@@ -35,6 +51,7 @@ SELECT
       , [Location]
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where category = 'feeds'
+--and text like '%Ashley%'
 and text like '%Ashley API - Wrong Credentials for merchant%'
 --and time between '2024-11-27 14:44:14.377' and '2024-11-27 14:46:14.377'
 order by [time] desc
@@ -48,9 +65,8 @@ where id = 8
 
 select *
 from datatail20130410.feeds.MerchantFeeds
-where feedid = 9 and merchantid = 589
+where feedid = 9 and merchantid = 3347
 order by merchantid
-
 
 select *
 from datatail20130410.feeds.MerchantFeeds
@@ -256,3 +272,4 @@ union all
 
 
 
+	select * from merchantwebsitefeatures where merchant_id = 3558
