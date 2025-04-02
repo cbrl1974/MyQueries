@@ -1,46 +1,36 @@
-
-select 
-*
+use datatail20130410
+select
+    *
 from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-and feedid = 9
---and merchantid = 3445
-order by merchantid,RunDate desc
+   and feedid = 9
+--and merchantid = 2798
+order by feedid,merchantid,RunDate desc
+
+delete top (10) 
+--select *
+from datatail20130410.feeds.FeedDumps  
+where  RunDate > convert(date,getdate()-1) 
+and merchantid = 3099 
+--and id in (6383,6387)
+    and CurrentIndex < totalcount
+--and totalcount = 0
 
 
---delete top (10) from datatail20130410.feeds.FeedDumps  where id in (6212)
 
-select distinct merchantid,RunDate,feedid, count(merchantid)
+select distinct merchantid, RunDate, feedid, count(merchantid)
 from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-and feedid = 9
+    and feedid = 9
 group by merchantid,RunDate,feedid
-order by count(merchantid),merchantid,RunDate,feedid desc
-
-select * from merchantwebsitefeatures where merchant_id = 3558
-select * from merchantwebsitefeatures where merchant_id = 3227
+order by count(merchantid) desc,merchantid,RunDate,feedid desc
 
 
-DELETE TOP (10)
-FROM datatail20130410.feeds.FeedDumps
-WHERE id IN (
-    SELECT id 
-    FROM datatail20130410.feeds.FeedDumps WITH (NOLOCK)
-    WHERE RunDate > CONVERT(date, GETDATE() - 1)
-	and feedid = 9
-    GROUP BY id, merchantid, CurrentIndex, totalCount 
-    HAVING totalcount = 0
-);
-
-
-
-
---Delete top (5) datatail20130410.feeds.FeedDumps where id in (5957,5962,5969)
 
 
 
 SELECT
-    top 20
+    --top 20
     [LogID]
       , [Project]
       , [Category]
@@ -51,34 +41,44 @@ SELECT
       , [Location]
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where category = 'feeds'
---and text like '%Ashley%'
-and text like '%Ashley API - Wrong Credentials for merchant%'
+    and text like '%Ashley%'
+	--and text not like '%DumpData%'
+	and time between '2025-03-31 00:00:00.00' and '2025-04-01 00:00:00.00'
+    --and text like '%Ashley API - Wrong Credentials for merchant%'
 --and time between '2024-11-27 14:44:14.377' and '2024-11-27 14:46:14.377'
 order by [time] desc
 
 
 select *
 from datatail20130410.feeds.feeds
-where id = 8
+where id = 9
 --where updatefrequency not like '%api%'
 
 
 select *
 from datatail20130410.feeds.MerchantFeeds
-where feedid = 9 and merchantid = 3347
+where feedid = 9 
+--and merchantid = 3347
 order by merchantid
+
+-- update top (1) datatail20130410.feeds.MerchantFeeds
+-- set FeedOptionsJson = ''
+-- where feedid = 9 and merchantid = 3515
 
 select *
 from datatail20130410.feeds.MerchantFeeds
-where merchantid = 2858
+where merchantid = 2798
 order by merchantid
 
 
 
 --Old Feed
 select *
+--delete top (20)
 from datatail20130410.dbo.MerchantFeeds
-where merchant_id = 2858 and brand = 'Ashley'
+where merchant_id in (1719,3284,1807,3233,1761,2087,3450,3347,3507,3476,1140,3319,3515,3538,3445,3227,3496,1546,2923,3558)
+    and brand = 'Ashley'
+
 select *
 from datatail20130410.dbo.MerchantFeeds
 where merchant_id in (3336,2312) and brand = 'Ashley'
@@ -104,6 +104,21 @@ DELETE  FROM datatail20130410.feeds.FEEDDUMPS
 select *
 from datatail20130410.feeds.Locations
 where feedid = 21
+
+
+SELECT mp.productid 
+    ,p.manufacturerIdentifier
+	,mp.cost 'costOnMerchantprods'
+	,mp.price, 
+	mp.reducedPrice
+    ,mp.QtyPerPackage 
+	,f.Price, 'costOnAshley'
+	f.AdditionalPricingData
+FROM datatail20130410.dbo.MerchantProds  mp
+    INNER JOIN datatail20130410.dbo.products p on p.Id_product = mp.ProductID
+	inner join feeds.ProductBasePrices f on f.MerchantId = mp.Merchant_ID and f.feedid = 9
+WHERE 	mp.Merchant_ID = 2798
+    and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227, 6183);
 
 
 
@@ -272,4 +287,6 @@ union all
 
 
 
-	select * from merchantwebsitefeatures where merchant_id = 3558
+select *
+from merchantwebsitefeatures
+where merchant_id = 3558

@@ -6,6 +6,10 @@ from Copernic_verifone.dbo.sales
 where saledate > convert(date,getdate()-1)
 order by saledate desc
 
+
+select count(message_id)
+from Copernic_verifone.dbo.sales
+
 --total sale per day
 SELECT
     CONVERT(DATE, SALEDATE) AS SALEDATE,
@@ -43,8 +47,9 @@ from messages
 
 select *
 from Copernic_verifone.dbo.WebHooksLogs
-where creationDate > convert(date,getdate()-1)
---and severity <> 0
+where 1 = 1
+--where creationDate > convert(date,getdate()-1)
+and severity <> 0
 order by creationDate desc
 
 

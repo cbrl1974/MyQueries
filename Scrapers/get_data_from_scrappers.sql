@@ -1,5 +1,7 @@
 use datatail20130410
 
+-- ***********This checks if the total of products per merchant on a specific day. To check if the scrapper did ran*************
+exec datatail20130410.dbo.ScraperDataReport
 
 --Check the state of a scraper
 select assemblyclass, [state], LastIntervalExecution, [Interval], AssemblyMethodName from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
@@ -7,8 +9,7 @@ where AssemblyMethodName like 'Scrape%'
 and AssemblyMethodName = 'ScrapeProducts'
  order by  [state] ,LastIntervalExecution desc 
 
--- ***********This checks if the total of products per merchant on a specific day. To check if the scrapper did ran*************
-exec datatail20130410.dbo.ScraperDataReport
+
 
 -- Get Competition from merchant
 DECLARE @MerchantID as int = 675;
