@@ -1,36 +1,46 @@
-use datatail20130410
+use Datatail20130410
+
 select
     *
-from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
+from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-   and feedid = 9
---and merchantid = 2798
+   and feedid = 4
+--and merchantid in (3233)
 order by feedid,merchantid,RunDate desc
 
-delete top (10) 
+
+delete top (25) 
 --select *
-from datatail20130410.feeds.FeedDumps  
-where  RunDate > convert(date,getdate()-1) 
-and merchantid = 3099 
+from Datatail20130410.feeds.FeedDumps  
+where  RunDate > convert(date,getdate()-1)
+and feedid = 9
+--and merchantid = 3585 
 --and id in (6383,6387)
     and CurrentIndex < totalcount
---and totalcount = 0
+and totalcount = 0
+
+1140
+3570
+
+select distinct mf.merchantid as merchantOnbaoarded, d.merchantid, d.RunDate, d.feedid, count(d.merchantid)
+from Datatail20130410.feeds.FeedDumps d  WITH (NOLOCK)
+left join feeds.MerchantFeeds mf on mf.FeedId = d.FeedId and mf.MerchantId = d.MerchantId
+where  d.RunDate > convert(date,getdate()-1)
+    and d.feedid = 9
+group by mf.merchantid, d.merchantid,d.RunDate,d.feedid
+order by count(d.merchantid) desc,mf.merchantid, d.merchantid,d.RunDate,d.feedid desc
+
+--Chef if all merchants onboarded preload ran
+select merchantid from feeds.MerchantFeeds where feedid = 9 and merchantid not in ( 
+select distinct merchantid from feeds.FeedDumps where feedid = 9 and RunDate > convert(date,getdate()-1))
 
 
 
-select distinct merchantid, RunDate, feedid, count(merchantid)
-from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
-where  RunDate > convert(date,getdate()-1)
-    and feedid = 9
-group by merchantid,RunDate,feedid
-order by count(merchantid) desc,merchantid,RunDate,feedid desc
-
-
-
+select *  FROM merchantfeeds where merchant_id = 2793
 
 
 SELECT
-    --top 20
+    top 20
     [LogID]
       , [Project]
       , [Category]
@@ -40,33 +50,44 @@ SELECT
       , [Module]
       , [Location]
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
-where category = 'feeds'
+where 1= 1
+	and category = 'feeds'
     and text like '%Ashley%'
 	--and text not like '%DumpData%'
-	and time between '2025-03-31 00:00:00.00' and '2025-04-01 00:00:00.00'
-    --and text like '%Ashley API - Wrong Credentials for merchant%'
+	and time between '2025-04-02 00:00:00.00' and '2025-04-03 00:00:00.00'
+    --and text like '%verify if there could be an issue with the data%'
 --and time between '2024-11-27 14:44:14.377' and '2024-11-27 14:46:14.377'
 order by [time] desc
 
 
 select *
-from datatail20130410.feeds.feeds
+from Datatail20130410.feeds.feeds
 where id = 9
 --where updatefrequency not like '%api%'
 
+select f.ClassName, mf.*
+from Datatail20130410.feeds.MerchantFeeds mf
+join feeds.feeds f on f.id =mf.FeedId
+where 
+merchantid in (2322,3575,2534,3393,3236,2680)
+--and feedid = 25
+--and merchantid = 3447
+order by feedid
 
-select *
-from datatail20130410.feeds.MerchantFeeds
-where feedid = 9 
---and merchantid = 3347
-order by merchantid
 
--- update top (1) datatail20130410.feeds.MerchantFeeds
+select mp.merchant_id, mp.productid, mp.ptr, p.model, p.manufmodel, p.ManufacturerIdentifier, p.active, p.discontinued from Datatail20130410.dbo.merchantProds mp
+inner join products p on p.id_product = mp.productid
+where merchant_id = 3447
+and p.manufID = 2982
+and p.manufmodel= 'SM300TTB'
+
+
+-- update top (1) Datatail20130410.feeds.MerchantFeeds
 -- set FeedOptionsJson = ''
 -- where feedid = 9 and merchantid = 3515
 
 select *
-from datatail20130410.feeds.MerchantFeeds
+from Datatail20130410.feeds.MerchantFeeds
 where merchantid = 2798
 order by merchantid
 
@@ -75,34 +96,34 @@ order by merchantid
 --Old Feed
 select *
 --delete top (20)
-from datatail20130410.dbo.MerchantFeeds
-where merchant_id in (1719,3284,1807,3233,1761,2087,3450,3347,3507,3476,1140,3319,3515,3538,3445,3227,3496,1546,2923,3558)
+from Datatail20130410.dbo.MerchantFeeds
+where merchant_id in  (2322,3575,2534,3393,3236,2680)
     and brand = 'Ashley'
 
 select *
-from datatail20130410.dbo.MerchantFeeds
+from Datatail20130410.dbo.MerchantFeeds
 where merchant_id in (3336,2312) and brand = 'Ashley'
 
 
 
 SELECT *
-FROM [datatail20130410].[TrackTailApp].[ClientAccounts]
+FROM [Datatail20130410].[TrackTailApp].[ClientAccounts]
 where merchantid in (645,2724)
 
 
 select productid, price, merchantid, feedid, AdditionalPricingData
-from datatail20130410.feeds.ProductBasePrices
+from Datatail20130410.feeds.ProductBasePrices
 where ProductId =  234959 and FeedId = 9
---delete top (1) from datatail20130410.feeds.ProductBasePrices where ProductId =  554229 and FeedId = 9 and merchantid = 1448
+--delete top (1) from Datatail20130410.feeds.ProductBasePrices where ProductId =  554229 and FeedId = 9 and merchantid = 1448
 
 -- --Delete records from today
-DELETE  FROM datatail20130410.feeds.FEEDDUMPS 
+DELETE  FROM Datatail20130410.feeds.FEEDDUMPS 
   WHERE  RUNDATE > CONVERT(DATE,GETDATE()-1)
     AND FEEDID = 9
 --   and merchantid = 1448
 
 select *
-from datatail20130410.feeds.Locations
+from Datatail20130410.feeds.Locations
 where feedid = 21
 
 
@@ -114,8 +135,8 @@ SELECT mp.productid
     ,mp.QtyPerPackage 
 	,f.Price, 'costOnAshley'
 	f.AdditionalPricingData
-FROM datatail20130410.dbo.MerchantProds  mp
-    INNER JOIN datatail20130410.dbo.products p on p.Id_product = mp.ProductID
+FROM Datatail20130410.dbo.MerchantProds  mp
+    INNER JOIN Datatail20130410.dbo.products p on p.Id_product = mp.ProductID
 	inner join feeds.ProductBasePrices f on f.MerchantId = mp.Merchant_ID and f.feedid = 9
 WHERE 	mp.Merchant_ID = 2798
     and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227, 6183);
@@ -125,9 +146,9 @@ WHERE 	mp.Merchant_ID = 2798
 
 
 SELECT mp.merchant_id, mp.productid, p.manufacturerIdentifier, mp.cost, mp.price, mp.reducedPrice, mp.QtyPerPackage, fb.Price, fb.AdditionalPricingData
-FROM datatail20130410.dbo.MerchantProds mp WITH (NOLOCK)
-    INNER JOIN datatail20130410.dbo.products p on p.Id_product = mp.ProductID
-    INNER join datatail20130410.feeds.ProductBasePrices fb on fb.ProductId = mp.productid
+FROM Datatail20130410.dbo.MerchantProds mp WITH (NOLOCK)
+    INNER JOIN Datatail20130410.dbo.products p on p.Id_product = mp.ProductID
+    INNER join Datatail20130410.feeds.ProductBasePrices fb on fb.ProductId = mp.productid
 WHERE 	mp.Merchant_ID in (589)
     and p.manufID in (3437)
     --and mp.cost is null
@@ -135,13 +156,13 @@ WHERE 	mp.Merchant_ID in (589)
 --and QtyPerPackage != ''
 -- and QtyPerPackage > 1
 
---  update datatail20130410.dbo.MerchantProds
+--  update Datatail20130410.dbo.MerchantProds
 --  set QtyPerPackage = null
 --  where merchant_id = 1448
 
 
 
---**************************Comparing data with 2 datatail20130410.dbo.merchants using old and new versions Ashley
+--**************************Comparing data with 2 Datatail20130410.dbo.merchants using old and new versions Ashley
 SELECT
     mp1.productid AS productid_1448,
     mp2.productid AS productid_2312,
@@ -156,13 +177,13 @@ SELECT
 --mp1.reducedPrice AS reducedPrice_1448,
 --mp2.reducedPrice AS reducedPrice_2312
 FROM
-    datatail20130410.dbo.MerchantProds mp1
+    Datatail20130410.dbo.MerchantProds mp1
     LEFT JOIN
-    datatail20130410.dbo.MerchantProds mp2 ON mp1.productid = mp2.productid AND mp2.Merchant_ID = 2312
+    Datatail20130410.dbo.MerchantProds mp2 ON mp1.productid = mp2.productid AND mp2.Merchant_ID = 2312
     INNER JOIN
-    datatail20130410.dbo.products p1 ON p1.Id_product = mp1.ProductID AND p1.manufid IN ('6183', '3181', '3182', '3184', '4226', '4227')
+    Datatail20130410.dbo.products p1 ON p1.Id_product = mp1.ProductID AND p1.manufid IN ('6183', '3181', '3182', '3184', '4226', '4227')
     LEFT JOIN
-    datatail20130410.dbo.products p2 ON p2.Id_product = mp2.ProductID AND p2.manufid IN ('6183', '3181', '3182', '3184', '4226', '4227')
+    Datatail20130410.dbo.products p2 ON p2.Id_product = mp2.ProductID AND p2.manufid IN ('6183', '3181', '3182', '3184', '4226', '4227')
 WHERE 
     mp1.Merchant_ID = 1448
     --AND mp2.QtyPerPackage IS NOT NULL
@@ -173,19 +194,19 @@ ORDER BY
 
 
 select fb.productid, p.ManufacturerIdentifier, fb.price, fb.merchantid, fb.feedid, fb.AdditionalPricingData
-from datatail20130410.feeds.ProductBasePrices fb
+from Datatail20130410.feeds.ProductBasePrices fb
     inner join products p on p.id_product = fb.ProductId
 where fb.ProductId =  389679
     and fb.FeedId = 9
 
---delete from datatail20130410.feeds.ProductBasePrices where feedid = 9
+--delete from Datatail20130410.feeds.ProductBasePrices where feedid = 9
 
---************Get datatail20130410.dbo.products*************
+--************Get Datatail20130410.dbo.products*************
 DECLARE @MerchantId AS int = 2312;
 DECLARE @ProductCount AS  int = (
 SELECT count(1)
-FROM datatail20130410.dbo.MerchantProds  mp
-    INNER JOIN datatail20130410.dbo.products p on p.Id_product = mp.ProductID
+FROM Datatail20130410.dbo.MerchantProds  mp
+    INNER JOIN Datatail20130410.dbo.products p on p.Id_product = mp.ProductID
 WHERE 	mp.Merchant_ID = @MerchantId
     and p.manufID in (6183, 3181, 3182, 3184, 4226, 4227, 6183));
 
@@ -193,41 +214,41 @@ WHERE 	mp.Merchant_ID = @MerchantId
 select @ProductCount
 
 
--- **********Delete datatail20130410.dbo.products**********
-delete top (@ProductCount) FROM datatail20130410.dbo.MerchantProds
+-- **********Delete Datatail20130410.dbo.products**********
+delete top (@ProductCount) FROM Datatail20130410.dbo.MerchantProds
  where merchant_id = @MerchantId
     and productid in (
     SELECT mp.ProductID
-    FROM datatail20130410.dbo.MerchantProds  mp
-        INNER JOIN datatail20130410.dbo.products p on p.Id_product = mp.ProductID
+    FROM Datatail20130410.dbo.MerchantProds  mp
+        INNER JOIN Datatail20130410.dbo.products p on p.Id_product = mp.ProductID
     WHERE 	mp.Merchant_ID = @MerchantId
         and p.manufID in (1436,3181,3182,3184,4226,4227,6183)
  )
 
 
 
--- ************Delete datatail20130410.dbo.COLLECTIONS************
+-- ************Delete Datatail20130410.dbo.COLLECTIONS************
 DECLARE @MerchantIdForCollections AS int = 2312;
 DECLARE @CollectionCountCount AS  int = (
 SELECT count(distinct mc.collectionID) as total
-FROM datatail20130410.dbo.MerchantCollections  mc
-    inner join datatail20130410.dbo.COLLECTIONS c on c.id = mc.collectionid
-    inner join datatail20130410.dbo.collection_product cp on cp.collectionID = c.id
-    INNER JOIN datatail20130410.dbo.products p on p.Id_product = cp.ProductID
+FROM Datatail20130410.dbo.MerchantCollections  mc
+    inner join Datatail20130410.dbo.COLLECTIONS c on c.id = mc.collectionid
+    inner join Datatail20130410.dbo.collection_product cp on cp.collectionID = c.id
+    INNER JOIN Datatail20130410.dbo.products p on p.Id_product = cp.ProductID
 WHERE 	mc.Merchant_ID = @MerchantIdForCollections
     and p.manufID in (1436,3181,3182,3184,4226,4227, 6183))
 
 
 select @CollectionCountCount
 
-DELETE TOP (@COLLECTIONCOUNTCOUNT) FROM datatail20130410.dbo.MerchantCollections
+DELETE TOP (@COLLECTIONCOUNTCOUNT) FROM Datatail20130410.dbo.MerchantCollections
  WHERE MERCHANT_ID =  @MERCHANTIDFORCOLLECTIONS
     AND COLLECTIONID IN (
     SELECT distinct MC.COLLECTIONID
-    FROM datatail20130410.dbo.MerchantCollections  MC
-        INNER JOIN datatail20130410.dbo.COLLECTIONS C ON C.ID = MC.COLLECTIONID
-        INNER JOIN datatail20130410.dbo.collection_product CP ON CP.COLLECTIONID = C.ID
-        INNER JOIN datatail20130410.dbo.products P ON P.ID_PRODUCT = CP.PRODUCTID
+    FROM Datatail20130410.dbo.MerchantCollections  MC
+        INNER JOIN Datatail20130410.dbo.COLLECTIONS C ON C.ID = MC.COLLECTIONID
+        INNER JOIN Datatail20130410.dbo.collection_product CP ON CP.COLLECTIONID = C.ID
+        INNER JOIN Datatail20130410.dbo.products P ON P.ID_PRODUCT = CP.PRODUCTID
     WHERE 	MC.MERCHANT_ID =  @MERCHANTIDFORCOLLECTIONS
         AND P.MANUFID IN (1436,3181,3182,3184,4226,4227, 6183)
  )
@@ -239,13 +260,13 @@ DELETE TOP (@COLLECTIONCOUNTCOUNT) FROM datatail20130410.dbo.MerchantCollections
 DECLARE @MerchantIdForBrands AS int = 2312;
 DECLARE @BrandsCount AS  int = (
 select count(cieId) as total
-from datatail20130410.dbo.merchantBrands
+from Datatail20130410.dbo.merchantBrands
 where merchant_id = @MerchantIdForBrands
     and cieId in  (3181,3182,3184,4226,4227,6183))
 
 select @BrandsCount
 
-delete top ( @BrandsCount) from  datatail20130410.dbo.merchantBrands
+delete top ( @BrandsCount) from  Datatail20130410.dbo.merchantBrands
  where merchant_id = @MerchantIdForBrands
     and cieId in  (3181,3182,3184,4226,4227, 6183)
 
@@ -253,10 +274,10 @@ select @BrandsCount
 
 
 
-----Current Query to get Combined datatail20130410.dbo.products
+----Current Query to get Combined Datatail20130410.dbo.products
 --select p.id_product,p.model,p.manufid,p.manufmodel,mp.lock,mp.featured,mp.reducedPrice,mp.price,mp.cost,c.category,d.dept 
---from datatail20130410.dbo.products p
---inner join datatail20130410.dbo.MerchantProds mp on mp.productid = p.id_product and mp.merchant_id = 1448
+--from Datatail20130410.dbo.products p
+--inner join Datatail20130410.dbo.MerchantProds mp on mp.productid = p.id_product and mp.merchant_id = 1448
 --inner join categories c on c.id_category = p.catid and c.id_langue = 1
 --inner join departments d on d.id_dept = c.deptID and d.id_langue = 1		    
 --where p.manufid in (1436,3181,3182,3184,4226,4227)
@@ -265,28 +286,26 @@ select @BrandsCount
 
 Declare @model as varchar(200) = '%CM7267N%';
     select p.id_product, p.model, p.manufmodel, co.cie, p.ManufacturerIdentifier, p.modelkey, p.manufid
-    from datatail20130410.dbo.products p
-        inner join datatail20130410.dbo.companies co on co.id_cie = p.manufid
+    from Datatail20130410.dbo.products p
+        inner join Datatail20130410.dbo.companies co on co.id_cie = p.manufid
     where p.model like @model
 union all
     select p.id_product, p.model, p.manufmodel, co.cie, p.ManufacturerIdentifier, p.modelkey, p.manufid
-    from datatail20130410.dbo.products p
-        inner join datatail20130410.dbo.companies co on co.id_cie = p.manufid
+    from Datatail20130410.dbo.products p
+        inner join Datatail20130410.dbo.companies co on co.id_cie = p.manufid
     where p.manufmodel like @model
 union all
     select p.id_product, p.model, p.manufmodel, co.cie, p.ManufacturerIdentifier, p.modelkey, p.manufid
-    from datatail20130410.dbo.products p
-        inner join datatail20130410.dbo.companies co on co.id_cie = p.manufid
+    from Datatail20130410.dbo.products p
+        inner join Datatail20130410.dbo.companies co on co.id_cie = p.manufid
     where p.ManufacturerIdentifier like @model
 union all
     select p.id_product, p.model, p.manufmodel, co.cie, p.ManufacturerIdentifier, p.modelkey, p.manufid
-    from datatail20130410.dbo.products p
-        inner join datatail20130410.dbo.companies co on co.id_cie = p.manufid
+    from Datatail20130410.dbo.products p
+        inner join Datatail20130410.dbo.companies co on co.id_cie = p.manufid
     where p.modelKey like @model
 
 
 
 
-select *
-from merchantwebsitefeatures
-where merchant_id = 3558
+select * from VW_MerchantCollectionProducts
