@@ -1,11 +1,9 @@
 use Datatail20130410
 
-select
-    *
-from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
+select    * from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-   and feedid = 4
---and merchantid in (3233)
+   and feedid = 9
+and merchantid in (3569)
 order by feedid,merchantid,RunDate desc
 
 
@@ -14,13 +12,11 @@ delete top (25)
 from Datatail20130410.feeds.FeedDumps  
 where  RunDate > convert(date,getdate()-1)
 and feedid = 9
---and merchantid = 3585 
---and id in (6383,6387)
-    and CurrentIndex < totalcount
+and merchantid = 3541 
+--and id in (3541)
+    --and CurrentIndex < totalcount
 and totalcount = 0
 
-1140
-3570
 
 select distinct mf.merchantid as merchantOnbaoarded, d.merchantid, d.RunDate, d.feedid, count(d.merchantid)
 from Datatail20130410.feeds.FeedDumps d  WITH (NOLOCK)
@@ -30,17 +26,14 @@ where  d.RunDate > convert(date,getdate()-1)
 group by mf.merchantid, d.merchantid,d.RunDate,d.feedid
 order by count(d.merchantid) desc,mf.merchantid, d.merchantid,d.RunDate,d.feedid desc
 
---Chef if all merchants onboarded preload ran
+--Check if all merchants onboarded preload ran
 select merchantid from feeds.MerchantFeeds where feedid = 9 and merchantid not in ( 
 select distinct merchantid from feeds.FeedDumps where feedid = 9 and RunDate > convert(date,getdate()-1))
-
-
-
-select *  FROM merchantfeeds where merchant_id = 2793
+order by merchantid
 
 
 SELECT
-    top 20
+    --top 20
     [LogID]
       , [Project]
       , [Category]
@@ -54,7 +47,8 @@ where 1= 1
 	and category = 'feeds'
     and text like '%Ashley%'
 	--and text not like '%DumpData%'
-	and time between '2025-04-02 00:00:00.00' and '2025-04-03 00:00:00.00'
+	and time >=  getdate()
+	--and time between '2025-04-04 00:00:00.00' and '2025-04-05 00:00:00.00'
     --and text like '%verify if there could be an issue with the data%'
 --and time between '2024-11-27 14:44:14.377' and '2024-11-27 14:46:14.377'
 order by [time] desc
@@ -97,7 +91,7 @@ order by merchantid
 select *
 --delete top (20)
 from Datatail20130410.dbo.MerchantFeeds
-where merchant_id in  (2322,3575,2534,3393,3236,2680)
+where merchant_id in  (3569,3586,3510,3541,2384,2771,2264,2046,1785,3490,1922,3171,1574)
     and brand = 'Ashley'
 
 select *
@@ -309,3 +303,8 @@ union all
 
 
 select * from VW_MerchantCollectionProducts
+
+
+
+select top 100 * from AssociatedCollections
+where maincollectionID = 29365
