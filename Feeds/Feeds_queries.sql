@@ -3,7 +3,7 @@ use Datatail20130410
 select    * from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
    and feedid = 9
-and merchantid in (3569)
+and merchantid in (1762)
 order by feedid,merchantid,RunDate desc
 
 
@@ -12,19 +12,41 @@ delete top (25)
 from Datatail20130410.feeds.FeedDumps  
 where  RunDate > convert(date,getdate()-1)
 and feedid = 9
-and merchantid = 3541 
+--and merchantid = 3541 
 --and id in (3541)
-    --and CurrentIndex < totalcount
+    and CurrentIndex < totalcount
 and totalcount = 0
 
+with MerchantRunSummary as (
+	select 
+		d.merchantid,
+		count(*) as CountMerchant
+	from Datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
+	where d.RunDate > convert(date, getdate() - 1)
+		and d.feedid = 9
+	group by d.merchantid
+)
 
-select distinct mf.merchantid as merchantOnbaoarded, d.merchantid, d.RunDate, d.feedid, count(d.merchantid)
-from Datatail20130410.feeds.FeedDumps d  WITH (NOLOCK)
-left join feeds.MerchantFeeds mf on mf.FeedId = d.FeedId and mf.MerchantId = d.MerchantId
-where  d.RunDate > convert(date,getdate()-1)
-    and d.feedid = 9
-group by mf.merchantid, d.merchantid,d.RunDate,d.feedid
-order by count(d.merchantid) desc,mf.merchantid, d.merchantid,d.RunDate,d.feedid desc
+select 
+	distinct mf.merchantid as merchantOnboarded,
+	d.merchantid,
+	d.RunDate,
+	d.feedid,
+	mrs.CountMerchant,
+	case 
+		when d.CurrentIndex > d.totalcount then 'Complete'
+		when mrs.CountMerchant = 2 then 'Complete'
+		else 'Incomplete'
+	end as status
+from Datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
+inner join feeds.MerchantFeeds mf 
+	on mf.FeedId = d.FeedId and mf.MerchantId = d.MerchantId
+inner join MerchantRunSummary mrs 
+	on mrs.merchantid = d.merchantid
+where d.RunDate > convert(date, getdate() - 1)
+	and d.feedid = 9
+order by mrs.CountMerchant, mf.merchantid, d.merchantid, d.RunDate desc, d.feedid desc
+
 
 --Check if all merchants onboarded preload ran
 select merchantid from feeds.MerchantFeeds where feedid = 9 and merchantid not in ( 
