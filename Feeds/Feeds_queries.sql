@@ -3,19 +3,19 @@ use Datatail20130410
 select    * from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
    and feedid = 9
-and merchantid in (1762)
+and merchantid in (2771)
 order by feedid,merchantid,RunDate desc
 
 
-delete top (25) 
---select *
-from Datatail20130410.feeds.FeedDumps  
-where  RunDate > convert(date,getdate()-1)
-and feedid = 9
---and merchantid = 3541 
---and id in (3541)
-    and CurrentIndex < totalcount
-and totalcount = 0
+delete top (45) 
+--SELECT *
+FROM Datatail20130410.feeds.FeedDumps  
+WHERE RunDate > CONVERT(date, GETDATE() - 1)
+  AND feedid = 9
+  AND (CurrentIndex < totalcount OR totalcount = 0)
+
+
+
 
 with MerchantRunSummary as (
 	select 
@@ -35,7 +35,7 @@ select
 	mrs.CountMerchant,
 	case 
 		when d.CurrentIndex > d.totalcount then 'Complete'
-		when mrs.CountMerchant = 2 then 'Complete'
+		when mrs.CountMerchant >= 2 then 'Complete'
 		else 'Incomplete'
 	end as status
 from Datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
@@ -46,6 +46,10 @@ inner join MerchantRunSummary mrs
 where d.RunDate > convert(date, getdate() - 1)
 	and d.feedid = 9
 order by mrs.CountMerchant, mf.merchantid, d.merchantid, d.RunDate desc, d.feedid desc
+
+
+
+
 
 
 --Check if all merchants onboarded preload ran
