@@ -3,18 +3,8 @@ use Datatail20130410
 select    * from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
    and feedid = 9
-and merchantid in (2771)
+--and merchantid in (2771)
 order by feedid,merchantid,RunDate desc
-
-
-delete top (45) 
---SELECT *
-FROM Datatail20130410.feeds.FeedDumps  
-WHERE RunDate > CONVERT(date, GETDATE() - 1)
-  AND feedid = 9
-  AND (CurrentIndex < totalcount OR totalcount = 0)
-
-
 
 
 with MerchantRunSummary as (
@@ -46,8 +36,6 @@ inner join MerchantRunSummary mrs
 where d.RunDate > convert(date, getdate() - 1)
 	and d.feedid = 9
 order by mrs.CountMerchant, mf.merchantid, d.merchantid, d.RunDate desc, d.feedid desc
-
-
 
 
 
@@ -108,10 +96,10 @@ and p.manufmodel= 'SM300TTB'
 
 select *
 from Datatail20130410.feeds.MerchantFeeds
-where merchantid = 2798
+where feedid = 17
 order by merchantid
 
-
+select * from feeds.Locations where feedid = 17
 
 --Old Feed
 select *
