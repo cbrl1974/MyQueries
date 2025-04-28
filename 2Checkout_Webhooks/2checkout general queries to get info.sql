@@ -43,13 +43,13 @@ order by creationdate desc
 
 
 
-select top 10 *
+select  top 100 *
 from Copernic_verifone.dbo.Subscriptions
-where avangate_customer_reference in (15)
+order by message_id desc
 
 select count(message_id)
 from Copernic_verifone.dbo.Subscriptions
---36009
+--110558
 
 
 select *
@@ -57,12 +57,12 @@ from Copernic_verifone.dbo.SubscriptionsUsers
 where CUSTOMER_ID in (15)
 
 
-select  top 10 * 
+select  top 50 * 
 from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
-and creationDate > convert(date,getdate()-1)
+and creationDate > convert(date,getdate()-5)
 --and webkook = 'lcn'
---and severity <> 0
+and severity <> 0
 --and text like '%6557886%'
 --and module = 'HandleIpn'
 order by creationDate desc
@@ -72,7 +72,7 @@ from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
 and creationDate > convert(date,getdate()-1)
 --and webkook = 'lcn'
---and severity <> 0
+and severity <> 0
 --and text like '%6557886%'
 --and module = 'HandleIpn'
 order by creationDate desc
