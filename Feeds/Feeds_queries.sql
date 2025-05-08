@@ -2,7 +2,7 @@ use Datatail20130410
 
 select    * from Datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-   and feedid = 9
+   --and feedid = 9
 --and merchantid in (2771)
 order by feedid,merchantid,RunDate desc
 
@@ -59,7 +59,7 @@ SELECT
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where 1= 1
 	and category = 'feeds'
-    and text like '%Ashley%'
+    and text like '%FOA%'
 	--and text not like '%DumpData%'
 	and time >=  getdate()
 	--and time between '2025-04-04 00:00:00.00' and '2025-04-05 00:00:00.00'
@@ -76,9 +76,7 @@ where id = 9
 select f.ClassName, mf.*
 from Datatail20130410.feeds.MerchantFeeds mf
 join feeds.feeds f on f.id =mf.FeedId
-where 
-merchantid in (2322,3575,2534,3393,3236,2680)
---and feedid = 25
+where  feedid = 27
 --and merchantid = 3447
 order by feedid
 

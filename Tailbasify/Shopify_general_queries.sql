@@ -1,4 +1,4 @@
-use Tailbasify
+use tailbasify
 
 --Update = 1
 --Convert only = 2 
@@ -26,7 +26,7 @@ select sm.merchantid, m.merchant, m.active, concat('https://admin.shopify.com/st
 inner join datatail20130410.dbo.merchants m on m.id = sm.MerchantId 
 where m.active = 1
 
-select * from shopify.shopifyMerchants  where merchantid = 3492
+select * from shopify.shopifyMerchants  where merchantid = 1956
 
 
 
@@ -35,18 +35,15 @@ select  me.MerchantId,merchant, me.Status, me.ModificationDate, me.ShopifyMercha
 from tailbasify.dbo.MerchantExports me WITH (NOLOCK)
     inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 	inner join tailbasify.shopify.ShopifyMerchants sm on sm.MerchantId = me.MerchantId
-	--and  me.MerchantId = 1175
+	--and  me.MerchantId = 1956
 	and sm.ApiVersion is not null
 order by [Status] desc, me.ModificationDate desc
 
-3039
-3242
 
-Product update failed for shopify product Id: 1942634 | Exception: The HTTP request failed with status code NotFound -    at GraphQL.Client.Http.GraphQLHttpClient.SendHttpRequestAsync[TResponse](GraphQLRequest request, CancellationToken cancellationToken)     at GraphQL.Client.Http.GraphQLHttpClient.SendQueryAsync[TResponse](GraphQLRequest request, CancellationToken cancellationToken)     at Tailbasify.Synchronizer.Gateways.ProductsGateway.UpdateItem[ProductUpdateInputForGateway,ProductUpdateOutputModel](ProductUpdateInputForGateway item) in /home/vsts/work/1/s/Tailbasify.Synchronizer/Gateways/ProductsGateway.cs:line 93
 -- ************* Reset sync status
 update MerchantExports
  set [status]  = 1
- where merchantid  = 2798
+ where merchantid  = 1202
 
 
  select count(productid) from datatail20130410.dbo.merchantProds where merchant_id = 3447
@@ -59,11 +56,29 @@ where Text like '%Failed%'
 and LogTime > convert(date,getdate()-5)
 order by LogTime desc 
 
-select distinct top 250  text,logtime, category module 
+select distinct   text,logtime, category module 
 from logs  WITH (NOLOCK) 
-WHERE  merchantid = 1175
+WHERE  merchantid = 3527
 and LogTime > convert(date,getdate()-1)
 order by LogTime desc 
+
+select sp.MerchantId, sp.id, sp.tailbaseid, sp.handle, sp.SyncStatusId, 
+m.KeyName, m.ValueEn, m.DescriptionEn, m.SyncStatusId from shopify.ShopifyMerchantMetafields m 
+inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
+inner join shopify.shopifymerchants sm on sm.MerchantId = sp.MerchantId
+inner join datatail20130410.dbo.merchants me on me.id = sm.merchantid
+where 1= 1
+and m.SyncStatusId = 3
+and me.active = 1
+order by sp.merchantid
+--115
+
+
+
+update top (50) shopify.shopifyProducts
+set SyncStatusId = 2
+where id in (select shopifyProductid from shopify.ShopifyMerchantMetafields where SyncStatusId = 3)
+and merchantid = 3470
 
 
 
@@ -96,8 +111,8 @@ order by h.id desc
 select * 
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 3492
-    and d.ShopifyProductId in (1942634)
+where h.MerchantId = 3527
+    and d.ShopifyProductId in (1849581)
 order by h.id desc
 
 select top 50 * from Shopify.ShopifySyncReports h WITH (NOLOCK) where h.MerchantId = 3388 order by h.id desc
@@ -130,20 +145,42 @@ AND MerchantId = 1202
 
 select * from datatail20130410.dbo.merchantcollections where merchant_id = 3388 and collectionID = 6602
 
-delete top (1) from datatail20130410.dbo.merchantcollections where merchant_id = 3388 and collectionID = 6602
+select * from shopify.ShopifyProducts where MerchantId = 2724 and TailbaseId = 796174
 
 --**************PRODUCTS**************
-select  merchantid,id, tailbaseid, handle, syncstatusid
+select  merchantid,id, vendor, tailbaseid, handle, syncstatusid
 from shopify.shopifyProducts
---where merchantid = 3492
-where id = 686691
+where merchantid = 3527
+and ItemType = 5
+and tailbaseid = 729554
+
+
+DECLARE @easternNow DATETIME = getdate();
+SELECT *
+FROM datatail20130410.dbo.MerchantRebates mr
+--JOIN MerchantRebateProducts mrp ON mr.Id_Rebate = mrp.RebateId
+WHERE 
+    mr.Merchant_Id = 1202
+    AND mr.Active IS NOT NULL
+    AND mr.Active = 1
+    AND mr.DisplayStartDate < @easternNow
+    AND mr.DisplayEndDate > @easternNow
+    AND mr.Name_1 IS NOT NULL
+    AND mr.Name_1 <> '';
+
+	select * from datatail20130410.dbo.MerchantRebateProducts where RebateID = 1155012 and productid = 738989
 
 
 select sp.merchantid,v.*
 from shopify.ShopifyProductVariants v
 	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-    where sp.merchantid =  3492
-	and ShopifyProductID = 1942634
+    where sp.merchantid =  3527
+	and v.SyncStatusId is null
+	and ShopifyProductID = 2634605
+
+	update top (1) shopify.ShopifyProductVariants
+	set SyncStatusId = 1
+	where ShopifyProductID = 2634605
 
 	select * from datatail20130410.dbo.merchantProds where merchant_id = 3492 and productid = 791737
 
@@ -153,8 +190,8 @@ from shopify.ShopifyProductVariants v
 select * 
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-where h.MerchantId = 3447
-    and d.ShopifyProductId in (2456804)
+where h.MerchantId = 1448
+    and d.ShopifyProductId in (1122460)
 order by h.id desc
 
 
@@ -164,7 +201,8 @@ order by h.id desc
 
 select *
 FROM shopify.ShopifyMerchantCollections mc
-where mc.merchantid = 2795 
+where mc.merchantid = 1202 
+and syncstatusid <> 6
 --and TitleEn like '%mod%'
 order by id desc
 
@@ -172,9 +210,11 @@ order by id desc
 
 --**************METAFIELDS**************
 
-select m.* from shopify.ShopifyMerchantMetafields m 
+select top 250 m.* from shopify.ShopifyMerchantMetafields m 
 inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-where sp.merchantid = 2456
+where 1= 1
+--and sp.merchantid = 2456
+and keyname like '%associated%'
 --and keyname like '%rebate%'
 and m.ShopifyProductId in (686691,686692)
 -- and keyname = 'specs'
@@ -182,12 +222,7 @@ and m.ShopifyProductId in (686691,686692)
 --and keyname like '%media%'
 -- and m.SyncStatusId != 4
 
-update top (380) shopify.ShopifyMerchantMetafields
-set SyncStatusId = 2
-where id in  (select m.id from shopify.ShopifyMerchantMetafields m 
-inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-where sp.merchantid = 2456
-and m.ShopifyProductId in (select id from shopify.shopifyProducts where merchantid = 2456 and SyncStatusId =2))
+
 
 select distinct keyname from shopify.ShopifyMerchantMetafields m 
 
@@ -196,16 +231,12 @@ select distinct keyname from shopify.ShopifyMerchantMetafields m
 
 --**************MEDIA**************
 
-select m.*
+select  sp.id, sp.MerchantId, sp.handle, sp.tailbaseid, sp.SyncStatusId, m.Id, m.OriginalSource, m.SyncStatusId
     from Shopify.ShopifyProductMedia m
 	inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-    where m.tailbaseid = 43889
-    and m.MediaContentTypeId = 1
-    order by m.tailbaseid
-where sp.merchantid = 571
-and m.ShopifyProductId in (select  id from shopify.shopifyProducts where merchantid = 571 and SyncStatusId =2)
-and m.MediaContentTypeId = 1
---and m.SyncStatusId != 4
+	where sp.MerchantId  = 3388
+and m.ShopifyProductId in (select  id from shopify.shopifyProducts where merchantid = 3388 and SyncStatusId =2)
+--and sp.MerchantId  = 3388
 order by m.MediaContentTypeId,m.tailbaseid, m.DisplayOrder
 
 --update top (7) Shopify.ShopifyProductMedia
@@ -226,41 +257,25 @@ select sp.merchantid,v.*
 from shopify.ShopifyProductVariants v
 	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
     where sp.merchantid =  3388
+	and 
     --where v.ShopifyProductID = 83
 --where sp.merchantid != 3470
 and v.ShopifyGeneratedVariantId is null
 --and v.SyncStatusId is null
 
-update top (90) shopify.ShopifyProductVariants
-set SyncStatusId = 1
-where ShopifyProductID in (select v.shopifyProductId
-from shopify.ShopifyProductVariants v
-	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 3388
-and v.ShopifyGeneratedVariantId is null
---and v.SyncStatusId is null
-)
+796174
 
 
-
-select sp.merchantid, sp.id, sp.itemType, v.* from shopify.ShopifyProductVariants v 
+select sp.merchantid, sp.id, sp.tailbaseid, sp.handle, sp.itemType, v.* from shopify.ShopifyProductVariants v 
 join shopify.shopifyProducts sp on sp.id = v.ShopifyProductID
- where v.ShopifyGeneratedVariantId is null 
- and sp.merchantid = 3388
+inner join datatail20130410.dbo.merchantprods
+ where sp.merchantid = 2724
+ and sp.id = 1775033
 
-select collectionid, count(collectionID) from datatail20130410.dbo.merchantCollections where merchant_id = 3470 
-group by collectionid
-having count(collectionID) > 1
+ select * from datatail20130410.dbo.merchantprods where merchant_id = 2724 and ProductID =796174
+ 
 
-select productid, count(productid) from datatail20130410.dbo.merchantProds where merchant_id =3470 
-group by productid
-having count(productid) > 1
 
-delete  shopify.ShopifyProductVariants where id  in (select v.id
-from shopify.ShopifyProductVariants v
-	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 3470
-and v.ShopifyGeneratedVariantId is null)
 
 
 
@@ -300,3 +315,9 @@ from SyncStatus
     -- Translated = 2
     -- None = 3
 
+	select spsr.id, spsr.syncreportid, spsr.shopifyproductid, spsr.Operation, spsr.[Status], spsr.text, ssr.StartTime, spsr.graphqlcallinfo
+    from Shopify.ShopifyProductSyncReportsDetail spsr with (nolock)
+    join Shopify.ShopifySyncReports ssr on ssr.id = spsr.syncreportid
+    where ssr.merchantid = 1175 and CAST(ssr.StartTime AS DATE) = '2025-03-31'
+    and spsr.ShopifyProductId in (1109674)
+    order by spsr.id desc;

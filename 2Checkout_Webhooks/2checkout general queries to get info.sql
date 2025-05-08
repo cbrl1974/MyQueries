@@ -28,18 +28,16 @@ ORDER BY PAYMENTDATE DESC;
 	SELECT
     FORMAT(SUM(IPN_TOTAL * FX_RATE), 'N2') AS totalSaleForApril
 FROM Copernic_verifone.dbo.sales
-WHERE MONTH(PAYMENTDATE) = 4
-and ORDERSTATUS = 'COMPLETE'
+WHERE MONTH(PAYMENTDATE) = 5
+and ORDERSTATUS = 'COMPLETE' 
   AND YEAR(PAYMENTDATE) = YEAR(GETDATE());
 
 
 
 select id, FIRSTNAME, LASTNAME, ADDRESS1, city, [STATE], ZIPCODE, country, COUNTRYCODE
 from Copernic_verifone.dbo.CustomerInformation
-where id =15
+--where id =15
 order by creationdate desc
-
-
 
 
 
@@ -49,7 +47,7 @@ order by message_id desc
 
 select count(message_id)
 from Copernic_verifone.dbo.Subscriptions
---110558
+--110644
 
 
 select *
