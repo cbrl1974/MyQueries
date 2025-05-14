@@ -55,7 +55,7 @@ where ShopifyMerchantId = 5
 
 select *
 from tailbasify.shopify.ShopifyConfigurations
-where id = 22
+--where id = 22
 order by id
 
 select *

@@ -1,4 +1,4 @@
-
+use datatail20130410
 --Get Statistics
 select top 4 * from SpecsTranslationSnapshot order by id desc
 

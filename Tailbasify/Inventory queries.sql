@@ -25,7 +25,7 @@ order by h.id desc
 select l.*
 from datatail20130410.dbo.MerchantStores ms
     inner join Shopify.ShopifyMerchantStoreLocations l on l.MerchantStoreId = ms.id
-where ms.MerchantID = 1448
+where ms.MerchantID = 3477
 
 
 select *

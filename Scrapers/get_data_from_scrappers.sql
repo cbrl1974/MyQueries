@@ -26,7 +26,7 @@ select * from datatail20130410.dbo.companies where cie like '%lowe%'
 select * from datatail20130410.dbo.retailers where webtracking = 1 and countryid = 36
 select * from datatail20130410.dbo.products where model like '%RF25HMIDBSR%'
 
-SELECT TOP (100) [LogID]
+SELECT TOP (300) [LogID]
       ,[Project]
       ,[Category]
       ,[Text]
@@ -36,7 +36,7 @@ SELECT TOP (100) [LogID]
       ,[Location]
   FROM [EventReactor].[dbo].[Logs]
   where Category = 'scrapers'
- --and module = 'TheBrickScraper'
+ and module = 'CostcoScraper'
   order by [Time] desc
 
 
@@ -52,7 +52,7 @@ order by DateModified, Parse desc
 
 
 select top 150  * from TailbaseServices.dbo.WebTrackingProducts  WITH (NOLOCK)         
-where RetailerID = 21
+where RetailerID = 23
 --and TailbaseId = 756879
 and date > convert(date,getdate()-1)
  order by date desc 
@@ -61,7 +61,7 @@ and date > convert(date,getdate()-1)
 
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%homedepot%' and AssemblyMethodName like 'Scrape%'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%brick%' and AssemblyMethodName like 'Scrape%'
 
 
 ----- *****************This runs an individual scrapper********************
