@@ -1,14 +1,13 @@
-      declare @MerchantId int=589;
+﻿      declare @MerchantId int=589;
       declare @FeedBrandCategories as FeedBrandCategory;
-      insert into @FeedBrandCategories values (2434,'58,318,419,75,88,175,208,258,310,315,311,312,313,314,316,319,389,473,589,87,649,659,134,257,487,267,657,178,210,209,179,429,431,519,598,181,182,183,184,185,186,187,262,272,277,308,331,372,587,607,188,189,190,191,192,193,196,407,591,260,282,294,298,420,457,527,261,590,592,593,517');
+      insert into @FeedBrandCategories values (2434,'58,88,134,175,178,180,181,182,183,184,186,187,188,189,190,191,192,193,194,196,197,208,210,209,258,257,260,277,282,294,298,308,310,315,311,312,313,314,316,318,319,372,389,179,407,419,431,448,447,457,473,487,519,527,533,248,539,587,261,590,591,267,600,87,607,649,657');
       declare @FeedBrandDepartments as FeedBrandCategory;
-      insert into @FeedBrandDepartments values (2434,'25,29,28,26,27,30');
-      declare @FeedId int=7;
-      declare @LocationName nvarchar(1000)='CH';
+      insert into @FeedBrandDepartments values (2434,'23,25,29,28,26,27,30,58');
+      declare @FeedId int=9;
+      declare @LocationName nvarchar(1000)='';
      
     
-
-
+--Find all of the products managed by the feed for this merchant.
 WITH cte_ProductFromFeedSettings
 AS (
     SELECT *
@@ -45,6 +44,11 @@ AS (
 		        SELECT DISTINCT a.BrandId
 		        FROM @FeedBrandCategories a
 		        )
+				    and p.photo=1 
+    and p.specs=1 
+    and p.bundle=0                     
+    and p.model not like '%refurb%'
+    and p.model not like '%blemished%'
         ) x
     )
     --Find all of the managed products that also are collection_products
@@ -71,6 +75,18 @@ AS (
 			(select [value] from OpenJson('[' + fbd.CategoryIds + ']'))
 	        ) --Actually fbd.CategoryIds is a deptid. We just reused the category table variable definition.
     )
+	,cte_CollectionProductsInMerchant
+	AS (
+		SELECT 
+			cp.collectionID,
+			COUNT(*) AS TotalProducts,
+			COUNT(mp.ProductID) AS ProductsOnMerchant
+		FROM collection_product cp
+		LEFT JOIN MerchantProds mp 
+			ON mp.ProductID = cp.productID 
+			AND mp.Merchant_ID = @MerchantId
+		GROUP BY cp.collectionID
+	)
     --select collectionID,DepartmentId,count(*) 'DistinctProducts' from cte_CollectionProducts where ProductCategoryIsPartOfFeedSettings=1 and ProductDepartmentIsPartOfFeedSettings=1
     --group by collectionID,DepartmentId
     --Find all the collections that contain only active feed products. 
@@ -107,13 +123,27 @@ AS (
 	        group by cp.collectionID
         ) b on a.collectionID=b.collectionID
         --Only return collections that contain only managed products
-        --where a.ManagedCollectionProducts=b.TotalCollectionProducts
+        where a.ManagedCollectionProducts=b.TotalCollectionProducts
     )
-    select ac.*,convert(bit,case when mc.ID is not null then 1 else 0 end) 'IsInMerchantCollections',convert(bit,mc.lock) 'IsLocked'
-    ,convert(bit,case when coalesce(mc.featured,0)=0 then 0 else 1 end) 'IsFeatured'
-    ,mc.price 'MerchantCollectionPrice',mc.reducedPrice 'MerchantCollectionReducedPrice' 
-    ,c.collection_1 'CollectionName'
-    ,convert(bit, case when c.active=1 and c.complete=1 then 1 else 0 end) 'CollectionIsActiveAndComplete'
-    from cte_AffectedCollections ac
-    left join MerchantCollections mc on ac.collectionID=mc.collectionID and mc.Merchant_ID=@MerchantId
-    left join collections c on ac.collectionID=c.ID;
+   select 
+    ac.*,
+    convert(bit, case when mc.ID is not null then 1 else 0 end) 'IsInMerchantCollections',
+    convert(bit, mc.lock) 'IsLocked',
+    convert(bit, case when coalesce(mc.featured,0)=0 then 0 else 1 end) 'IsFeatured',
+    mc.price 'MerchantCollectionPrice',
+    mc.reducedPrice 'MerchantCollectionReducedPrice',
+    c.collection_1 'CollectionName',
+    convert(bit, case when c.active=1 and c.complete=1 then 1 else 0 end) 'CollectionIsActiveAndComplete',
+    
+    -- 💡 New flag:
+    convert(bit, case 
+        when cpm.ProductsOnMerchant = cpm.TotalProducts 
+        then 1 else 0 
+    end) as AllProductsOfTheCollectionAreOnTheMerchant
+	from cte_AffectedCollections ac
+	left join MerchantCollections mc on ac.collectionID = mc.collectionID and mc.Merchant_ID = @MerchantId
+	left join collections c on ac.collectionID = c.ID
+	left join cte_CollectionProductsInMerchant cpm on ac.collectionID = cpm.collectionID
+
+
+

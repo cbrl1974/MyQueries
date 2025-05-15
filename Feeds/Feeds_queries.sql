@@ -70,22 +70,45 @@ order by [time] desc
 
 select *
 from Datatail20130410.feeds.feeds
-where id = 9
+where id = 7
 --where updatefrequency not like '%api%'
+
+select * from collections where  id = 32550
+
+select distinct mc.collectionid, c.brands, mc.price, mc.reducedPrice, mc.lock
+from merchantcollections mc
+inner join collections c on c.id = mc.collectionId
+inner join collection_product cp on cp.collectionid = c.id
+inner join products p on p.id_product = cp.productid
+where  mc.merchant_id = 2959 
+and p.manufid =2768
+
+--update top (186) merchantcollections
+--set  reducedPrice = null,
+--price = null,
+--lock = 1
+--where merchant_id = 2959 
+--and collectionid in (select distinct mc.collectionid
+--from merchantcollections mc
+--inner join collections c on c.id = mc.collectionId
+--inner join collection_product cp on cp.collectionid = c.id
+--inner join products p on p.id_product = cp.productid
+--where  mc.merchant_id = 2959 
+--and p.manufid =2768
+--)
+
 
 select f.ClassName, mf.*
 from Datatail20130410.feeds.MerchantFeeds mf
 join feeds.feeds f on f.id =mf.FeedId
-where  feedid = 27
---and merchantid = 3447
+where  feedid = 9
+and merchantid = 1448
 order by feedid
 
-
-select mp.merchant_id, mp.productid, mp.ptr, p.model, p.manufmodel, p.ManufacturerIdentifier, p.active, p.discontinued from Datatail20130410.dbo.merchantProds mp
-inner join products p on p.id_product = mp.productid
-where merchant_id = 3447
-and p.manufID = 2982
-and p.manufmodel= 'SM300TTB'
+select productid from collection_product where collectionID = 33104
+select id_product, model, photo, specs, bundle, manufmodel from products where id_product in (199985,199987)
+select * from merchantProds where merchant_id = 1448 and productid in (select productid from collection_product where collectionID = 33104)
+select * from BlacklistedItems where merchantid = 589
 
 
 -- update top (1) Datatail20130410.feeds.MerchantFeeds
