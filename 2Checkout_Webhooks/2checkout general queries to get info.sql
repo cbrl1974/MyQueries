@@ -1,14 +1,25 @@
 use Copernic_verifone
 
-select 	*
-from Copernic_verifone.dbo.sales
---where REFNO = '115052909'
---where IPN_PARTNER_CODE is not null
---where REFNO = 252673919
---where  AVANGATE_CUSTOMER_REFERENCE = '47474788'
---where PAYMENTDATE between '2025-04-22' and '2025-04-23'
-where PAYMENTDATE > convert(date,getdate()-1)
+select * from Copernic_verifone.dbo.sales 
+where  PAYMENTDATE > convert(date,getdate()-1)
 order by PAYMENTDATE desc
+
+select * from salesInformation
+where  PAYMENTDATE > convert(date,getdate()-1)
+and  ORDERNO =  183000
+order by PAYMENTDATE desc
+
+
+select s.PAYMENTDATE,  sp.* from Copernic_verifone.dbo.salesProducts sp
+join Copernic_verifone.dbo.salesInformation  s on s.REFNO = sp.REFNO
+where  s.PAYMENTDATE > convert(date,getdate()-1)
+order by s.PAYMENTDATE desc
+
+
+
+
+
+
 
 
 select count(message_id)
@@ -41,8 +52,14 @@ order by creationdate desc
 
 
 
-select  top 100 *
+select  license_code  'License Code',
+license_product_code  'License Product Code',
+EXPIRATION_DATE 'Expiration Date', 
+Status, 
+NEXT_RENEWAL_PRICE,
+NEXT_RENEWAL_DATE
 from Copernic_verifone.dbo.Subscriptions
+where status = 'ACTIVE'
 order by message_id desc
 
 select count(message_id)
@@ -60,41 +77,18 @@ from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
 and creationDate > convert(date,getdate()-5)
 --and webkook = 'lcn'
-and severity <> 0
+--and severity <> 0
 --and text like '%6557886%'
 --and module = 'HandleIpn'
 order by creationDate desc
 
-select  top 50 * 
+select  top 50  * 
 from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
-and creationDate > convert(date,getdate()-1)
+and creationDate > convert(date,getdate()-2)
 --and webkook = 'lcn'
 and severity <> 0
 --and text like '%6557886%'
 --and module = 'HandleIpn'
 order by creationDate desc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
