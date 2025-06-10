@@ -96,7 +96,7 @@ from datatail20130410.feeds.feeds
 where id = 9
 --where updatefrequency not like '%api%'
 
-select m.id, m.merchant, f.id,f.ClassName, mf.FeedOptionsJson, JSON_VALUE(mf.FeedOptionsJson, '$.UseCostByCarton') AS UseCostByCarton
+select m.id, m.merchant, f.id, f.Name, f.ClassName, mf.FeedOptionsJson, JSON_VALUE(mf.FeedOptionsJson, '$.UseCostByCarton') AS UseCostByCarton
 from datatail20130410.feeds.MerchantFeeds mf
 join feeds.feeds f on f.id =mf.FeedId
 join merchants m on m.id = mf.MerchantId
