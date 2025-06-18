@@ -1,6 +1,6 @@
 --**************************Configs
 use tailbasify
-DECLARE @MerchantId as int = 3477;
+DECLARE @MerchantId as int = 3096;
 DECLARE @ShopifyMerchantId as int =  (select s.id
 from tailbasify.shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId

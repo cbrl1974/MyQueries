@@ -2,9 +2,17 @@ use datatail20130410
 
 select    * from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-and  feedid = 9 
-and MerchantId in (3600)
+--and  feedid = 9 
+--and MerchantId in (3401)
 order by feedid,merchantid,RunDate desc
+
+--delete top (2) datatail20130410.feeds.FeedDumps 
+--where  RunDate > convert(date,getdate()-1)
+--and  feedid = 9 
+--and MerchantId in (3401)
+
+
+select * from subcategories where Id_langue = 1 and catid = 156
 
 
 select mp.merchant_id,  mp.cost, mp.productid, mp.price, mp.reducedprice,mp.QtyPerPackage, fp.productid 'Productid_From_Feed', fp.price, fp.merchantid, fp.feedid, fp.AdditionalPricingData
@@ -16,14 +24,10 @@ and fp.MerchantId in (761)
 and fp.productid = 625189
 and m.active = 1
 
-select * from  feeds.ProductBasePrices where merchantId = 2798 and productid = 805314
-761	101.5929	625189	423.99	390.99	7	625189	330.00	761	9	{"FobPoint":1.0,"Discount":0.0,"DfiDiscount":0.0,"Freight":54.45,"ItemsPerCase":7}
-select * from merchantprods where merchant_id = 3065 and catID  = 181
-
 --delete top (2) datatail20130410.feeds.FeedDumps 
 --where  RunDate > convert(date,getdate()-1)
 --and  feedid = 9 
---and MerchantId in (3600)
+--and MerchantId in (1448)
 
 
 
@@ -56,8 +60,6 @@ inner join MerchantRunSummary mrs
 where d.RunDate > convert(date, getdate() - 1)
 	and d.feedid = 9
 order by mrs.CountMerchant, mf.merchantid, d.merchantid, d.RunDate desc, d.feedid desc
-
-
 
 
 --Check if all merchants onboarded preload ran
@@ -96,16 +98,26 @@ from datatail20130410.feeds.feeds
 where id = 9
 --where updatefrequency not like '%api%'
 
-select m.id, m.merchant, f.id, f.Name, f.ClassName, mf.FeedOptionsJson, JSON_VALUE(mf.FeedOptionsJson, '$.UseCostByCarton') AS UseCostByCarton
+select m.id, m.merchant, f.id, f.Name, f.ClassName, mf.FeedOptionsJson,
+JSON_VALUE(mf.FeedOptionsJson, '$.ApplySurcharge') AS ApplySurcharge
 from datatail20130410.feeds.MerchantFeeds mf
 join feeds.feeds f on f.id =mf.FeedId
 join merchants m on m.id = mf.MerchantId
 join merchantwebsiteInformation mwi on mwi.merchant_id = m.id and mwi.infoCode = 'template'
 where  mf.feedid = 9
-and JSON_VALUE(mf.FeedOptionsJson, '$.UseCostByCarton') = 'false'
 and m.active = 1
-and mwi.infoValue like '%Tailbasify%'
 order by MerchantId
+
+
+UPDATE top(1) mf
+SET FeedOptionsJson = JSON_MODIFY(FeedOptionsJson, '$.ApplySurcharge', 'true')
+FROM datatail20130410.feeds.MerchantFeeds mf
+JOIN feeds.feeds f ON f.id = mf.FeedId
+JOIN merchants m ON m.id = mf.MerchantId
+JOIN merchantwebsiteInformation mwi ON mwi.merchant_id = m.id AND mwi.infoCode = 'template'
+WHERE mf.FeedId = 9
+and mf.MerchantId  = 1448
+  AND m.active = 1;
 
 
 select distinct mc.collectionid, c.brands, mc.price, mc.reducedPrice, mc.lock
@@ -117,21 +129,16 @@ where  mc.merchant_id = 2798
 and p.manufid =2434
 
 
-
-select mp.merchant_id,  mp.cost, mp.productid, mp.price, mp.reducedprice, mp.lock,
-mp.QtyPerPackage, mp.PriceQualifier,
-p.ManufacturerIdentifier,
-fp.productid 'Productid_From_Feed', fp.price, fp.merchantid, fp.feedid, fp.AdditionalPricingData,
-sp.id, sp.SyncStatusId
---,v.*
+select mp.merchant_id,  mp.cost, mp.productid, p.active, p.discontinued, p.manufacturerIdentifier,
+mp.price, mp.reducedprice,mp.QtyPerPackage,
+fp.productid 'Productid_From_Feed', fp.price, fp.merchantid, fp.feedid, fp.AdditionalPricingData
 from feeds.ProductBasePrices fp
 left join merchantprods mp on mp.Merchant_ID = fp.MerchantId and  mp.productid = fp.ProductId 
-inner join products p on p.id_product = fp.productid
-left join Tailbasify.shopify.shopifyproducts sp on sp.MerchantId = fp.MerchantId and sp.tailbaseid = fp.productid
-inner join Tailbasify.shopify.ShopifyProductVariants v on v.ShopifyProductID = sp.id
-where  fp.feedid = 9
-and mp.Merchant_ID = 3065
-and mp.productid = 805314
+join products p on p.id_product =  fp.ProductId
+where  fp.feedid = 9 
+and p.discontinued = 0
+and p.active = 1
+and fp.MerchantId = 1448
 
 
 
@@ -192,8 +199,8 @@ select mp.merchant_id,  mp.cost, mp.productid, mp.price, mp.reducedprice,mp.QtyP
 from feeds.ProductBasePrices fp
 left join merchantprods mp on mp.Merchant_ID = fp.MerchantId and  mp.productid = fp.ProductId 
 where  fp.feedid = 9 
-and fp.MerchantId = 1202
-and fp.productid = 805314
+and fp.MerchantId = 1448
+--and fp.productid = 805314
 
 select * from feeds.ProductBasePrices fp where feedid = 9 and merchantid = 2087 and productid =577574
 

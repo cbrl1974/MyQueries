@@ -77,7 +77,7 @@ from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
 and creationDate > convert(date,getdate()-5)
 --and webkook = 'lcn'
---and severity <> 0
+and severity <> 0
 --and text like '%6557886%'
 --and module = 'HandleIpn'
 order by creationDate desc
@@ -85,9 +85,9 @@ order by creationDate desc
 select  top 50  * 
 from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
-and creationDate > convert(date,getdate()-2)
+and creationDate > convert(date,getdate()-1)
 --and webkook = 'lcn'
-and severity <> 0
+--and severity <> 0
 --and text like '%6557886%'
 --and module = 'HandleIpn'
 order by creationDate desc

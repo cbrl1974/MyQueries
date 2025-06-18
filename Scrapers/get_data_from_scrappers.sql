@@ -26,7 +26,7 @@ select * from datatail20130410.dbo.companies where cie like '%lowe%'
 select * from datatail20130410.dbo.retailers where webtracking = 1 and countryid = 36
 select * from datatail20130410.dbo.products where model like '%RF25HMIDBSR%'
 
-SELECT TOP (300) [LogID]
+SELECT TOP (100) [LogID]
       ,[Project]
       ,[Category]
       ,[Text]
@@ -38,7 +38,7 @@ SELECT TOP (300) [LogID]
   where Category = 'scrapers'
  and module = 'CostcoScraper'
   order by [Time] desc
-
+  Node Error detected in https://www.costco.ca/laptops.html xPath error .//div[contains(@class, 'table-cell results hidden-xs hidden-sm hidden-md')] has occur 1 times
 
 select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
 where RetailerID = 21
@@ -61,7 +61,7 @@ and date > convert(date,getdate()-1)
 
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%brick%' and AssemblyMethodName like 'Scrape%'
+select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%CostcoCanadaScraper%' and AssemblyMethodName like 'Scrape%'
 
 
 ----- *****************This runs an individual scrapper********************
@@ -70,7 +70,7 @@ select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%brick%'
 --Products
 update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
-where id = 'F2227F48-7997-446C-BF34-9DBDB069D9CE'
+where id = 'BBF0B852-5967-4278-B302-A9D3747F7C87' --categpriesAC3FE4C9-3203-4088-BA33-686653A7F8FA
 
 --Categories
 update top (1) Tailbaseservices.dbo.asynctasks

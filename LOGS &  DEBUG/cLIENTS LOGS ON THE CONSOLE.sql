@@ -1,13 +1,14 @@
-Declare @merchantId as int = 3423;
-Declare @productid int = 664230;
+Declare @merchantId as int = 1448;
+Declare @productid int = 853217
+;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -30, GETDATE()) ;
+Declare @past as date = DATEADD(day, -5, GETDATE()) ;
 
 
-SELECT TOP (100) *
-  FROM [firewall].[dbo].[LoggerClientEvents]
-  where merchantid = 1448
-  order by EventId desc
+--SELECT TOP (100) *
+--  FROM [firewall].[dbo].[LoggerClientEvents]
+--  where merchantid = 1448
+--  order by EventId desc
 
 
 
@@ -25,8 +26,8 @@ SELECT TOP (100) *
   order by changetime desc
 
   --For Collections
-Declare @merchantId as int = 3336;
-Declare @collectionId int = 29421;
+Declare @merchantId as int = 2959;
+Declare @collectionId int = 32550;
 Declare @today as date = getdate();
 Declare @past as date = DATEADD(day, -30, GETDATE()) ;
 
@@ -89,6 +90,17 @@ select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
  and ipaddress = '209.121.60.42'
   order by [timestamp] desc
 
+  SELECT 
+    o.type_desc AS ObjectType,
+    o.name AS ObjectName,
+    m.definition AS ObjectDefinition
+FROM sys.sql_modules m
+JOIN sys.objects o ON m.object_id = o.object_id
+WHERE m.definition LIKE '%MerchantProducts_ChangeTrackingArchive%'
+ORDER BY ObjectType, ObjectName;
+
+
+
 
 
 
@@ -104,11 +116,3 @@ select top 100 * from firewall.dbo.online where ipaddress = '70.69.9.5'
 
 
 
-
-use devtailbasecore
-select photo from products where id_product = 356299
-
-select * from specsProd where productid = 356299 order by specsID_1
-
-delete top (7) from specsProd 
-where  productid = 356299
