@@ -1,5 +1,5 @@
  Declare @AllBrandCatsActive int = 0;
-  Declare @merchantid int = 2087;
+  Declare @merchantid int = 3556;
   declare @FeedBrandCategories as FeedBrandCategory;
   insert into @FeedBrandCategories values
   (3181,'58,88,134,175,178,180,181,182,183,184,186,187,188,189,190,191,192,193,194,196,197,208,210,209,258,257,260,277,282,294,298,308,310,315,311,312,313,314,316,318,319,372,389,179,407,419,431,448,447,457,473,487,519,527,533,248,539,587,261,590,591,267,600,87,607,649,657'),
@@ -18,7 +18,8 @@
      ,dp.Dept 'Department'
      ,p.ManufModel
      ,p.active 'Active'
-     ,mp.price
+     ,mp.price,
+	 mp.lock
      ,CONVERT(BIT,CASE 
          WHEN @AllBrandCatsActive = 1
              THEN 1
