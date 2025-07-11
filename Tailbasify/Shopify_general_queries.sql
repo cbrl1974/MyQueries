@@ -4,7 +4,7 @@ use tailbasify
 --Convert only = 2 
 --Synchronize only = 3
 
-Declare @action as int = 3;
+Declare @action as int = 1;
 
 -- Merchants
 select
@@ -26,7 +26,7 @@ select sm.merchantid, m.merchant, m.active, concat('https://admin.shopify.com/st
 inner joindatatail20130410.dbo.merchants m on m.id = sm.MerchantId 
 where m.active = 1
 
-select * from shopify.shopifyMerchants  where merchantid = 3447
+select * from shopify.shopifyMerchants  where merchantid = 3558
 
 
 
@@ -42,7 +42,7 @@ order by [Status] desc, me.ModificationDate desc
 -- ************* Reset sync status
 update MerchantExports
  set [status]  = 1
- where merchantid  = 3227
+ where merchantid  = 3242
 
 
 
@@ -78,7 +78,7 @@ order by LogTime desc
 
 select distinct   text,logtime, category module 
 from logs  WITH (NOLOCK) 
-WHERE  merchantid = 3227
+WHERE  merchantid = 3039
 and LogTime > convert(date,getdate()-1)
 order by LogTime desc 
 
@@ -152,8 +152,8 @@ select * from shopify.ShopifyProducts where MerchantId = 2724 and TailbaseId = 7
 select  
 merchantid,id, vendor, tailbaseid, handle, syncstatusid, TemplateSuffix, ShopifyGeneratedProductId
 from shopify.shopifyProducts
-where merchantid = 3447
-and TailbaseId = 755234
+where merchantid = 3558
+and TailbaseId = 806437
 
 
 

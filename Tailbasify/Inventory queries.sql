@@ -1,9 +1,9 @@
 -- Get Merchants info
-use tailbasify
+use devtailbasify
 select
     s.id, m.merchant, s.MerchantId, s.ShopUrl, s.SecurityStamp, s.ApiVersion
 from shopify.shopifyMerchants s
-    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+    inner join devtailbasecore.dbo.merchants m on m.id = s.MerchantId
 where m.id = 3477
 
 select distinct top 100
@@ -23,26 +23,37 @@ order by h.id desc
 
 
 select l.*
-from datatail20130410.dbo.MerchantStores ms
+from devtailbasecore.dbo.MerchantStores ms
     inner join Shopify.ShopifyMerchantStoreLocations l on l.MerchantStoreId = ms.id
 where ms.MerchantID = 3477
 
 
 select *
-from datatail20130410.dbo.merchantstoresInventory
+from devtailbasecore.dbo.merchantstoresInventory
 where merchantid = 3477
 
 select *
-from datatail20130410.dbo.MerchantInventoryTypes
+from devtailbasecore.dbo.MerchantInventoryTypes
 order by MerchantId
 
 select *
-from datatail20130410.dbo.merchantStores
+from devtailbasecore.dbo.merchantStores
 where MerchantID = 3477
 
 select *
 from Shopify.ShopifyMerchantStoreLocations
 where shopifyMerchantId = 57
+
+select *
+from devtailbasecore.dbo.MerchantStores
+where merchantid =   3477
+
+select *
+from devtailbasecore.dbo.merchantstoresInventory
+where merchantid = 3477
+select *
+from devtailbasecore.dbo.MerchantInventoryStore
+where merchant_id = 3477
 
 insert into Shopify.ShopifyMerchantStoreLocations
     (ShopifyMerchantId, [name], ShopifyGeneratedLocationId, MerchantStoreId, IncludeInventoryAsTags, IncludeInventory, StorePickup, OnlineStockThreshold)
@@ -56,22 +67,22 @@ VALUES
 -- where ShopifyMerchantId = 4
 
 select *
-from datatail20130410.dbo.MerchantStores
+from devtailbasecore.dbo.MerchantStores
 where merchantid =   3477
 
 select *
-from datatail20130410.dbo.merchantstoresInventory
+from devtailbasecore.dbo.merchantstoresInventory
 where merchantid = 3477
 select *
-from datatail20130410.dbo.MerchantInventoryStore
+from devtailbasecore.dbo.MerchantInventoryStore
 where merchant_id = 3477
 
 
 select sp.MerchantId, sp.id, sp.TailbaseID, sp.handle, sp.tags, sp.SyncStatusId, sp.ModificationDate, si.Quantity, mt.InventoryType
 from shopify.shopifyProducts sp
-    inner join datatail20130410.dbo.merchantstoresInventory si on si.MerchantId = sp.MerchantId
+    inner join devtailbasecore.dbo.merchantstoresInventory si on si.MerchantId = sp.MerchantId
         and si.ItemId = sp.TailbaseId and si.ItemType = 1
-    inner join datatail20130410.dbo.MerchantInventoryTypes mt on mt.Id = si.MerchantInventoryTypeId and mt.MerchantId = sp.MerchantId
+    inner join devtailbasecore.dbo.MerchantInventoryTypes mt on mt.Id = si.MerchantInventoryTypeId and mt.MerchantId = sp.MerchantId
 where sp.MerchantId = 3477
     and sp.ItemType = 1
     and sp.tailbaseid in (44160,76142,43888)

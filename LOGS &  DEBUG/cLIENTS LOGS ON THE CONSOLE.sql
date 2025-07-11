@@ -1,16 +1,8 @@
-Declare @merchantId as int = 1448;
-Declare @productid int = 853217
+Declare @merchantId as int = 3447;
+Declare @productid int = 579507
 ;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -5, GETDATE()) ;
-
-
---SELECT TOP (100) *
---  FROM [firewall].[dbo].[LoggerClientEvents]
---  where merchantid = 1448
---  order by EventId desc
-
-
+Declare @past as date = DATEADD(day, -15, GETDATE()) ;
 
 --For Products
  select  * from MerchantProducts_ChangeTrackingArchive
@@ -19,11 +11,24 @@ Declare @past as date = DATEADD(day, -5, GETDATE()) ;
  and productid =@productid
   order by changetime desc
 
- select  * from MerchantProducts_ChangeTracking
- WHERE MERCHANTID = @merchantId
- --and [changetime] between @past and @today
- --and productid =@productid
-  order by changetime desc
+ --select  * from MerchantProducts_ChangeTracking
+ --WHERE MERCHANTID = @merchantId
+ ----and [changetime] between @past and @today
+ ----and productid =@productid
+ -- order by changetime desc
+
+SELECT TOP (100) *
+  FROM [firewall].[dbo].[LoggerClientEvents]
+  where merchantid = 3447
+  and urlpath like '%3990425%'
+  order by EventId desc
+
+  select id_product, model, manufmodel, manufacturerIdentifier from products  where id_product = 579507
+  select * from merchantProds where merchant_id = 3447 and  productid = 579507
+
+
+
+
 
   --For Collections
 Declare @merchantId as int = 2959;

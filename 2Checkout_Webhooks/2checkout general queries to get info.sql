@@ -60,7 +60,7 @@ NEXT_RENEWAL_PRICE,
 NEXT_RENEWAL_DATE
 from Copernic_verifone.dbo.Subscriptions
 where status = 'ACTIVE'
-order by message_id desc
+order by [Expiration Date] desc
 
 select count(message_id)
 from Copernic_verifone.dbo.Subscriptions
@@ -72,23 +72,12 @@ from Copernic_verifone.dbo.SubscriptionsUsers
 where CUSTOMER_ID in (15)
 
 
-select  top 50 * 
+select top 10 * 
 from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
 and creationDate > convert(date,getdate()-5)
---and webkook = 'lcn'
-and severity <> 0
---and text like '%6557886%'
---and module = 'HandleIpn'
+--and severity = 2
 order by creationDate desc
 
-select  top 50  * 
-from Copernic_verifone.dbo.WebHooksLogs
-where 1 = 1
-and creationDate > convert(date,getdate()-1)
---and webkook = 'lcn'
---and severity <> 0
---and text like '%6557886%'
---and module = 'HandleIpn'
-order by creationDate desc
+
 

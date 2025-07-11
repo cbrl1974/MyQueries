@@ -1,6 +1,6 @@
 --**************************Configs
 use tailbasify
-DECLARE @MerchantId as int = 3096;
+DECLARE @MerchantId as int = 3447;
 DECLARE @ShopifyMerchantId as int =  (select s.id
 from tailbasify.shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
@@ -18,29 +18,29 @@ where ShopifyConfigurationId = 22)
 and m.active = 1
 order by sm.merchantid desc
 
-insert into tailbasify.shopify.ShopifyMerchantConfigurations
- values
-     (19, 22, '[{"id":"gid://shopify/Publication/88933007592","name":"Online Store"},{"id":"gid://shopify/Publication/89588891880","name":"Shopify GraphiQL App"}]')
+--insert into tailbasify.shopify.ShopifyMerchantConfigurations
+-- values
+--     (19, 22, '[{"id":"gid://shopify/Publication/88933007592","name":"Online Store"},{"id":"gid://shopify/Publication/89588891880","name":"Shopify GraphiQL App"}]')
 
 
 
 
-delete top (1) Tailbasify.shopify.ShopifyMerchantConfigurations 
-where ShopifyMerchantId = 38 
-and ShopifyConfigurationId = 19
+--delete top (1) tailbasify.shopify.ShopifyMerchantConfigurations 
+--where ShopifyMerchantId = 38 
+--and ShopifyConfigurationId = 19
 
-update top (1) tailbasify.shopify.ShopifyMerchantConfigurations
-set ConfigurationValue = 'yes'
-where ShopifyMerchantId = 4
-    and ShopifyConfigurationId = 23
+--update top (1) tailbasify.shopify.ShopifyMerchantConfigurations
+--set ConfigurationValue = 'yes'
+--where ShopifyMerchantId = 4
+--    and ShopifyConfigurationId = 23
 
 
 select *
 from tailbasify.shopify.ShopifyMerchantConfigurations
 
-delete top (12) tailbasify.shopify.ShopifyMerchantConfigurations
- where ShopifyMerchantId = 4
- and ShopifyConfigurationId = 23
+--delete top (12) tailbasify.shopify.ShopifyMerchantConfigurations
+-- where ShopifyMerchantId = 4
+-- and ShopifyConfigurationId = 23
 
  
 select *
