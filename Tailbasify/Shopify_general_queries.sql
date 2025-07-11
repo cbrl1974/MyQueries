@@ -43,28 +43,7 @@ order by [Status] desc, me.ModificationDate desc
 update MerchantExports
  set [status]  = 1
  where merchantid  = 3242
-
-
-
-select s.MerchantId, REPLACE(s.ShopUrl, '.myshopify.com', '') AS CleanedShopUrl 
-	from datatail20130410.dbo.merchants m
-        inner join datatail20130410.dbo.MerchantWebsiteInformation w on w.merchant_id = m.id and w.infoValue like '%tailbasify%'
-        inner join shopify.ShopifyMerchants s on s.merchantid = m.id 
-        inner join  MerchantExports me on me.MerchantId = s.MerchantId
-        where me.ModificationDate > convert(date,getdate()-7)
-        and s.merchantid not in (1190,1956,2339,2478,2570,2802,2887,3209,3441)
-		and m.active = 1
-        order by w.merchant_id
-
-		select * from  [Shopify].[ShopifyAppInfo]  order by creationdate desc
-		select * from [Shopify].[MerchantShopifyApps]  order by creationdate desc
-
-
-
-
-
- select count(productid) fromdatatail20130410.dbo.merchantProds where merchant_id = 1956
-
+ 
 ----**************LOGS**************
 select * from logsType
 
@@ -154,8 +133,6 @@ merchantid,id, vendor, tailbaseid, handle, syncstatusid, TemplateSuffix, Shopify
 from shopify.shopifyProducts
 where merchantid = 3558
 and TailbaseId = 806437
-
-
 
 
 
@@ -310,10 +287,3 @@ from SyncStatus
     -- Translate = 1
     -- Translated = 2
     -- None = 3
-
-	select spsr.id, spsr.syncreportid, spsr.shopifyproductid, spsr.Operation, spsr.[Status], spsr.text, ssr.StartTime, spsr.graphqlcallinfo
-    from Shopify.ShopifyProductSyncReportsDetail spsr with (nolock)
-    join Shopify.ShopifySyncReports ssr on ssr.id = spsr.syncreportid
-    where ssr.merchantid = 1175 and CAST(ssr.StartTime AS DATE) = '2025-03-31'
-    and spsr.ShopifyProductId in (1109674)
-    order by spsr.id desc;
