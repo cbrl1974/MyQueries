@@ -5,13 +5,15 @@ from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
 --where 1 = 1
     and feedid = 9
-    --and MerchantId in (2087)
+    --and MerchantId in (3606)
+	--and CurrentIndex <= totalcount
 order by feedid,merchantid,RunDate desc
 
---delete top (2) datatail20130410.feeds.FeedDumps 
---where  RunDate > convert(date,getdate()-1)
---and  feedid = 9 
---and MerchantId in (3401)
+delete top (20) datatail20130410.feeds.FeedDumps 
+where  RunDate > convert(date,getdate()-1)
+and  feedid = 9 
+--and CurrentIndex <= totalcount
+and MerchantId in (3606)
 
 
 select mp.merchant_id, mp.cost, mp.productid, mp.price, mp.reducedprice, mp.QtyPerPackage, fp.productid 'Productid_From_Feed', fp.price, fp.merchantid, fp.feedid, fp.AdditionalPricingData
@@ -22,6 +24,20 @@ where  fp.feedid = 9
     and fp.MerchantId in (761)
     and fp.productid = 625189
     and m.active = 1
+
+
+	
+
+select mp.merchant_id, mp.cost, mp.productid, mp.price, mp.reducedprice, mp.QtyPerPackage, fp.productid 'Productid_From_Feed', fp.price, fp.merchantid, fp.feedid, fp.AdditionalPricingData
+from feeds.ProductBasePrices fp
+    left join merchantprods mp on mp.Merchant_ID = fp.MerchantId and mp.productid = fp.ProductId
+    inner join merchants m on m.id = fp.MerchantId
+where  fp.feedid = 9
+    and fp.MerchantId in (1202)
+    and fp.productid in (258565,258558)
+    and m.active = 1
+
+
 
 --delete top (2) datatail20130410.feeds.FeedDumps 
 --where  RunDate > convert(date,getdate()-1)
@@ -74,6 +90,7 @@ select distinct merchantid
 order by merchantid
 
 
+
 SELECT --top 150
     [LogID]
       , [Project]
@@ -87,7 +104,7 @@ FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where category = 'feeds'
     --and text not like '%soap%'
     --and text  like '%Starting DumpData for AshleyAPI(9 -%'
-    and severity != 2
+   and severity != 2
     --and text like '%MerchantProds updated for feed AshleyAPI(9), MerchantID:%'
     --and time between '2025-06-14 00:00:00.000' and '2025-06-14 23:59:59.999'
     and time > convert(date,getdate()-0)
@@ -98,6 +115,11 @@ order by [time] desc
 select *
 from datatail20130410.feeds.feeds
 where id = 9
+
+select *
+from datatail20130410.feeds.merchantfeeds
+where feedid = 9
+and merchantid = 1202
 --where updatefrequency not like '%api%'
 
 select m.id, m.merchant, f.id, f.Name, f.ClassName, mf.MerchantFeedId, mf.FeedOptionsJson,
@@ -106,7 +128,7 @@ from datatail20130410.feeds.MerchantFeeds mf
     join feeds.feeds f on f.id =mf.FeedId
     join merchants m on m.id = mf.MerchantId
     join merchantwebsiteInformation mwi on mwi.merchant_id = m.id and mwi.infoCode = 'template'
-where  mf.merchantid = 2087
+where  mf.merchantid = 1202
     and m.active = 1
 order by MerchantId
 

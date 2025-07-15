@@ -4,7 +4,7 @@ use tailbasify
 --Convert only = 2 
 --Synchronize only = 3
 
-Declare @action as int = 1;
+Declare @action as int = 3;
 
 -- Merchants
 select
@@ -17,7 +17,7 @@ select
 	 s.ShopUrl, s.SecurityStamp, s.AccessToken, ApiKey
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-	and s.merchantid = 3227
+	and s.merchantid = 1817
 	and m.active = 1
 order by s.id
 
@@ -42,13 +42,13 @@ order by [Status] desc, me.ModificationDate desc
 -- ************* Reset sync status
 update MerchantExports
  set [status]  = 1
- where merchantid  = 3242
+ where merchantid  = 1817
  
 ----**************LOGS**************
 select * from logsType
 
 select  distinct  *  from logs  WITH (NOLOCK) 
-where Text like '%Failed%'
+where Text like '%Failed convert%'
 and LogTime > convert(date,getdate()-1)
 and MerchantID != 3209
 order by LogTime desc 
@@ -57,10 +57,9 @@ order by LogTime desc
 
 select distinct   text,logtime, category module 
 from logs  WITH (NOLOCK) 
-WHERE  merchantid = 3039
+WHERE  merchantid = 3589
 and LogTime > convert(date,getdate()-1)
 order by LogTime desc 
-
 
 
 select distinct top 100 *  from logs  WITH (NOLOCK) 
@@ -131,7 +130,10 @@ select * from shopify.ShopifyProducts where MerchantId = 2724 and TailbaseId = 7
 select  
 merchantid,id, vendor, tailbaseid, handle, syncstatusid, TemplateSuffix, ShopifyGeneratedProductId
 from shopify.shopifyProducts
-where merchantid = 3558
+where merchantid = 3589
+and ItemType = 2
+and vendor = 'Calgary Furniture Emporium'
+and syncstatusid = 4
 and TailbaseId = 806437
 
 
@@ -156,15 +158,17 @@ and m.ShopifyProductId in (2767726)
 
 
 
-select sp.merchantid,
---v.sku, v.Price, v.CompareAtPrice, mp.price, mp.reducedPrice,
-v.*
+select  m.id, m.merchant, m.active,sp.id, sp.MerchantId, sp.handle, sp.tailbaseid, sp.SyncStatusId,
+v.sku, v.syncstatusid
+--,v.*
 from shopify.ShopifyProductVariants v
 	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
+	inner join datatail20130410.dbo.merchants m on m.id = sp.MerchantId
 	inner join datatail20130410.dbo.Merchantprods mp on  mp.productid =sp.tailbaseid and mp.merchant_id = sp.merchantid
-    where sp.merchantid =  3096
-	--and ShopifyProductID in (695752 ,695749,695750,695751)
-	and sp.tailbaseid in (635315)
+    where sp.SyncStatusId = 4
+	and v.SyncStatusId <> 4
+	and sp.merchantid not in (1956,2798,3209,3441,3458)
+	and m.active = 1
 
 
 
