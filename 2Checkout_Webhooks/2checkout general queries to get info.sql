@@ -10,16 +10,14 @@ and  ORDERNO =  183000
 order by PAYMENTDATE desc
 
 
-select s.PAYMENTDATE,  sp.* from Copernic_verifone.dbo.salesProducts sp
+select 
+    CONVERT(DATE, s.PAYMENTDATE) AS PAYMENTDATE,
+    Format(SUM(sp.IPN_TOTAL * s.FX_RATE), 'N3') AS totalSale
+from Copernic_verifone.dbo.salesProducts sp
 join Copernic_verifone.dbo.salesInformation  s on s.REFNO = sp.REFNO
-where  s.PAYMENTDATE > convert(date,getdate()-1)
-order by s.PAYMENTDATE desc
-
-
-
-
-
-
+where s.ORDERSTATUS = 'COMPLETE'
+GROUP BY CONVERT(DATE, s.PAYMENTDATE)
+ORDER BY PAYMENTDATE DESC;
 
 
 select count(message_id)
@@ -29,7 +27,7 @@ from Copernic_verifone.dbo.sales
 --total sale per day
 SELECT
     CONVERT(DATE, PAYMENTDATE) AS PAYMENTDATE,
-    Format(SUM(IPN_TOTAL * FX_RATE), 'N2') AS totalSale
+    Format(SUM(IPN_TOTAL * FX_RATE), 'N3') AS totalSale
 FROM Copernic_verifone.dbo.sales
 where ORDERSTATUS = 'COMPLETE'
 GROUP BY CONVERT(DATE, PAYMENTDATE)
@@ -72,12 +70,41 @@ from Copernic_verifone.dbo.SubscriptionsUsers
 where CUSTOMER_ID in (15)
 
 
-select top 10 * 
+select  * 
 from Copernic_verifone.dbo.WebHooksLogs
 where 1 = 1
-and creationDate > convert(date,getdate()-5)
+and creationDate > convert(date,getdate()-0)
 --and severity = 2
 order by creationDate desc
+
+
+
+select  license_code  'License Code',
+license_product_code  'License Product Code',
+start_date,
+date_updated,
+EXPIRATION_DATE 'Expiration Date',
+Status,
+NEXT_RENEWAL_PRICE,
+NEXT_RENEWAL_DATE
+from Copernic_verifone.dbo.Subscriptions
+where 
+status = 'ACTIVE'
+and EXPIRATION_DATE != '9999-12-31'
+and 
+(
+LICENSE_CODE like '0%' or
+LICENSE_CODE like '1%' or
+LICENSE_CODE like '2%' or
+LICENSE_CODE like '3%' or
+LICENSE_CODE like '4%' or
+LICENSE_CODE like '5%' or
+LICENSE_CODE like '6%' or
+LICENSE_CODE like '7%' or
+LICENSE_CODE like '8%' or
+LICENSE_CODE like '9%'
+)
+order by license_code asc
 
 
 
