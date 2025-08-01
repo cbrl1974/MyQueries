@@ -1,12 +1,15 @@
-Declare @MerchantID as int = 2814
+Declare @MerchantID as int = 3587
 
 select * from merchantwebsitetexts where merchant_id = @MerchantID  and textcode = 'newslettersignup'
 
 
 update top (1) merchantwebsitetexts
-set content_1 = 'MailChimp|apikey~70101ab022b6ad6615a49da1d8444c07-us2|id~ff9458cee3'
---, content_2 = 'MailChimp|apikey~323517431820b132d038920ea4bd5209-us18|id~e84bd667b5'
+set content_1 = 'MailChimp|apikey~90f457aa8628e21a1f75aa907159e8b2-us1|id~92de533cff'
+, content_2 = 'MailChimp|apikey~90f457aa8628e21a1f75aa907159e8b2-us1|id~92de533cff'
  where merchant_id = @MerchantID  and textcode = 'newslettersignup'
+ --email|dfw@donsfurniturewhse.com
+
+ select * from merchantwebsitetexts where merchant_id = @MerchantID  and textcode = 'newslettersignup'
 
 select content_1 from merchantwebsitetexts where textcode = 'newslettersignup' 
 
