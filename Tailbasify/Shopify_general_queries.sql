@@ -17,7 +17,7 @@ select
 	 s.ShopUrl, s.SecurityStamp, s.AccessToken, ApiKey
 from shopify.shopifyMerchants s
     inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-	and s.merchantid = 1817
+	and s.merchantid = 3388
 	and m.active = 1
 order by s.id
 
@@ -26,8 +26,15 @@ select sm.merchantid, m.merchant, m.active, concat('https://admin.shopify.com/st
 inner joindatatail20130410.dbo.merchants m on m.id = sm.MerchantId 
 where m.active = 1
 
-select * from shopify.shopifyMerchants  where merchantid = 3558
 
+
+select * from shopify.shopifyMerchants  where merchantid = 1781
+
+--update top (1) shopify.shopifyMerchants
+--set AccessToken = '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', --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
+--SecurityStamp = 'DA4DBD51-D003-4B9C-A2E2-36825E590959' -- DA4DBD51-D003-4B9C-A2E2-36825E590959
+--where id = 6
+--and merchantid = 1202
 
 
 ----**************EXPORT STATUS**************
@@ -37,29 +44,47 @@ from tailbasify.dbo.MerchantExports me WITH (NOLOCK)
 	inner join tailbasify.shopify.ShopifyMerchants sm on sm.MerchantId = me.MerchantId
 	--and  me.MerchantId = 1956
 	and sm.ApiVersion is not null
+	and m.active = 1
 order by [Status] desc, me.ModificationDate desc
 
 -- ************* Reset sync status
 update MerchantExports
  set [status]  = 1
- where merchantid  = 1817
+ where merchantid  = 3497
  
 ----**************LOGS**************
 select * from logsType
 
+
+
+select distinct  *  from logs  WITH (NOLOCK) 
+WHERE  merchantid = 2761
+and LogTime > convert(date,getdate()-0)
+order by LogTime desc 
+
+
 select  distinct  *  from logs  WITH (NOLOCK) 
 where Text like '%Failed convert%'
-and LogTime > convert(date,getdate()-1)
-and MerchantID != 3209
+and LogTime > convert(date,getdate()-0)
+and MerchantID != null
 order by LogTime desc 
 
 
 
-select distinct   text,logtime, category module 
-from logs  WITH (NOLOCK) 
-WHERE  merchantid = 3589
-and LogTime > convert(date,getdate()-1)
-order by LogTime desc 
+SELECT DISTINCT
+       a.*,
+       j.MetafieldsToBeUpdated
+FROM logs a WITH (NOLOCK)
+CROSS APPLY OPENJSON(a.text)
+WITH (
+    MetafieldsToBeUpdated nvarchar(100) '$.MetafieldsToBeUpdated'
+) j
+WHERE a.merchantid = 3388
+  AND a.LogTime > CONVERT(date, GETDATE() - 10)
+  AND a.Category = 'Statistics'
+  AND a.module = 'Converter'
+ORDER BY a.LogTime DESC;
+
 
 
 select distinct top 100 *  from logs  WITH (NOLOCK) 
@@ -93,7 +118,7 @@ select * from shopify.ShopifyProducts where id = 2742242
 select * 
 from Shopify.ShopifySyncReports h WITH (NOLOCK)
     join Shopify.ShopifyProductSyncReportsDetail d on h.id = d.SyncReportId
-    where d.ShopifyProductId in (2322315)
+    where d.ShopifyProductId in (1844590)
 order by h.id desc
 
  --
@@ -135,6 +160,23 @@ and ItemType = 2
 and vendor = 'Calgary Furniture Emporium'
 and syncstatusid = 4
 and TailbaseId = 806437
+
+
+select sp.merchantid, sp.vendor, sp.ProductType, sp.tailbaseid, sp.handle, sp.SyncStatusId, v.*
+from shopify.ShopifyMerchantMetafields v
+	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
+    where sp.merchantid =  3388
+	and sp.itemtype = 1
+	and v.SyncStatusId <> 4
+
+	update top (25) shopify.shopifyProducts
+	set SyncStatusId = 2 
+	where id in (select sp.id
+from shopify.ShopifyMerchantMetafields v
+	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
+    where sp.merchantid =  3388
+	and sp.itemtype = 1
+	and v.SyncStatusId <> 4)
 
 
 

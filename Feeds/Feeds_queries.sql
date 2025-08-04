@@ -5,14 +5,14 @@ from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
 --where 1 = 1
     and feedid = 9
-    --and MerchantId in (3606)
+    --and MerchantId in (2798,1448)
 	--and totalcount = 0
 order by feedid,merchantid,RunDate desc
 
---delete top (10) datatail20130410.feeds.FeedDumps 
---where  RunDate > convert(date,getdate()-1)
---and  feedid = 9 
---and totalcount = 0
+delete top (10) datatail20130410.feeds.FeedDumps 
+where  RunDate > convert(date,getdate()-1)
+and  feedid = 9 
+   and MerchantId in (2798,1448)
 
 
 
@@ -138,3 +138,17 @@ select *
 from datatail20130410.dbo.MerchantFeeds
 where merchant_id in (3429) and brand = 'Ashley'
 
+
+
+select * from products where model like '%WP2188656%' --208601
+--WP2188656
+
+select m.id, m.merchant, m.merchant_url, p.model, p.manufmodel,p.DateCreation  , mp.price, mp.reducedPrice,mp.realPrice
+from  products p
+inner join merchantProds mp  on p.id_product = mp.productid
+inner join merchants m on m.id = mp.merchant_id
+and m.countryCode = 'ca'
+where mp.productid = 208601
+and mp.realprice is not null
+and m.active = 1
+order by mp.realPrice
