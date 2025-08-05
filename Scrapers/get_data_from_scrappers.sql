@@ -4,64 +4,84 @@ use datatail20130410
 exec datatail20130410.dbo.ScraperDataReport
 
 --Check the state of a scraper
-select assemblyclass, [state], LastIntervalExecution, [Interval], AssemblyMethodName from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)  
+select assemblyclass, [state], LastIntervalExecution, [Interval], AssemblyMethodName
+from Tailbaseservices.dbo.AsyncTasks WITH (NOLOCK)
 where AssemblyMethodName like 'Scrape%'
-and AssemblyMethodName = 'ScrapeProducts'
- order by  [state] ,LastIntervalExecution desc 
+    and AssemblyMethodName = 'ScrapeProducts'
+order by  [state] ,LastIntervalExecution desc
 
 
 
 -- Get Competition from merchant
 DECLARE @MerchantID as int = 675;
-select competition from datatail20130410.dbo.merchants where id = @MerchantID
+select competition
+from datatail20130410.dbo.merchants
+where id = @MerchantID
 
-select * from datatail20130410.dbo.companies where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307,1100,2756)
-select id, merchant, competition from datatail20130410.dbo.merchants where competition is not null and active = 1
-select * from datatail20130410.dbo.companies where cie like '%lowe%'
- 
+select *
+from datatail20130410.dbo.companies
+where id_cie in (19,21,23,156,25,155,27,28,994,21,225,160,31,47,307,1100,2756)
+select id, merchant, competition
+from datatail20130410.dbo.merchants
+where competition is not null and active = 1
+select *
+from datatail20130410.dbo.companies
+where cie like '%lowe%'
+
 -- update top (1) merchants
 -- set competition = '19,156,27,21,225,160,31'
 --  where id = 675
 
-select * from datatail20130410.dbo.retailers where webtracking = 1 and countryid = 36
-select * from datatail20130410.dbo.products where model like '%RF25HMIDBSR%'
+select *
+from datatail20130410.dbo.retailers
+where webtracking = 1 and countryid = 36
+select *
+from datatail20130410.dbo.products
+where model like '%RF25HMIDBSR%'
 
-SELECT TOP (100) [LogID]
-      ,[Project]
-      ,[Category]
-      ,[Text]
-      ,[Time]
-      ,[Severity]
-      ,[Module]
-      ,[Location]
-  FROM [EventReactor].[dbo].[Logs]
-  where Category = 'scrapers'
- and module = 'CostcoScraper'
-  order by [Time] desc
-  Node Error detected in https://www.costco.ca/laptops.html xPath error .//div[contains(@class, 'table-cell results hidden-xs hidden-sm hidden-md')] has occur 1 times
+SELECT TOP (100)
+    [LogID]
+      , [Project]
+      , [Category]
+      , [Text]
+      , [Time]
+      , [Severity]
+      , [Module]
+      , [Location]
+FROM [EventReactor].[dbo].[Logs]
+where Category = 'scrapers'
+    and module = 'CostcoScraper'
+order by [Time] desc
 
-select  *  from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)         
+
+
+select *
+from TailbaseServices.dbo.WebTrackingCategories WITH (NOLOCK)
 where RetailerID = 21
---and Department = ''
---and url like '%furniture%'
--- and not  url like '%gaming%'
-and parse =1
+    --and Department = ''
+    --and url like '%furniture%'
+    -- and not  url like '%gaming%'
+    and parse =1
 --and url like '%appliances%'
 order by DateModified, Parse desc
 
 
 
-select top 150  * from TailbaseServices.dbo.WebTrackingProducts  WITH (NOLOCK)         
+select top 150
+    *
+from TailbaseServices.dbo.WebTrackingProducts  WITH (NOLOCK)
 where RetailerID = 23
---and TailbaseId = 756879
-and date > convert(date,getdate()-1)
- order by date desc 
+    --and TailbaseId = 756879
+    and date > convert(date,getdate()-1)
+order by date desc
 
 
 
 
 --This checks  the state of a scraper
-select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%CostcoCanadaScraper%' and AssemblyMethodName like 'Scrape%'
+select *
+from Tailbaseservices.dbo.AsyncTasks
+where AssemblyClass like '%thebrick%' and AssemblyMethodName like 'Scrape%'
 
 
 ----- *****************This runs an individual scrapper********************
@@ -70,7 +90,8 @@ select * from Tailbaseservices.dbo.AsyncTasks where AssemblyClass like '%CostcoC
 --Products
 update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
-where id = 'BBF0B852-5967-4278-B302-A9D3747F7C87' --categpriesAC3FE4C9-3203-4088-BA33-686653A7F8FA
+where id = 'f2227f48-7997-446c-bf34-9dbdb069d9ce'
+--categpriesAC3FE4C9-3203-4088-BA33-686653A7F8FA
 
 --Categories
 update top (1) Tailbaseservices.dbo.asynctasks
@@ -189,7 +210,8 @@ where id = '3ff2b78b-5ce8-465f-942b-f62af9ab9a6d'
 
 
 --States Defintiion
-    1 = queue to the tasks list (will be executed shortly)
+1 = queue to the tasks list
+(will be executed shortly)
     3 = currently executing
     5 = finished executing
     6 = finished executing successfully
@@ -197,21 +219,43 @@ where id = '3ff2b78b-5ce8-465f-942b-f62af9ab9a6d'
 
 
 
-select top 10 * from Tailbaseservices.dbo.WebTrackingProducts order by date desc
+select top 10
+    *
+from Tailbaseservices.dbo.WebTrackingProducts
+order by date desc
 
 
 
 
 
 
-select * from Tailbaseservices.dbo.ScrapersSettings where retailerid = 21
-select  top 10 * from Tailbaseservices.dbo.HomeDepotCanadaBrandModels
-select  top 500 * from Tailbaseservices.dbo.ScrapersModelsMappings where retailerid = 21 order by CreatedOn desc
-select top 100 * from Tailbaseservices.dbo.DebugInfoScraper
-select top 100 * from Tailbaseservices.dbo.ScrapersSkuInfos
-select * from Tailbaseservices.dbo.WebTrackingCategories where retailerid = 1100
-select top 10 * from Tailbaseservices.dbo.WebTrackingProducts where retailerid = 1100  order by date desc
-select * from Tailbaseservices.dbo.ApiClientConfigs
+select *
+from Tailbaseservices.dbo.ScrapersSettings
+where retailerid = 21
+select top 10
+    *
+from Tailbaseservices.dbo.HomeDepotCanadaBrandModels
+select top 500
+    *
+from Tailbaseservices.dbo.ScrapersModelsMappings
+where retailerid = 21
+order by CreatedOn desc
+select top 100
+    *
+from Tailbaseservices.dbo.DebugInfoScraper
+select top 100
+    *
+from Tailbaseservices.dbo.ScrapersSkuInfos
+select *
+from Tailbaseservices.dbo.WebTrackingCategories
+where retailerid = 1100
+select top 10
+    *
+from Tailbaseservices.dbo.WebTrackingProducts
+where retailerid = 1100
+order by date desc
+select *
+from Tailbaseservices.dbo.ApiClientConfigs
 
 
 
