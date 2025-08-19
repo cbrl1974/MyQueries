@@ -3,31 +3,18 @@ use datatail20130410
 select *
 from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
---where 1 = 1
     and feedid = 9
-    --and MerchantId in (2798,1448)
-	--and totalcount = 0
+    --and MerchantId in (1817)
+     --and    totalcount = 0
 order by feedid,merchantid,RunDate desc
+--208
 
-delete top (10) datatail20130410.feeds.FeedDumps 
-where  RunDate > convert(date,getdate()-1)
-and  feedid = 9 
-   and MerchantId in (2798,1448)
+ delete top (20) datatail20130410.feeds.FeedDumps 
+ where  RunDate > convert(date,getdate()-1)
+     and feedid = 9
+     --and MerchantId in (3385)
+	  and totalcount = 0
 
-
-
-
-
-	
-
-select mp.merchant_id, mp.cost, mp.productid, mp.price, mp.reducedprice, mp.QtyPerPackage, fp.productid 'Productid_From_Feed', fp.price, fp.merchantid, fp.feedid, fp.AdditionalPricingData
-from feeds.ProductBasePrices fp
-    left join merchantprods mp on mp.Merchant_ID = fp.MerchantId and mp.productid = fp.ProductId
-    inner join merchants m on m.id = fp.MerchantId
-where  fp.feedid = 9
-    and fp.MerchantId in (1202)
-    and fp.productid in (258565,258558)
-    and m.active = 1
 
 
 
@@ -95,34 +82,57 @@ SELECT top 150
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where category = 'feeds'
     and time > convert(date,getdate()-0)
+    and severity <> 2
 order by [time] desc
 
+select *
+from datatail20130410.Feeds.ProductBasePrices
+where feedid = 4
+    and ProductId = 733607
 
+select *
+from feeds.PriceTypes
+select *
+from feeds.PricingTiers
 
+select id_product, model, manufModel, photo, active, discontinued, ManufacturerIdentifier
+from products
+where id_product = 456991
+--733607
+select *
+from merchantProds
+where merchant_id = 3605 and productid = 733607
 select *
 from datatail20130410.feeds.feeds
-where id = 9
+where id = 1
 
-select *
-from datatail20130410.feeds.merchantfeeds
-where feedid = 9
-and merchantid = 3401
---where updatefrequency not like '%api%'
+select mf.MerchantId, mf.FeedOptionsJson, m.active
+from datatail20130410.feeds.merchantfeeds mf
+left join merchants m on m.id = mf.merchantid
+where mf.feedid = 1
+order by mf.merchantid
 
-select m.id, m.merchant, f.id, f.Name, f.ClassName, mf.MerchantFeedId, mf.FeedOptionsJson,
-    JSON_VALUE(mf.FeedOptionsJson, '$.CustomerId') AS CustomerId,
-	JSON_VALUE(mf.FeedOptionsJson, '$.ShipTo') AS ShipTo
-from datatail20130410.feeds.MerchantFeeds mf
-    join feeds.feeds f on f.id = mf.FeedId
-	join datatail20130410.feeds.FeedDumps fd on fd.MerchantId = mf.MerchantId
-    join merchants m on m.id = mf.MerchantId
-    join merchantwebsiteInformation mwi on mwi.merchant_id = m.id and mwi.infoCode = 'template'
-where  m.active = 1 
-	and totalcount = 0
-	and RunDate > convert(date,getdate()-1)
-	and mf.feedid = 9
-    --and mf.merchantid = 3401
---order by MerchantId
+
+
+select m.id, p.id_product, p.manufModel, co.cie, c.category,  fp.price, mp.cost, mp.price, mp.reducedPrice,
+  JSON_VALUE( fp.AdditionalPricingData , '$.MinimumAdvertisedPrice') AS MAP,
+    JSON_VALUE( fp.AdditionalPricingData , '$.ManufacturerSuggestedRetailPrice') AS MSRP,
+  JSON_VALUE( fp.AdditionalPricingData , '$.Freight') AS Freight,
+    JSON_VALUE( fp.AdditionalPricingData , '$.ItemsPerCase') AS ItemsPerCase,
+ fp.AdditionalPricingData 
+from Feeds.ProductBasePrices fp
+join products p on p.id_product = fp.productid
+join companies co on co.id_cie = p.manufid 
+join categories c on c.id_category = p.catid and c.id_langue = 1
+join merchantProds mp on mp.productid = p.id_product
+join merchants m on m.id = mp.merchant_id and fp.productid = mp.productid
+where fp.feedid = 9
+and p.manufid = 7587
+and m.id = 3025
+and p.active = 1
+and p.discontinued = 0
+and p.photo = 1
+and p.specs = 1
 
 
 --Old Feed
@@ -136,19 +146,46 @@ where mf.brand = 'Ashley'
 
 select *
 from datatail20130410.dbo.MerchantFeeds
-where merchant_id in (3429) and brand = 'Ashley'
+where merchant_id in (2763,3281,3242,2347,2936,3598,3509,1099,3514,2175,2627,2542,2993,2232,3471,3392,2071,3090,1817,1798,3384,3512,2932,2980,2738,3077,3574,3391,3390,2186,3535,2562,2281,3429,2769,3363,2464,2029,2777,3604,3608,3591,1606,3062,3603)
+    and brand = 'Ashley'
+
+--delete top (41) from datatail20130410.dbo.MerchantFeeds
+--where merchant_id in (2763,3281,3242,2347,2936,3598,3509,1099,3514,2175,2627,2542,2993,2232,3471,3392,2071,3090,1817,1798,3384,3512,2932,2980,2738,3077,3574,3391,3390,2186,3535,2562,2281,3429,2769,3363,2464,2029,2777,3604,3608,3591,1606,3062,3603) 
+--and brand = 'Ashley'
 
 
 
-select * from products where model like '%WP2188656%' --208601
+select *
+from products
+where model like '%WP2188656%'
+--208601
 --WP2188656
 
-select m.id, m.merchant, m.merchant_url, p.model, p.manufmodel,p.DateCreation  , mp.price, mp.reducedPrice,mp.realPrice
-from  products p
-inner join merchantProds mp  on p.id_product = mp.productid
-inner join merchants m on m.id = mp.merchant_id
-and m.countryCode = 'ca'
+select m.id, m.merchant, m.merchant_url, p.model, p.manufmodel, p.DateCreation  , mp.price, mp.reducedPrice, mp.realPrice
+from products p
+    inner join merchantProds mp on p.id_product = mp.productid
+    inner join merchants m on m.id = mp.merchant_id
+        and m.countryCode = 'ca'
 where mp.productid = 208601
-and mp.realprice is not null
-and m.active = 1
+    and mp.realprice is not null
+    and m.active = 1
 order by mp.realPrice
+
+
+ select mf.MerchantId
+                ,m.merchant 'Merchant'
+                ,m.active 'IsMerchantActive'
+                ,(select max(Time) from feeds.JobRun where FeedId=mf.FeedId and DryRun=0) 'LastSource'
+                ,(select max(Time) from feeds.JobRun where MerchantFeedId=mf.MerchantFeedId and DryRun=0) 'LastRun'
+                ,mf.FeedOptionsJson
+                from feeds.MerchantFeeds mf
+                join merchants m on mf.MerchantId=m.ID
+                where mf.FeedId = 9
+                order by 2;
+                
+                select id 'MerchantId', merchant+' ('+convert(nvarchar(10),id)+')' 'Merchant' from merchants where id not in (
+                select mf.MerchantId
+                from feeds.MerchantFeeds mf
+                where mf.FeedId = 9
+                )  and active=1
+                order by 2;
