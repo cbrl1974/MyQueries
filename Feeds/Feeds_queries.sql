@@ -3,11 +3,11 @@ use datatail20130410
 select *
 from datatail20130410.feeds.FeedDumps  WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-    and feedid = 9
-    --and MerchantId in (1817)
-     --and    totalcount = 0
+    and feedid = 4
+    --and MerchantId in (1751)
+    -- and    totalcount = 0
 order by feedid,merchantid,RunDate desc
---208
+
 
  delete top (20) datatail20130410.feeds.FeedDumps 
  where  RunDate > convert(date,getdate()-1)
@@ -17,56 +17,6 @@ order by feedid,merchantid,RunDate desc
 
 
 
-
---delete top (2) datatail20130410.feeds.FeedDumps 
---where  RunDate > convert(date,getdate()-1)
---and  feedid = 9 
---and MerchantId in (1448)
-
-
-
-with
-    MerchantRunSummary
-    as
-    (
-        select
-            d.merchantid,
-            count(*) as CountMerchant
-        from datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
-        where d.RunDate > convert(date, getdate() - 1)
-            and d.feedid = 9
-        group by d.merchantid
-    )
-
-select
-    distinct mf.merchantid as merchantOnboarded,
-    d.merchantid,
-    d.RunDate,
-    d.feedid,
-    mrs.CountMerchant,
-    case 
-		when d.CurrentIndex > d.totalcount then 'Complete'
-		when mrs.CountMerchant >= 2 then 'Complete'
-		else 'Incomplete'
-	end as status
-from datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
-    inner join feeds.MerchantFeeds mf
-    on mf.FeedId = d.FeedId and mf.MerchantId = d.MerchantId
-    inner join MerchantRunSummary mrs
-    on mrs.merchantid = d.merchantid
-where d.RunDate > convert(date, getdate() - 1)
-    and d.feedid = 9
-order by mrs.CountMerchant, mf.merchantid, d.merchantid, d.RunDate desc, d.feedid desc
-
-
---Check if all merchants onboarded preload ran
-select merchantid
-from feeds.MerchantFeeds
-where feedid = 9 and merchantid not in ( 
-select distinct merchantid
-    from feeds.FeedDumps
-    where feedid = 9 and RunDate > convert(date,getdate()-1))
-order by merchantid
 
 
 
@@ -102,37 +52,44 @@ where id_product = 456991
 select *
 from merchantProds
 where merchant_id = 3605 and productid = 733607
+
 select *
 from datatail20130410.feeds.feeds
-where id = 1
+where id = 21
+
 
 select mf.MerchantId, mf.FeedOptionsJson, m.active
 from datatail20130410.feeds.merchantfeeds mf
 left join merchants m on m.id = mf.merchantid
-where mf.feedid = 1
+where mf.feedid = 21
+and merchantid = 3418
 order by mf.merchantid
 
 
 
-select m.id, p.id_product, p.manufModel, co.cie, c.category,  fp.price, mp.cost, mp.price, mp.reducedPrice,
-  JSON_VALUE( fp.AdditionalPricingData , '$.MinimumAdvertisedPrice') AS MAP,
-    JSON_VALUE( fp.AdditionalPricingData , '$.ManufacturerSuggestedRetailPrice') AS MSRP,
-  JSON_VALUE( fp.AdditionalPricingData , '$.Freight') AS Freight,
-    JSON_VALUE( fp.AdditionalPricingData , '$.ItemsPerCase') AS ItemsPerCase,
+select distinct m.id as merchantID, p.id_product, p.manufModel, co.cie, c.category,  fp.price, mp.cost, mp.price, mp.reducedPrice,
+  --JSON_VALUE( fp.AdditionalPricingData , '$.Promotions.Value') AS PromoPricing,
+    --JSON_VALUE( fp.AdditionalPricingData , '$.ManufacturerSuggestedRetailPrice') AS MSRP,
+  --JSON_VALUE( fp.AdditionalPricingData , '$.Freight') AS Freight,
+  --  JSON_VALUE( fp.AdditionalPricingData , '$.ItemsPerCase') AS ItemsPerCase,
  fp.AdditionalPricingData 
 from Feeds.ProductBasePrices fp
 join products p on p.id_product = fp.productid
 join companies co on co.id_cie = p.manufid 
 join categories c on c.id_category = p.catid and c.id_langue = 1
 join merchantProds mp on mp.productid = p.id_product
-join merchants m on m.id = mp.merchant_id and fp.productid = mp.productid
-where fp.feedid = 9
-and p.manufid = 7587
-and m.id = 3025
+join merchants m on m.id = mp.merchant_id and fp.productid = p.id_product
+where fp.feedid =27
+--and p.manufid = 7587
+--and p.id_product  in (809498,809507,809508 )
+and m.id = 3242
 and p.active = 1
 and p.discontinued = 0
 and p.photo = 1
 and p.specs = 1
+and c.category like '%adjustable%'
+group by m.id , p.id_product, p.manufModel, co.cie, c.category,  fp.price, mp.cost, mp.price, mp.reducedPrice,
+ fp.AdditionalPricingData 
 
 
 --Old Feed
@@ -189,3 +146,49 @@ order by mp.realPrice
                 where mf.FeedId = 9
                 )  and active=1
                 order by 2;
+
+
+
+
+with
+    MerchantRunSummary
+    as
+    (
+        select
+            d.merchantid,
+            count(*) as CountMerchant
+        from datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
+        where d.RunDate > convert(date, getdate() - 1)
+            and d.feedid = 9
+        group by d.merchantid
+    )
+
+select
+    distinct mf.merchantid as merchantOnboarded,
+    d.merchantid,
+    d.RunDate,
+    d.feedid,
+    mrs.CountMerchant,
+    case 
+		when d.CurrentIndex > d.totalcount then 'Complete'
+		when mrs.CountMerchant >= 2 then 'Complete'
+		else 'Incomplete'
+	end as status
+from datatail20130410.feeds.FeedDumps d WITH (NOLOCK)
+    inner join feeds.MerchantFeeds mf
+    on mf.FeedId = d.FeedId and mf.MerchantId = d.MerchantId
+    inner join MerchantRunSummary mrs
+    on mrs.merchantid = d.merchantid
+where d.RunDate > convert(date, getdate() - 1)
+    and d.feedid = 9
+order by mrs.CountMerchant, mf.merchantid, d.merchantid, d.RunDate desc, d.feedid desc
+
+
+--Check if all merchants onboarded preload ran
+select merchantid
+from feeds.MerchantFeeds
+where feedid = 9 and merchantid not in ( 
+select distinct merchantid
+    from feeds.FeedDumps
+    where feedid = 9 and RunDate > convert(date,getdate()-1))
+order by merchantid
