@@ -1,7 +1,7 @@
 -- Count product changes on Tailbasify
 use datatail20130410
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -2, GETDATE()) ;
+Declare @past as date = DATEADD(day, -1, GETDATE()) ;
 
 --For Products
  select m.id, m.merchant,  count(a.productid)  as totalProducts
@@ -14,7 +14,7 @@ Declare @past as date = DATEADD(day, -2, GETDATE()) ;
  and m.active = 1
  and m.merchant not like '% old%'
   and m.merchant not like '%demo%'
-  --and m.id = 2087
+  and m.id = 2186
   and m.id not in (3209,2798,1448,589,1193)
   group by  m.id, m.merchant
   order by count(a.productid) desc
@@ -40,7 +40,7 @@ Declare @past as date = DATEADD(day, -1, GETDATE()) ;
  and m.merchant not like '% old%'
   and m.merchant not like '%demo%'
   and m.id not in (3209,2798,1448,589,1193)
-  --and m.id = 2087
+  and m.id = 2186
   group by  m.id, m.merchant,  a.productid, c.category, co.cie, a.Price, a.Price, a.ReducedPrice, a.ReducedPriceBefore, a.changetype, a.ChangeByApp, a.changetime 
   order by a.changetime desc
 
@@ -64,6 +64,6 @@ Declare @past as date = DATEADD(day, -1, GETDATE()) ;
  and m.merchant not like '% old%'
   and m.merchant not like '%demo%'
   and m.id not in (3209,2798,1448,589,1193)
-  --and m.id = 2087
+  and m.id = 2186
   group by m.id, m.merchant,  c.category, co.cie, p.DateModification, p.SpecsModifDate, p.DatePhotoModification
   order by p.DateModification desc
