@@ -1,15 +1,21 @@
-Declare @merchantId as int = 3447;
-Declare @productid int = 579507
+Declare @merchantId as int = 2087;
+Declare @productid int = 805110
 ;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -15, GETDATE()) ;
+Declare @past as date = DATEADD(day, -10, GETDATE()) ;
 
 --For Products
- select  * from MerchantProducts_ChangeTrackingArchive
- WHERE MERCHANTID = @merchantId
- and [changetime] between @past and @today
- and productid =@productid
-  order by changetime desc
+ select p.id_product, p.manufacturerIdentifier, c.category, co.cie,  a.* from MerchantProducts_ChangeTrackingArchive a
+ join products p on p.id_product = a.productid
+ join companies co on co.id_cie = p.manufid
+ join categories c on c.id_category = p.catid and c.id_langue = 1
+ WHERE a.MERCHANTID = @merchantId
+ --and a.ProductId = @productid
+ and a.changetime between @past and @today
+ and a.changetype in ('insert','delete')
+  order by a.changetime desc
+
+  select * from  Feeds.ProductBasePrices  where feedid = 9 and merchantid =3227
 
  --select  * from MerchantProducts_ChangeTracking
  --WHERE MERCHANTID = @merchantId
@@ -104,6 +110,15 @@ JOIN sys.objects o ON m.object_id = o.object_id
 WHERE m.definition LIKE '%MerchantProducts_ChangeTrackingArchive%'
 ORDER BY ObjectType, ObjectName;
 
+
+
+select * from MerchantProducts_ChangeTracking 
+where MerchantId = 3227 
+and ProductId in (
+	select Id_product from Products where manufID in (1436,4227,3184,3181,3182,4226)
+)
+and ChangeType in ('insert','delete')
+order by productid, changetime desc
 
 
 
