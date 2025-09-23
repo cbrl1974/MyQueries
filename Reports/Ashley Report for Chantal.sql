@@ -62,14 +62,20 @@ SELECT
     MAX(CASE 
         WHEN cm.isAshleyFeedActive = 1 THEN 'yes' 
         WHEN cm.mfe_merchantid is not null THEN 'yes'  ELSE 'no' 
-    END) AS IsAshleyFeedActiveInTheConsole
-
+    END) AS IsAshleyFeedActiveInTheConsole,
+    MAX(mstore.GeoPosition) as geoLocation
 FROM cleaned_merchants cm
     INNER JOIN merchantProds mp ON mp.Merchant_ID = cm.id
     INNER JOIN products p ON p.Id_product = mp.ProductID
     INNER JOIN merchantCms mc ON mc.Merchant_id = cm.id
     INNER JOIN MerchantWebsiteInformation mwi ON mwi.merchant_id = cm.id
     INNER JOIN merchantBrands mb ON mb.merchant_id = cm.id AND mb.cieId = p.manufID
+OUTER APPLY (
+    SELECT TOP 1 GeoPosition
+    FROM MerchantStores ms
+    WHERE ms.MerchantID = cm.id
+    ORDER BY ms.ID
+) mstore
     LEFT JOIN MerchantDistributorWarehouseLocations md ON md.merchantid = cm.id
     LEFT JOIN merchantwebsitefeatures mwf ON mwf.merchant_id = cm.id AND mwf.featurecode = 'shoppingCartType'
     LEFT JOIN merchantshipping ms ON ms.merchant_id = md.MerchantID AND ms.dropShippingProgramID = 1
@@ -130,3 +136,4 @@ ORDER BY cm.id;
 --order by m.id
 
 
+select top 10 * from merchantStores
