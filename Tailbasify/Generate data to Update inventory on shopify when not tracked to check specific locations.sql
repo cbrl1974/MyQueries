@@ -1,160 +1,37 @@
--- This query will generate the data you need to make the stores display on each product, specially if it was not onbarded initially. Inventory related. Remove the filter for the productid currently in place and add or remove the stores based on the loations that the merchant have, minus the one in place.
-select 
-sp.handle 'Handle',
-sp.TitleEn 'Title',
-'Title' as 'Option1 Name',
-'Default Title' 'Option1 Value',
-'' 'Option2 Name',
-'' 'Option2 Value',
-'' 'Option3 Name',
-'' 'Option3 Value',
-v.sku 'SKU',
-'' 'HS Code',
-'' 'COO',
-'Branchaud Amos' 'Location',
-0 'Incoming',
-0 'Unavailable',
-0 'Committed',
-0 'Available',
-0 'On hand'
-from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 3230
---and v.ShopifyProductID in (1804678)
-UNION
-select 
-sp.handle 'Handle',
-sp.TitleEn 'Title',
-'Title' as 'Option1 Name',
-'Default Title' 'Option1 Value',
-'' 'Option2 Name',
-'' 'Option2 Value',
-'' 'Option3 Name',
-'' 'Option3 Value',
-v.sku 'SKU',
-'' 'HS Code',
-'' 'COO',
-'Branchaud Écono Buckingham' 'Location',
-0 'Incoming',
-0 'Unavailable',
-0 'Committed',
-0 'Available',
-0 'On hand'
-from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 3230
---and v.ShopifyProductID in (1804678)
-UNION
-select 
-sp.handle 'Handle',
-sp.TitleEn 'Title',
-'Title' as 'Option1 Name',
-'Default Title' 'Option1 Value',
-'' 'Option2 Name',
-'' 'Option2 Value',
-'' 'Option3 Name',
-'' 'Option3 Value',
-v.sku 'SKU',
-'' 'HS Code',
-'' 'COO',
-'Branchaud Écono Val d''Or' 'Location',
-0 'Incoming',
-0 'Unavailable',
-0 'Committed',
-0 'Available',
-0 'On hand'
-from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid = 3230
---and v.ShopifyProductID in (1804678)
--- UNION
--- select 
--- sp.handle 'Handle',
--- sp.TitleEn 'Title',
--- 'Title' as 'Option1 Name',
--- 'Default Title' 'Option1 Value',
--- '' 'Option2 Name',
--- '' 'Option2 Value',
--- '' 'Option3 Name',
--- '' 'Option3 Value',
--- v.sku 'SKU',
--- '' 'HS Code',
--- '' 'COO',
--- 'Branchaud Maniwaki' 'Location',
--- 0 'Incoming',
--- 0 'Unavailable',
--- 0 'Committed',
--- 0 'Available',
--- 0 'On hand'
--- from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
--- where sp.merchantid = 3230
--- and v.ShopifyProductID in (1804678)
--- UNION
--- select 
--- sp.handle 'Handle',
--- sp.TitleEn 'Title',
--- 'Title' as 'Option1 Name',
--- 'Default Title' 'Option1 Value',
--- '' 'Option2 Name',
--- '' 'Option2 Value',
--- '' 'Option3 Name',
--- '' 'Option3 Value',
--- v.sku 'SKU',
--- '' 'HS Code',
--- '' 'COO',
--- 'Branchaud Mont-Laurier' 'Location',
--- 0 'Incoming',
--- 0 'Unavailable',
--- 0 'Committed',
--- 0 'Available',
--- 0 'On hand'
--- from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
--- where sp.merchantid = 3230
--- and v.ShopifyProductID in (1804678)
--- UNION
--- select 
--- sp.handle 'Handle',
--- sp.TitleEn 'Title',
--- 'Title' as 'Option1 Name',
--- 'Default Title' 'Option1 Value',
--- '' 'Option2 Name',
--- '' 'Option2 Value',
--- '' 'Option3 Name',
--- '' 'Option3 Value',
--- v.sku 'SKU',
--- '' 'HS Code',
--- '' 'COO',
--- 'Branchaud Rouyn-Noranda' 'Location',
--- 0 'Incoming',
--- 0 'Unavailable',
--- 0 'Committed',
--- 0 'Available',
--- 0 'On hand'
--- from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
--- where sp.merchantid = 3230
--- and v.ShopifyProductID in (1804678)
--- UNION
--- select 
--- sp.handle 'Handle',
--- sp.TitleEn 'Title',
--- 'Title' as 'Option1 Name',
--- 'Default Title' 'Option1 Value',
--- '' 'Option2 Name',
--- '' 'Option2 Value',
--- '' 'Option3 Name',
--- '' 'Option3 Value',
--- v.sku 'SKU',
--- '' 'HS Code',
--- '' 'COO',
--- 'Branchaud  Val d''Or' 'Location',
--- 0 'Incoming',
--- 0 'Unavailable',
--- 0 'Committed',
--- 0 'Available',
--- 0 'On hand'
--- from shopify.ShopifyProductVariants v	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
--- where sp.merchantid = 3230
--- and v.ShopifyProductID in (1804678)
-
-
-
-
-
+-- This query generates inventory rows for all 8 store locations
+-- for every product/variant of merchant 3497
+SELECT 
+    sp.handle       AS Handle,
+    sp.TitleEn      AS Title,
+    'Title'         AS [Option1 Name],
+    'Default Title' AS [Option1 Value],
+    ''              AS [Option2 Name],
+    ''              AS [Option2 Value],
+    ''              AS [Option3 Name],
+    ''              AS [Option3 Value],
+    v.sku           AS SKU,
+    ''              AS [HS Code],
+    ''              AS COO,
+    s.Location      AS Location,
+    0               AS Incoming,
+    0               AS Unavailable,
+    0               AS Committed,
+    0               AS Available,
+    0               AS [On hand],
+    0               AS [On hand (new)]
+FROM shopify.ShopifyProductVariants v
+INNER JOIN shopify.ShopifyProducts sp 
+    ON sp.id = v.ShopifyProductId
+CROSS JOIN (
+    SELECT 'Branchaud Amos'                AS Location UNION ALL
+    SELECT 'Branchaud Écono Buckingham'    UNION ALL
+    SELECT 'Branchaud Écono Val d''Or'     UNION ALL
+    SELECT 'Branchaud Gatineau'            UNION ALL
+    SELECT 'Branchaud Maniwaki'            UNION ALL
+    SELECT 'Branchaud Mont-Laurier'        UNION ALL
+    SELECT 'Branchaud Rouyn-Noranda'       UNION ALL 
+    SELECT 'Branchaud Val d''Or'      
+) s
+WHERE sp.merchantid = 3497
+and sp.id in (3254179,3254180,3254303,3254351,3254210,2455879,3254364,3254211,3254241,3254365,3254105,3254106,3254107,3254108,3254109,3254135,3254167,3254175,3254176,3254206,3254217,3254234,3254235,3254236,3254237,3254238,3254240,3254374,3254375,3254376,3254377,3254378,3254379,3254380,3254381,3254382,3254383,3254384,3254385,3254386,3254387,2544179,3163833,3254200,3254201,3254402,3254403,3254457,3254458,3254459,3254460,3254461,3254462,3254463,3254464,3254465,3254466,3254467,3254468,3254469,3254470,3254471,3254472,3254473,3254474,3254475,2096832,3254388,3254481,3161344,3161345,3113275,2096267,2096726,2096896,2097630,2097793,2097798,2097799,2876824,2097248,2097249,2097266,2097740,2097902,3161346,3210941,2308892,2308904,2308933,2308949,2308969,2309000,2603768,3252945,1805264,2603773,3254242,3254243,3254335,3254336,3254337,3254347,3254348,3254349,2096260,2096299,2226837,2226880,3163830,3254097,2466362,3254095,3254096,2840251,3254197,3250354,3254346,3122452,3254104,3254163,3252943,3254182,3254183,3254184,3254185,3254186,3254198,3254199,3254205,3254258,3254267,3254268,3254269,3254270,3254271,3254272,3254273,3254274,3254275,3254276,3254278,3254280,3254281,3254282,3254297,3254298,3254299,3254300,3254301,3254304,3254305,3254306,3254307,3254308,3254309,3254310,3254311,3254312,3254313,3254314,3254315,3254316,3254317,3254318,3254319,3254320,3254321,3254322,3254323,3254324,3254325,3254326,3254327,3254328,3254329,3254330,3254331,3254332,3254333,3254334,3254338,3254339,3254340,3254341,3254342,3254343,3254366,3254367,3254412,3254413,3254414,3254415,3254416,3254417,3254418,3254419,3254420,3254421,3254422,3254423,3254424,3254425,3254426,3254427,3254428,3254429,3254430,3254431,3254432,3254433,3254434,3254435,3254436,3254437,3254438,3254439,3254440,3254441,3254442,3254443,3254444,3254445,3254446,3254447,3254448,3254449,3254450,3254482,3254483,3254484,3254485,3254486,3254487,3254488,3254489,3254490,3254491,3254492,3254493,3254494,3254495,3254496,3254497,3210934,3210936,3210937,3210938,3210939,3210940,3198008,3254098,3254099,3254100,3254101,3254102,3254103,3254110,3254111,3254112,3254113,3254114,3254115,3254116,3254117,3254118,3254119,3254120,3254121,3254122,3254123,3254124,3254125,3254127,3254129,3254130,3254136,3254137,3254139,3254140,3254141,3254142,3254143,3254144,3254145,3254146,3254147,3254149,3254150,3254151,3254152,3254153,3254154,3254155,3254156,3254157,3254158,3254159,3254164,3254165,3254166,3254168,3254169,3254170,3254171,3254172,3254173,3254174,3254177,3254187,3254188,3254189,3254190,3254191,3254192,3254193,3254194,3254195,3254196,3254207,3254208,3254209,3254212,3254214,3254215,3254216,3254218,3254219,3254220,3254221,3254222,3254223,3254224,3254225,3254226,3254227,3254228,3254229,3254230,3254231,3254232,3254233,3254239,3254244,3254245,3254246,3254247,3254248,3254249,3254250,3254251,3254252,3254253,3254256,3254257,3254260,3254261,3254262,3254263,3254264,3254265,3254266,3254283,3254284,3254285,3254286,3254287,3254288,3254289,3254290,3254291,3254292,3254293,3254294,3254295,3254296,3254302,3254345,3254397,3254398,3254399,3254400,3254401,3254404,3254405,3254451,3254452,3254453,3254454,3254455,3254456,3254498,3254500,3198007,3210935,3210942,2290972,3111303,3116514,3196282,3208728,3250352,3252946,3254213,3254254,3254255,3254344,3254369,3254370,3254371,3254372,3254373,3254389,3254390,3254391,3254395,3254396,3254476,3254477,3254478,3254479,3254480,3254499,2097429,2097957,2242239,2544181,2544183,2977208,3138901,3199904,3254277,3254181,3199060,3254126,3254161,3254162,3254259,3254279,3109547,3254128,3254131,3254132,3254133,3254134,3254178,3254202,3254203,3254204,3254352,3254353,3254354,3254355,3254356,3254357,3254358,3254359,3254360,3254361,3254362,3254363,3254368,3254406,3254407,3254408,3254409,3254410,3254411,3254138,3254148,3254160,3254350,3254392,3254393,3254394)
 

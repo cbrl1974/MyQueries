@@ -1,3 +1,4 @@
+use datatail20130410
 SELECT
     m.id,
     m.merchant,
@@ -17,4 +18,5 @@ WHERE co.BrandFamilyId = 7
   AND m.merchant NOT LIKE '%demo%'
   AND m.merchant NOT LIKE '%old%'
   AND m.merchant NOT LIKE '%test%'
+  and m.countryCode = 'us'
 GROUP BY m.id, m.merchant, m.AccountingID;

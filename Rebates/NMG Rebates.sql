@@ -1,18 +1,20 @@
- DECLARE @MerchantIdforFeatures AS INT = 3558;
+ use datatail20130410
+ 
+ DECLARE @MerchantIdforFeatures AS INT = 2724;
  select * from merchantWebsiteFeatures where merchant_id = @MerchantIdforFeatures
  and featurecode like '%rebates%'
 
-select * from merchants where id = 2456
-select rebate from merchantcms where merchant_id = 2456
+select * from merchants where id = 2724
+select rebate from merchantcms where merchant_id = 2724
 
 --Get the nmgid(DealerId)
- select id, merchant, nmgid, NmgLocationID from merchants where id in (3560)
+ select id, merchant, nmgid, NmgLocationID from merchants where id in (32724560)
 
 
 
 select top 10 * from RebateGroups
-select  top 10 * from RebateFeeds where rebategroupid = 1 order by RebateFeedID desc
---where RebateFeedID  in (1138839,1138840,1138841,1138842,1139268,1126781)
+select  top 10 * from RebateFeeds 
+where RebateFeedID  in (1010623)
 select top 10 * from RebateFeedClients
 --Get the RebateFeedIds for the dealer
  select  RebateFeedID from RebateFeedClients where 
@@ -113,3 +115,17 @@ WHERE
     AND mr.DisplayEndDate > @easternNow
     AND mr.Name_1 IS NOT NULL
     AND mr.Name_1 <> '';
+
+	select * from merchantrebates where merchant_id = 2217 order by id_rebate desc
+
+	update top (1) merchantrebates 
+	set name_2 = '',
+	description_1 = '',
+	shortdescription_1 = '',
+		description_2 = '',
+		shortdescription_2 = ''
+	where id_rebate = 1167196
+	and merchant_id = 2091
+
+	select count(productid) from merchantprods where merchant_id = 3589
+	 

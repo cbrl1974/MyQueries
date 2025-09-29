@@ -1,17 +1,20 @@
-use Copernic_verifone
+use Copernic_verifone  
 
-select *
-from Copernic_verifone.dbo.sales WITH (NOLOCK)
-where  PAYMENTDATE > convert(date,getdate()-1)
-order by PAYMENTDATE desc
+--select * from Copernic_verifone.dbo.sales WITH (NOLOCK) where REFNO = '260429257'
+select si.* from salesInformation si WITH (NOLOCK) where si.REFNO = '260429257'
+select sp.* from salesProducts sp WITH (NOLOCK) where sp.REFNO = '260429257'
+
+--delete from Copernic_verifone.dbo.sales  where refno = '260417056'
+delete from Copernic_verifone.dbo.salesInformation  where refno = '260429257'
+delete from Copernic_verifone.dbo.salesProducts  where refno = '260429257'
 
 
+select  * from Subscriptions where LICENSE_CODE = 'GF478DXST5'
 
-select si.*, sp.*
-from salesInformation si WITH (NOLOCK)
-join salesProducts sp on sp.REFNO = si.REFNO and sp.ORDERNO = si.ORDERNO
-where  PAYMENTDATE > convert(date,getdate()-0)
-order by PAYMENTDATE desc
+delete from Copernic_verifone.dbo.SubscriptionsUsers where LICENSE_CODE = 'GF478DXST5'
+delete from Copernic_verifone.dbo.Subscriptions where LICENSE_CODE = 'GF478DXST5'
+
+
 
 
 select
@@ -50,12 +53,26 @@ from Copernic_verifone.dbo.CustomerInformation
 --where id =15
 order by creationdate desc
 
+*
 
-select *
+
+select  top 50  *
 from Copernic_verifone.dbo.WebHooksLogs WITH (NOLOCK)
 where   CreationDate > convert(date,getdate()-0)
-and Severity <> 0
+--and text like '%260283197%'
+--and text like '%user%'
+and module = 'HandleIpn'
+--and location = 'WebhooksController.cs:77' 
+--and Severity <> 0
 order by CreationDate desc
+
+select * from Subscriptions  where MESSAGE_ID = 255682429211
+delete from SubscriptionsUsers where LICENSE_CODE = '5747C0FBYW'
+delete from Subscriptions  where MESSAGE_ID = 255682429211
+
+
+
+
 
 
 	

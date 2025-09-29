@@ -61,9 +61,16 @@ SELECT
 
     MAX(CASE 
         WHEN cm.isAshleyFeedActive = 1 THEN 'yes' 
-        WHEN cm.mfe_merchantid is not null THEN 'yes'  ELSE 'no' 
+        WHEN cm.mfe_merchantid IS NOT NULL THEN 'yes'  
+        ELSE 'no' 
     END) AS IsAshleyFeedActiveInTheConsole,
-    MAX(mstore.GeoPosition) as geoLocation
+
+    MAX(mstore.city)        AS City,
+    MAX(mstore.province)    AS Province,
+    MAX(mstore.postalcode)  AS PostalCode,
+    MAX(mstore.Country)     AS Country,
+    MAX(mstore.GeoPosition) AS geoLocation
+
 FROM cleaned_merchants cm
     INNER JOIN merchantProds mp ON mp.Merchant_ID = cm.id
     INNER JOIN products p ON p.Id_product = mp.ProductID
@@ -71,10 +78,10 @@ FROM cleaned_merchants cm
     INNER JOIN MerchantWebsiteInformation mwi ON mwi.merchant_id = cm.id
     INNER JOIN merchantBrands mb ON mb.merchant_id = cm.id AND mb.cieId = p.manufID
 OUTER APPLY (
-    SELECT TOP 1 GeoPosition
-    FROM MerchantStores ms
-    WHERE ms.MerchantID = cm.id
-    ORDER BY ms.ID
+    SELECT TOP 1 GeoPosition, city, province, postalcode, Country
+    FROM MerchantStores ms2
+    WHERE ms2.MerchantID = cm.id
+    ORDER BY ms2.ID
 ) mstore
     LEFT JOIN MerchantDistributorWarehouseLocations md ON md.merchantid = cm.id
     LEFT JOIN merchantwebsitefeatures mwf ON mwf.merchant_id = cm.id AND mwf.featurecode = 'shoppingCartType'

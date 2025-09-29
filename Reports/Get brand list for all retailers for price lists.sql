@@ -19,7 +19,8 @@
 			AND p.specs = '1'
 			AND	p.model NOT LIKE '% bdl%'
 			AND	p.model NOT LIKE '%refurbished%'
-			AND pp.StartDate < GETDATE()			
+			AND pp.StartDate < GETDATE()	
+			and
 			group by m.id,m.merchant, p.manufid ,co.cie,  map.enabled, m.countryCode
 			ORDER BY m.merchant
 
