@@ -13,11 +13,12 @@ WITH DistinctBrands AS (
     JOIN companies co ON co.id_cie = p.manufid
     JOIN merchantwebsiteinformation mwi on mwi.merchant_id = m.id and mwi.infoCode = 'template'
     WHERE m.AccountingID IN (
-        'TB0082','TB0187','TB0205','TB0233','TB0372','TB0381','TB0413','TB0424','TB0434','TB0436','TB0563',
-        'TB0566','TB0655','TB0689','TB0707','TB0762','TB0908','TB0918','TB0923','TB0937','TB0938','TB0951',
-        'TB0953','TB0958','TB0959','TB0962','TB0965','TB0969','TB0973','TB0981','TB1003','TB1007','TB1011',
-        'TB1013','TB1061','TB1066','TB1069','TB1070','TB1075','TB1080','TB1082','TB1089','TB1090','TB1095',
-        'TB1102','TB1107','TB1065'
+       'TB0198','TB0336','TB0347','TB0360','TB0362','TB0760','TB0034','TB0262','TB0285','TB0752',
+       'TB0040','TB0321','TB0057','TB0444','TB0456','TB0555','TB0580','TB0604','TB0916','TB0916',
+       'TB0097','TB0156','TB0383','TB0446','TB0457','TB0554','TB0597','TB0333','TB0345','TB0596',
+       'TB0624','TB0674','TB0936','TB0123','TB0157','TB0620','TB0636','TB0698','TB0919','TB0926',
+       'TB0932','TB0160','TB0657','TB0660','TB0669','TB0902','TB0904','TB0915','TB0703','TB0986',
+       'TB0361','TB0131','TB0731','TB0380','TB0008'
     )
     GROUP BY m.AccountingID, m.merchant_url, co.cie, co.BrandFamilyId, p.manufid, mwi.infoValue
 ),
@@ -41,4 +42,4 @@ GROUP BY cb.AccountingID, cb.merchant_url, Template
 ORDER BY cb.AccountingID, cb.merchant_url, Template;
 
 
-select id_cie, brandfamilyid from companies where cie in ('Café','GE','GE Profile','Haier','Hotpoint')
+--select id_cie, brandfamilyid from companies where cie in ('Café','GE','GE Profile','Haier','Hotpoint')
