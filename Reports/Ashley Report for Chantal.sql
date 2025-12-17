@@ -56,9 +56,22 @@ SELECT
     MAX(md.statecode) AS statecode,
     MAX(md.CountryName) AS CountryName,
     MAX(cm.lastmodified) AS lastmodified,
-
+MAX(
+    'https://www.google.com/maps/place/' +
+    REPLACE(
+        CONCAT(
+            ISNULL(mstore.address, ''), ' ',
+            ISNULL(mstore.city, ''), ', ',
+            ISNULL(mstore.province, ''), ' ',
+            ISNULL(mstore.postalcode, ''), ', ',
+            ISNULL(mstore.Country, '')
+        ),
+        ' ',
+        '+'
+    ) +
+    '/@' + mstore.GeoPosition + ',17z'
+) AS LocationUrl,
     COUNT(DISTINCT mp.productid) AS AshleyProdsOnWebsite,
-
     MAX(CASE 
         WHEN cm.isAshleyFeedActive = 1 THEN 'yes' 
         WHEN cm.mfe_merchantid IS NOT NULL THEN 'yes'  
@@ -78,7 +91,7 @@ FROM cleaned_merchants cm
     INNER JOIN MerchantWebsiteInformation mwi ON mwi.merchant_id = cm.id
     INNER JOIN merchantBrands mb ON mb.merchant_id = cm.id AND mb.cieId = p.manufID
 OUTER APPLY (
-    SELECT TOP 1 GeoPosition, city, province, postalcode, Country
+    SELECT TOP 1 GeoPosition, city, province, postalcode, Country, address
     FROM MerchantStores ms2
     WHERE ms2.MerchantID = cm.id
     ORDER BY ms2.ID
@@ -95,52 +108,3 @@ WHERE
 GROUP BY cm.id
 ORDER BY cm.id;
 
-
---************************** old one
---select m.id, m.merchant, SUBSTRING(mf.remoteFTPUser, 4, 6) as AccountNumber,
---    m.merchant_url,
---    (
---    CASE WHEN mwf.featurecode = 'ShoppingCartType' THEN 'yes' 
---	when mwi.infoCode = 'temaplate' and mwi.infoValue like '%Tailbasify%' then 'yes' 
---	else 'no' end
---) as EcommerceSite,
---    (
---    CASE WHEN ms.dropShippingProgramID = 1 THEN 'yes' else 'no' end
---) as DirectExress,
---    (
---    CASE 
---    WHEN COUNT(CASE WHEN mb.cieId IN (1436, 4227, 3184, 3182, 4226, 3181) THEN 1 ELSE NULL END) = 6 
---    THEN 'Ashley Only' 
---    ELSE 'Multi MFG' 
---    end
---) as isAshley,
---    (
---    CASE WHEN mc.RTOConsole = 1 THEN 'yes' else 'no' end
---) as isRTO,
---    md.city,
---    md.statecode,
---    md.CountryName,
---    replace(REPLACE(mf.lastModified,'{ts ''', ''), '''}','') as lastmodified,
---    count(distinct mp.productid) as AshleyProdsOnWebsite,
---     (
---        CASE WHEN mf.active = 1 THEN 'yes' else 'no' end
---    ) as IsAshleyFeedActiveInTheConsole
---from  merchants m 
---    inner join merchantProds mp on mp.Merchant_ID = m.id
---	inner join products p on p.Id_product = mp.ProductID
---	inner join merchantCms mc on mc.Merchant_id = m.id
---	inner join MerchantWebsiteInformation mwi on mwi.merchant_id = m.id
---    left join merchantfeeds mf on m.id = mf.merchant_id
---    inner join merchantBrands mb on mb.merchant_id = m.id and mb.cieId = p.manufID
---    left join MerchantDistributorWarehouseLocations md on md.merchantid = m.id
---    left join merchantwebsitefeatures mwf on mwf.merchant_id = m.id and mwf.featurecode = 'shoppingCartType'
---    left join merchantshipping ms on ms.merchant_id = md.MerchantID and ms.dropShippingProgramID = 1
---	left join feeds.merchantfeeds mfe on mfe.merchantid = m.id and mfe.FeedId = 9
---where ( mf.brand = 'Ashley' or mfe.FeedId = 9)
---    and m.active = 1	
---    and p.manufID in (1486,6183, 3181, 3182, 3184, 4226, 4227)
---group by m.id, m.merchant,mf.remoteFTPUser,m.merchant_url,mwf.featurecode,mwi.infoCode, mwi.infovalue, ms.dropShippingProgramID,md.city, md.statecode, md.CountryName,mc.RTOConsole, lastmodified, mf.active
---order by m.id
-
-
-select top 10 * from merchantStores
