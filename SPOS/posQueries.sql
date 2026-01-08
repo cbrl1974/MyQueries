@@ -1,12 +1,13 @@
 ﻿use datatail20130410
 
 --When onboarding you need to add the new merchant here 
-select * from datatail20130410.dbo.merchants where id = 3054
-select * from datatail20130410.dbo.MerchantPosConfigs
+select * from datatail20130410.dbo.merchants where id = 3497
+select merchantid, apikey, LocalPath, concat('http://10.8.158.10:8585/api/Pos/UpdateCatalog/', apikey)  from datatail20130410.dbo.MerchantPosConfigs 
 
 --CheckLogs
 select  * from datatail20130410.dbo.MerchantPosLogs 
 where time > convert(date,getdate()-1)
+--and merchantid = 3497
 order by time desc
 
 
