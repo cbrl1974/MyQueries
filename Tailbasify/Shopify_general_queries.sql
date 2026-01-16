@@ -17,9 +17,10 @@ select
 	s.ShopUrl, s.SecurityStamp, s.AccessToken, ApiKey
 from shopify.shopifyMerchants s
 	inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
-		and s.merchantid = 1202
+		and s.merchantid = 3638
 		and m.active = 1
 order by s.id
+
 
 select sm.merchantid, m.merchant, m.active, concat('https://admin.shopify.com/store/', LEFT(ShopUrl, CHARINDEX('.',ShopUrl) - 1), '/apps/shopify-graphiql-app')  AS subdomain, sm.ApiVersion
 from shopify.shopifyMerchants sm
@@ -38,7 +39,7 @@ select me.MerchantId, merchant, me.Status, me.ModificationDate, me.ShopifyMercha
 from tailbasify.dbo.MerchantExports me WITH (NOLOCK)
 	inner join datatail20130410.dbo.merchants m on m.id = me.MerchantId
 	inner join tailbasify.shopify.ShopifyMerchants sm on sm.MerchantId = me.MerchantId
-		--and  me.MerchantId = 1956
+		--and  me.MerchantId = 3402
 		and sm.ApiVersion is not null
 		and m.active = 1
 order by [Status] desc, me.ModificationDate desc
@@ -53,20 +54,25 @@ where sp.merchantid =  3227
 	and sp.itemtype = 1
 	and v.SyncStatusId <> 4
 
-update top (25) shopify.shopifyProducts
-	set SyncStatusId = 2 
-	where id in (select sp.id
-from shopify.ShopifyMerchantMetafields v
-	inner join shopify.shopifyProducts sp on sp.id = v.ShopifyProductId
-where sp.merchantid =  3388
-	and sp.itemtype = 1
-	and v.SyncStatusId <> 4)
+
+
+
+
+	select sp.id, sp.MerchantId, sp.handle, sp.tailbaseid, sp.SyncStatusId, m.Id, m.OriginalSource, m.SyncStatusId
+from Shopify.ShopifyProductMedia m
+	inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
+where sp.MerchantId  = 3648
+	and m.ShopifyProductId in (select id
+	from shopify.shopifyProducts
+	where merchantid = 3648 and SyncStatusId =2)
+and m.SyncStatusId  <> 4
+order by m.MediaContentTypeId,m.tailbaseid, m.DisplayOrder
 
 
 -- ************* Reset sync status
 update MerchantExports
  set [status]  = 1
- where merchantid  = 1956
+ where merchantid  = 3402
 
 ----**************LOGS**************
 select *
@@ -76,9 +82,12 @@ from logsType
 
 select distinct *
 from logs  WITH (NOLOCK)
-WHERE  merchantid = 1956
+WHERE  merchantid = 3402  
 	and LogTime > convert(date,getdate()-0)
 order by LogTime desc
+
+3648
+3638
 
 
 select distinct *
@@ -297,10 +306,10 @@ from shopify.ShopifyMerchantMetafields m
 select sp.id, sp.MerchantId, sp.handle, sp.tailbaseid, sp.SyncStatusId, m.Id, m.OriginalSource, m.SyncStatusId
 from Shopify.ShopifyProductMedia m
 	inner join shopify.shopifyProducts sp on sp.id = m.ShopifyProductId
-where sp.MerchantId  = 3096
+where sp.MerchantId  = 3648
 	and m.ShopifyProductId in (select id
 	from shopify.shopifyProducts
-	where merchantid = 3096 and SyncStatusId =2)
+	where merchantid = 3648 and SyncStatusId =2)
 --and sp.MerchantId  = 3096
 order by m.MediaContentTypeId,m.tailbaseid, m.DisplayOrder
 
