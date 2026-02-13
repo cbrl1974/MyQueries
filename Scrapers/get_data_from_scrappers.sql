@@ -10,6 +10,10 @@ where AssemblyMethodName like 'Scrape%'
     and AssemblyMethodName = 'ScrapeProducts'
 order by  [state] ,LastIntervalExecution desc
 
+select * from companies where cie like '%lh%'
+
+select * from merchantProds where productid = 867594
+
 
 
 -- Get Competition from merchant
@@ -81,7 +85,13 @@ order by date desc
 --This checks  the state of a scraper
 select *
 from Tailbaseservices.dbo.AsyncTasks
-where AssemblyClass like '%thebrick%' and AssemblyMethodName like 'Scrape%'
+where AssemblyClass like '%thebrick%' 
+and AssemblyMethodName like 'Scrape%'
+
+update top (1) Tailbaseservices.dbo.AsyncTasks
+set MaxRunTime = 360 
+where id = '4B59DCD2-7D1C-4B68-97BB-84CEA826D9E5'
+and AssemblyClass = 'StaplesCanadaScraper'
 
 
 ----- *****************This runs an individual scrapper********************

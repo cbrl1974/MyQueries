@@ -2,12 +2,12 @@
 
 --When onboarding you need to add the new merchant here 
 select * from datatail20130410.dbo.merchants where id = 3497
-select merchantid, apikey, LocalPath, concat('http://10.8.158.10:8585/api/Pos/UpdateCatalog/', apikey)  from datatail20130410.dbo.MerchantPosConfigs 
+select *, concat('http://10.8.158.10:8585/api/Pos/UpdateCatalog/', apikey)  from datatail20130410.dbo.MerchantPosConfigs 
 
 --CheckLogs
 select  * from datatail20130410.dbo.MerchantPosLogs 
 where time > convert(date,getdate()-1)
---and merchantid = 3497
+and merchantid = 3497
 order by time desc
 
 
@@ -41,3 +41,18 @@ select * from MerchantInventoryTypes
 --update top (1) MerchantInventoryTypes
 --set InventoryType = 'Total'
 --where merchantid = 3507
+
+
+
+Lino Cabral
+commented Dec 22, 2025
+
+
+
+
+
+
+select * from ProductsPrices where productid = 225676
+and Country = 'CA'
+and type = 'MSRP'
+order by StartDate  desc

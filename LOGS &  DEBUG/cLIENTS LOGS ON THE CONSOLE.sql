@@ -1,37 +1,65 @@
-Declare @merchantId as int = 2087;
-Declare @productid int = 805110
+Declare @merchantId as int = 3230;
+Declare @productid int = 861955
 ;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -10, GETDATE()) ;
+Declare @past as date = DATEADD(day, -30, GETDATE()) ;
 
 --For Products
- select p.id_product, p.manufacturerIdentifier, c.category, co.cie,  a.* from MerchantProducts_ChangeTrackingArchive a
+ select p.id_product, p.manufacturerIdentifier, c.category, co.cie,  a.* 
+ from MerchantProducts_ChangeTrackingarchive a
  join products p on p.id_product = a.productid
  join companies co on co.id_cie = p.manufid
  join categories c on c.id_category = p.catid and c.id_langue = 1
  WHERE a.MERCHANTID = @merchantId
- --and a.ProductId = @productid
- and a.changetime between @past and @today
- and a.changetype in ('insert','delete')
+ and a.ProductId = @productid
+ and a.changetime between @past and @today 
+ --and a.changetype in ('insert')
   order by a.changetime desc
 
   select * from  Feeds.ProductBasePrices  where feedid = 9 and merchantid =3227
 
- --select  * from MerchantProducts_ChangeTracking
- --WHERE MERCHANTID = @merchantId
- ----and [changetime] between @past and @today
- ----and productid =@productid
- -- order by changetime desc
+Declare @collectionstoday as date = getdate();
+Declare @collectionspast as date = DATEADD(day, -10, GETDATE()) ;
+ select top 150  * from MerchantCollections_ChangeTrackingArchive
+ WHERE MERCHANTID = 3230
+ and [changetime] between @collectionspast and @collectionstoday
+ --and productid =@productid
+  order by changetime desc
 
-SELECT TOP (100) *
+
+
+
+
+
+
+SELECT TOP (250) eventtime,urlpath, requestmethod, merchantid, username, usertype, instance
   FROM [firewall].[dbo].[LoggerClientEvents]
-  where merchantid = 3447
-  and urlpath like '%3990425%'
+  where merchantid = 3230
+  and RequestMethod = 'post'
   order by EventId desc
+
+select * from merchantProds where merchant_id = 3230 and productid = 861955
+861955
 
   select id_product, model, manufmodel, manufacturerIdentifier from products  where id_product = 579507
   select * from merchantProds where merchant_id = 3447 and  productid = 579507
 
+  select merchantid, count(merchantid) from ElasticSearch_TrackedChanges 
+  group by MerchantId
+  order by count(merchantid) desc
+  --where merchantid = 2547
+
+   SELECT TOP(600) * 
+  FROM Stats.TableStats 
+  WHERE SchemaName = 'dbo' AND TableName = 'ElasticSearch_TrackedChanges'
+  ORDER BY Id DESC
+
+  select top 50  * from ElasticSearchSettings
+
+  --update top (1) ElasticSearchSettings
+  --set value = 4000
+  --where textcode = 'UpdaterBatchSize'
+  --and id = 21
 
 
 
@@ -112,12 +140,12 @@ ORDER BY ObjectType, ObjectName;
 
 
 
-select * from MerchantProducts_ChangeTracking 
-where MerchantId = 3227 
+select * from MerchantProducts_ChangeTrackingarchive
+where MerchantId = 3230 
 and ProductId in (
-	select Id_product from Products where manufID in (1436,4227,3184,3181,3182,4226)
+	select Id_product from Products where manufID in (501)
 )
-and ChangeType in ('insert','delete')
+--and ChangeType in ('insert','delete')
 order by productid, changetime desc
 
 

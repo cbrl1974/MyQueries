@@ -1,26 +1,26 @@
 --**************************Configs
-use tailbasify
-DECLARE @MerchantId as int = 3447;
+use devtailbasify
+DECLARE @MerchantId as int = 1448;
 DECLARE @ShopifyMerchantId as int =  (select s.id
-from tailbasify.shopify.shopifyMerchants s
-    inner join datatail20130410.dbo.merchants m on m.id = s.MerchantId
+from devtailbasify.shopify.shopifyMerchants s
+    inner join devtailbasecore.dbo.merchants m on m.id = s.MerchantId
 where m.id = @MerchantId);
 
 select @ShopifyMerchantId as ShopifyMerchantId, c.id, c.Configuration, sc.ConfigurationValue
-from tailbasify.shopify.ShopifyMerchantConfigurations sc
-    inner join tailbasify.shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
+from devtailbasify.shopify.ShopifyMerchantConfigurations sc
+    inner join devtailbasify.shopify.ShopifyConfigurations c on c.Id = sc.ShopifyConfigurationId
 where ShopifyMerchantId = @ShopifyMerchantId
 
-select sm.id, m.active, sm.MerchantId, sm.ShopUrl, sm.AccessToken from shopify.ShopifyMerchants sm
-inner join datatail20130410.dbo.merchants m on m.id = sm.MerchantId
-where sm.id not in (select ShopifyMerchantId from tailbasify.shopify.ShopifyMerchantConfigurations
-where ShopifyConfigurationId = 22)
-and m.active = 1
-order by sm.merchantid desc
+select *
+from shopify.shopifyMerchants
+where merchantid = 1448
+
+
+
 
 --insert into tailbasify.shopify.ShopifyMerchantConfigurations
 -- values
---     (19, 22, '[{"id":"gid://shopify/Publication/88933007592","name":"Online Store"},{"id":"gid://shopify/Publication/89588891880","name":"Shopify GraphiQL App"}]')
+--     (100, 27, 'true')
 
 
 
@@ -29,10 +29,10 @@ order by sm.merchantid desc
 --where ShopifyMerchantId = 38 
 --and ShopifyConfigurationId = 19
 
---update top (1) tailbasify.shopify.ShopifyMerchantConfigurations
---set ConfigurationValue = 'yes'
---where ShopifyMerchantId = 4
---    and ShopifyConfigurationId = 23
+update top (1) devtailbasify.shopify.ShopifyMerchantConfigurations
+set ConfigurationValue = 'False'
+where ShopifyMerchantId = 5
+    and ShopifyConfigurationId = 27
 
 
 select *
@@ -47,24 +47,36 @@ select *
 from tailbasify.shopify.ShopifyMerchantConfigurations
 where shopifyConfigurationid = 22
 
-
+select * from shopify.ShopifyMerchants where id in (6,100)
 
 select *
 from shopify.ShopifyMerchantConfigurations
-where ShopifyMerchantId = 5
+where ShopifyConfigurationId = 20
 
 select *
-from tailbasify.shopify.ShopifyConfigurations
+from devtailbasify.shopify.ShopifyConfigurations
 --where id = 22
 order by id
 
-select *
-from tailbasify.shopify.ShopifyConfigurations
-where id = 22
-order by id
 
--- update top (1) tailbasify.shopify.ShopifyConfigurations
--- set Configuration  = 'ChannelPublicationIds'
--- where id = 23
+
+ --update top (1) tailbasify.shopify.ShopifyConfigurations
+ --set Configuration  = 'ChannelPublicationIds'
+ --where id = 23
+
+ select mp.merchant_id, mp.productid,mp.reducedPrice, mp.price
+ ,sp.id, sp.handle, sp.SyncStatusId, v.Price, v.CompareAtPrice, v.SyncStatusId  
+ from datatail20130410.dbo.merchantProds mp 
+ join shopify.shopifyProducts sp on sp.merchantid = mp.merchant_id and sp.tailbaseid = mp.productid
+ join shopify.shopifyProductVariants v on v.ShopifyProductID = sp.id 
+ where mp.merchant_id =3607
+ and sp.handle = 'tempur-pedic-tempur-neck-bed-pillow-15325144'
+ and v.price is null
+ order by mp.price
+
+ select * from datatail20130410.dbo.categories where category like '%pillow%' and id_langue = 1
+ select * from datatail20130410.dbo.merchantcats where merchant_id = 3607 and catid = 272
+ select id_product, model, manufmodel,modelkey, manufacturerIdentifier from datatail20130410.dbo.products where id_product = 397938
+  select specifi from datatail20130410.dbo.merchantprods where productid = 397938 and merchant_id = 3607
 
 
