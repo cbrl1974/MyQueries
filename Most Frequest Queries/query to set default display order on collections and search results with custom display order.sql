@@ -2,7 +2,13 @@
 
 select *
 from merchantwebsitefeatures
-where merchant_id = 3180
+where merchant_id = 3165
+
+select merchant_id, productid, displayOrder from merchantprods
+where merchant_id = 3165
+
+select merchant_id, collectionid, displayOrder from merchantCollections
+where merchant_id = 3165
 
 
 
@@ -20,15 +26,15 @@ where featurecode like '%sort%'
 order by featureCode
 
 
--- insert into merchantwebsitefeatures
--- values
---     --(1491, 'colldefaultsort', '(CASE WHEN mc.displayorder IS NULL THEN 1 ELSE 0 END), mc.displayorder, mc.brandHidden ASC, mc.specialbuy DESC,  mc.displayorder, ISNULL(mc.realprice, 9999999) ASC'),
---     (3429, 'searchDefaultSort', 'price ASC')
+insert into merchantwebsitefeatures
+values
+    --(1491, 'colldefaultsort', '(CASE WHEN mc.displayorder IS NULL THEN 1 ELSE 0 END), mc.displayorder, mc.brandHidden ASC, mc.specialbuy DESC,  mc.displayorder, ISNULL(mc.realprice, 9999999) ASC'),
+    (3165, 'searchDefaultSort', 'price DESC')
 
 
--- delete top (1) merchantwebsitefeatures
---     where merchant_id = 3429
---     and featurecode = 'searchDefaultSort'
+delete top (1) merchantwebsitefeatures
+    where merchant_id = 3165
+    and featurecode = 'searchDefaultSort'
 
 
 select *

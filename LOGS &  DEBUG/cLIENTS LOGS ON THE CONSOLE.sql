@@ -1,102 +1,127 @@
-Declare @merchantId as int = 3230;
-Declare @productid int = 861955
+Declare @merchantId as int = 1903;
+Declare @productid int = 669627
 ;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -30, GETDATE()) ;
+Declare @past as date = DATEADD(day, -5, GETDATE());
+
+
 
 --For Products
- select p.id_product, p.manufacturerIdentifier, c.category, co.cie,  a.* 
- from MerchantProducts_ChangeTrackingarchive a
- join products p on p.id_product = a.productid
- join companies co on co.id_cie = p.manufid
- join categories c on c.id_category = p.catid and c.id_langue = 1
- WHERE a.MERCHANTID = @merchantId
- and a.ProductId = @productid
- and a.changetime between @past and @today 
- --and a.changetype in ('insert')
-  order by a.changetime desc
+select p.id_product, p.manufacturerIdentifier, c.category, co.cie, a.*
+from MerchantProducts_ChangeTrackingarchive a
+  join products p on p.id_product = a.productid
+  join companies co on co.id_cie = p.manufid
+  join categories c on c.id_category = p.catid and c.id_langue = 1
+WHERE a.MERCHANTID = @merchantId
+  and a.ProductId = @productid
+  and p.manufID in (1146,2520,2539,7520)
+  and a.changetime between @past and @today
+  --and a.changetype in ('delete')
+order by a.changetime desc
 
-  select * from  Feeds.ProductBasePrices  where feedid = 9 and merchantid =3227
+select * from Companies where cie like '%marvel%'
+
+select merchant_id, productid, CreatedByApp  from merchantProds where merchant_id = 1903 and id_product = 687816
+
+select * from MerchantTimeZones
+
+select * from merchants where id = 1903
+
+select *
+from Feeds.ProductBasePrices
+where feedid = 9 and merchantid =3227
 
 Declare @collectionstoday as date = getdate();
-Declare @collectionspast as date = DATEADD(day, -10, GETDATE()) ;
- select top 150  * from MerchantCollections_ChangeTrackingArchive
- WHERE MERCHANTID = 3230
- and [changetime] between @collectionspast and @collectionstoday
- --and productid =@productid
-  order by changetime desc
+Declare @collectionspast as date = DATEADD(day, -10, GETDATE())
+;
+select top 150
+  *
+from MerchantCollections_ChangeTrackingArchive
+WHERE MERCHANTID = 3230
+  and [changetime] between @collectionspast and @collectionstoday
+--and productid =@productid
+order by changetime desc
 
 
 
-
-
-
-
-SELECT TOP (250) eventtime,urlpath, requestmethod, merchantid, username, usertype, instance
-  FROM [firewall].[dbo].[LoggerClientEvents]
-  where merchantid = 3230
+SELECT TOP (150)
+  eventtime, urlpath, requestmethod, merchantid, username, usertype, instance
+FROM [firewall].[dbo].[LoggerClientEvents]
+where merchantid = 1903
   and RequestMethod = 'post'
-  order by EventId desc
+--and urlpath like '%boxtype%'
+order by EventId desc
 
-select * from merchantProds where merchant_id = 3230 and productid = 861955
-861955
-
-  select id_product, model, manufmodel, manufacturerIdentifier from products  where id_product = 579507
-  select * from merchantProds where merchant_id = 3447 and  productid = 579507
-
-  select merchantid, count(merchantid) from ElasticSearch_TrackedChanges 
-  group by MerchantId
-  order by count(merchantid) desc
-  --where merchantid = 2547
-
-   SELECT TOP(600) * 
-  FROM Stats.TableStats 
-  WHERE SchemaName = 'dbo' AND TableName = 'ElasticSearch_TrackedChanges'
-  ORDER BY Id DESC
-
-  select top 50  * from ElasticSearchSettings
-
-  --update top (1) ElasticSearchSettings
-  --set value = 4000
-  --where textcode = 'UpdaterBatchSize'
-  --and id = 21
+select * from companies where id_cie = 1146
+select * from Categories where id_category = 159
 
 
+select top 1000 * from InternalEventLogs order by time desc
+select * from eve
 
 
-  --For Collections
+select merchantid, count(merchantid)
+from ElasticSearch_TrackedChanges
+group by MerchantId
+order by count(merchantid) desc
+--where merchantid = 2547
+
+SELECT TOP(600)
+  *
+FROM Stats.TableStats
+WHERE SchemaName = 'dbo' AND TableName = 'ElasticSearch_TrackedChanges'
+ORDER BY Id DESC
+
+select top 50
+  *
+from ElasticSearchSettings
+
+--update top (1) ElasticSearchSettings
+--set value = 4000
+--where textcode = 'UpdaterBatchSize'
+--and id = 21
+
+
+
+
+--For Collections
 Declare @merchantId as int = 2959;
 Declare @collectionId int = 32550;
 Declare @today as date = getdate();
-Declare @past as date = DATEADD(day, -30, GETDATE()) ;
+Declare @past as date = DATEADD(day, -30, GETDATE())
+;
 
-   select  * from MerchantCollections_ChangeTrackingArchive
- WHERE MERCHANTID = @merchantId
- and [changetime] between @past and @today
- and CollectionId =@collectionId
-  order by changetime desc
+select *
+from MerchantCollections_ChangeTrackingArchive
+WHERE MERCHANTID = @merchantId
+  and [changetime] between @past and @today
+  and CollectionId =@collectionId
+order by changetime desc
 
- select  * from MerchantCollections_ChangeTracking
- WHERE MERCHANTID = @merchantId
- and [changetime] between @past and @today
- and CollectionId = @collectionId
-  order by changetime desc
+select *
+from MerchantCollections_ChangeTracking
+WHERE MERCHANTID = @merchantId
+  and [changetime] between @past and @today
+  and CollectionId = @collectionId
+order by changetime desc
 
 
 
 
-  --Debugging
+--Debugging
 DECLARE @MerchantIdforDebugForLogs AS INT = 3468;
-select * from merchantwebsiteeventlogs 
+select *
+from merchantwebsiteeventlogs
 where merchantid = @MerchantIdforDebugForLogs
-and text like '%liquidation%'
+  and text like '%liquidation%'
 order by time desc
 
 DECLARE @MerchantIdforDebugForLogs AS INT = 3468;
-select * from merchantwebsiteeventlogs 
+select *
+from merchantwebsiteeventlogs
 where merchantid = @MerchantIdforDebugForLogs
-and time between '2023-07-13 13:36:37.207' and '2023-08-07 15:10:35.317'
-and server != 'servername'
+  and time between '2023-07-13 13:36:37.207' and '2023-08-07 15:10:35.317'
+  and server != 'servername'
 order by time desc
 
 
@@ -114,36 +139,42 @@ order by time desc
 -- order by ChangeTime 
 
 
-select * from firewall.dbo.
+select *
+from firewall.dbo.
 
 
-select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
- where url_string like '%www.haneyapplianceandsound.ca%'
- and [timestamp] between @past and @today
- and ipaddress = '2605:8d80:544:5fc7:ed3c:849b:2a38:79b3'
-  order by [timestamp] desc
+select id, ipaddress, [timestamp], url_string
+from firewall.dbo.historical
+where url_string like '%www.haneyapplianceandsound.ca%'
+  and [timestamp] between @past and @today
+  and ipaddress = '2605:8d80:544:5fc7:ed3c:849b:2a38:79b3'
+order by [timestamp] desc
 
-select  id, ipaddress, [timestamp],url_string from firewall.dbo.historical
- where url_string like '%www.haneyapplianceandsound.ca%'
- and [timestamp] between '2024-01-02 00:00:03.290' and '2024-01-02 16:00:03.290'
- and ipaddress = '209.121.60.42'
-  order by [timestamp] desc
+select id, ipaddress, [timestamp], url_string
+from firewall.dbo.historical
+where url_string like '%www.haneyapplianceandsound.ca%'
+  and [timestamp] between '2024-01-02 00:00:03.290' and '2024-01-02 16:00:03.290'
+  and ipaddress = '209.121.60.42'
+order by [timestamp] desc
 
-  SELECT 
-    o.type_desc AS ObjectType,
-    o.name AS ObjectName,
-    m.definition AS ObjectDefinition
+SELECT
+  o.type_desc AS ObjectType,
+  o.name AS ObjectName,
+  m.definition AS ObjectDefinition
 FROM sys.sql_modules m
-JOIN sys.objects o ON m.object_id = o.object_id
+  JOIN sys.objects o ON m.object_id = o.object_id
 WHERE m.definition LIKE '%MerchantProducts_ChangeTrackingArchive%'
 ORDER BY ObjectType, ObjectName;
 
 
 
-select * from MerchantProducts_ChangeTrackingarchive
-where MerchantId = 3230 
-and ProductId in (
-	select Id_product from Products where manufID in (501)
+select *
+from MerchantProducts_ChangeTrackingarchive
+where MerchantId = 3230
+  and ProductId in (
+	select Id_product
+  from Products
+  where manufID in (501)
 )
 --and ChangeType in ('insert','delete')
 order by productid, changetime desc
@@ -153,14 +184,33 @@ order by productid, changetime desc
 
 
 --Historical based on ip address
-select top 100 * from firewall.dbo.historical where url_string
+select top 100
+  *
+from firewall.dbo.historical
+where url_string
 ipaddress = '70.69.9.5' order by timestamp desc
 
-select  top 100 * from firewall.dbo.resume where ipaddress = '70.69.9.5' order by timestamp desc
-select top 10 * from firewall.dbo.black WHERE MERCHANTID = 155
-select top 100 * from firewall.dbo.config
-select * from firewall.dbo.WhoIsActive where session_id = 292
-select top 100 * from firewall.dbo.online where ipaddress = '70.69.9.5'
+select top 100
+  *
+from firewall.dbo.resume
+where ipaddress = '70.69.9.5'
+order by timestamp desc
+select top 10
+  *
+from firewall.dbo.black
+WHERE MERCHANTID = 155
+select top 100
+  *
+from firewall.dbo.config
+select *
+from firewall.dbo.WhoIsActive
+where session_id = 292
+select top 100
+  *
+from firewall.dbo.online
+where ipaddress = '70.69.9.5'
+
+select * from AutomatedPricingSettingsLogs where merchantid = 1804 order by CreationDate desc
 
 
 

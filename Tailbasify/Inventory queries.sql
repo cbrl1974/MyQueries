@@ -29,8 +29,8 @@ where ms.MerchantID = 3477
 
 
 select *
-from devtailbasecore.dbo.merchantstoresInventory
-where merchantid = 3477
+from datatail20130410.dbo.merchantstoresInventory
+where merchantid = 3527
 
 select *
 from devtailbasecore.dbo.MerchantInventoryTypes

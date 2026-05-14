@@ -16,7 +16,7 @@ TOP (100)
 
 SELECT TOP (100) *
 FROM [firewall].[dbo].[LoggerClientEvents]
-where merchantid = 1448
+where merchantid = 1804
 order by EventId desc
 
 
@@ -24,7 +24,7 @@ order by EventId desc
 --For Datatail - last 14 months
 select * from 
 Log_retail 
-where logindate >= DATEADD(MONTH, -14, CAST(GETDATE() AS DATE))
+where logindate >= DATEADD(MONTH, -05, CAST(GETDATE() AS DATE))
 order by id desc
 
 select top 10 *  from CatalogApiLogs order by id desc

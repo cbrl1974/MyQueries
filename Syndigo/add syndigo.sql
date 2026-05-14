@@ -1,26 +1,33 @@
 SELECT
-STUFF((SELECT ',' + CAST(cieID AS VARCHAR(10))
+        STUFF((SELECT ',' + CAST(cieID AS VARCHAR(10))
         FROM merchantBrands
         WHERE merchant_id = 3487
         FOR XML PATH('')), 1, 1, '') AS cieIDs;
 
 
-select * from MerchantWebsiteFeatures where merchant_id = 3528 and featurecode = 'syndigoBrands'
+select *
+from MerchantWebsiteFeatures
+where merchant_id = 3528 and featurecode = 'syndigoBrands'
 -- insert into MerchantWebsiteFeatures values 
 -- (3496,'syndigoBrands', NULL)
 
 
-select * from TailbaseServices.dbo.ApiClientConfigs where assemblyname = 'DataExportSyndigo'
-and clientid in (3468)
-
-update top (1) TailbaseServices.dbo.ApiClientConfigs
-set FtpServerIp = 'sftp-pcc.syndigo.com'
+select *
+from TailbaseServices.dbo.ApiClientConfigs
 where assemblyname = 'DataExportSyndigo'
-and clientid in (3468)
+        and clientid = 3527
+        and clientid not in (1202,0)
+
+-- update top (1) TailbaseServices.dbo.ApiClientConfigs
+-- set FtpServerIp = 'sftp-pcc.syndigo.com'
+-- where assemblyname = 'DataExportSyndigo'
+--         and clientid in (3468)
 
 
 
-select * from merchantwebsitetexts where merchant_id in (3496,3528,3468) and textcode = 'syndigositeid'
+select *
+from merchantwebsitetexts
+where merchant_id in (3496,3528,3468) and textcode = 'syndigositeid'
 
 
 
@@ -29,9 +36,10 @@ select * from merchantwebsitetexts where merchant_id in (3496,3528,3468) and tex
 
 
 
-select * from MerchantWebsiteFeatures
+select *
+from MerchantWebsiteFeatures
 where featureCode = 'syndigoBrands'
-and merchant_id in (3450)
+        and merchant_id in (3527)
 
 --Execute storedProcedure tailbase websites
 EXECUTE [dbo].[SP_SyndigoWebsitesProducts]
@@ -39,9 +47,13 @@ EXECUTE [dbo].[SP_SyndigoWebsitesProducts]
 @manufIds = NULL
 
 --or
-https://api.tailbase.com/data/ExportWebsitesData/ <Apikey> --V3
+https:
+//api.tailbase.com/data/ExportWebsitesData/E04FC9E6-1C3E-4E8D-99FE-D4770D23A62E
+--V3
 
-https://api.tailbase.com/data/ExportShopifyData/ <Apikey> --Tailbasify
+https:
+//api.tailbase.com/data/ExportShopifyData/DDFAB363-5CB5-4835-9520-1D9AE5B8B84C
+--Tailbasify
 
 
 
@@ -51,17 +63,18 @@ https://api.tailbase.com/data/ExportShopifyData/ <Apikey> --Tailbasify
 --and featurecode = 'syndigoBrands'
 
 
-SELECT TOP (100) [LogID]
-      ,[Project]
-      ,[Category]
-      ,[Text]
-      ,[Time]
-      ,[Severity]
-      ,[Module]
-      ,[Location]
-  FROM [EventReactor].[dbo].[Logs]
-  where module = 'SyndigoExportData'
-  order by [Time] desc
+SELECT TOP (100)
+        [LogID]
+      , [Project]
+      , [Category]
+      , [Text]
+      , [Time]
+      , [Severity]
+      , [Module]
+      , [Location]
+FROM [EventReactor].[dbo].[Logs]
+where module = 'SyndigoExportData'
+order by [Time] desc
 
 
 

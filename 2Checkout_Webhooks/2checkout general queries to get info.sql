@@ -53,11 +53,11 @@ order by creationdate desc
 
 
 
-select top 50
+select top 150
   *
 from Copernic_verifone.dbo.WebHooksLogs WITH (NOLOCK)
-where   CreationDate > convert(date,getdate()-0)
-  and Severity <> 0
+where   CreationDate > convert(date,getdate()-10)
+and Severity <> 0
 order by CreationDate desc
 
 SELECT *

@@ -1,19 +1,28 @@
 ﻿use datatail20130410
 
 --When onboarding you need to add the new merchant here 
-select * from datatail20130410.dbo.merchants where id = 3497
-select *, concat('http://10.8.158.10:8585/api/Pos/UpdateCatalog/', apikey)  from datatail20130410.dbo.MerchantPosConfigs 
+select *
+from datatail20130410.dbo.merchants
+where id = 3497
+
+select *, concat('http://10.8.158.10:8585/api/Pos/UpdateCatalog/', apikey)
+from datatail20130410.dbo.MerchantPosConfigs
+
+--delete top (1) from datatail20130410.dbo.MerchantPosConfigs where merchantid = 3462
 
 --CheckLogs
-select  * from datatail20130410.dbo.MerchantPosLogs 
+select *
+from datatail20130410.dbo.MerchantPosLogs
 where time > convert(date,getdate()-1)
-and merchantid = 3497
+    and merchantid = 3462
 order by time desc
 
 
 
 Declare @merchantID as int = 3507;
-select * from MerchantPosConfigs where merchantId = @merchantID
+select *
+from MerchantPosConfigs
+where merchantId = @merchantID
 
 -- INSERT INTO MerchantPosConfigs (MerchantId, ApiKey, LocalPath, [FileName], Config) VALUES
 -- (
@@ -24,16 +33,22 @@ select * from MerchantPosConfigs where merchantId = @merchantID
 --  '{"ProcessProducts": true, "ProcessInventory": true, "ProcessMerchantItemTags": false, "ProcessAdditionalInformation": false}'
 -- )
 
-select * from MerchantPosConfigs where merchantId = @merchantID
+select *
+from MerchantPosConfigs
+where merchantId = @merchantID
 
 
-select top 250 * from MerchantPosLogs
+select top 250
+    *
+from MerchantPosLogs
 order by time desc
- 
 
-select distinct InventoryType from MerchantInventoryTypes
 
-select * from MerchantInventoryTypes
+select distinct InventoryType
+from MerchantInventoryTypes
+
+select *
+from MerchantInventoryTypes
 
 --insert into MerchantInventoryTypes values
 --(3507,'Total',1)
@@ -44,7 +59,8 @@ select * from MerchantInventoryTypes
 
 
 
-Lino Cabral
+Lino
+Cabral
 commented Dec 22, 2025
 
 
@@ -52,7 +68,9 @@ commented Dec 22, 2025
 
 
 
-select * from ProductsPrices where productid = 225676
-and Country = 'CA'
-and type = 'MSRP'
+select *
+from ProductsPrices
+where productid = 225676
+    and Country = 'CA'
+    and type = 'MSRP'
 order by StartDate  desc
