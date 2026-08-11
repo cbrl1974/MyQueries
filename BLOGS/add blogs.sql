@@ -1,36 +1,84 @@
+DECLARE @merchantID INT = 3423;
 
-Declare @merchantID INT = 589;
+DECLARE @BlogToolActivated INT = (
+    SELECT hasBlog
+    FROM merchantcms
+    WHERE merchant_id = @merchantID
+);
 
-DECLARE @BlogToolActivated as int =  (select hasBlog from merchantcms where merchant_id = @merchantID);
-
-if @BlogToolActivated = 0 
-    update top (1) merchantcms set hasBlog = 1 where merchant_id = @merchantID
+IF ISNULL(@BlogToolActivated, 0) = 0
+BEGIN
+    UPDATE TOP (1) merchantcms
+    SET hasBlog = 1
+    WHERE merchant_id = @merchantID;
+END
 ELSE
-    select @BlogToolActivated;
- 
-
-select * from merchantblogs where merchantid = @merchantID
-
-insert into merchantblogs (name,urlkey,merchantid) values
-('Default','',@merchantID)
+BEGIN
+    SELECT @BlogToolActivated AS BlogToolActivated;
+END;
 
 
-Declare @merchantIDForUsers INT = 2443;
---Check the users for the blogTools session
- SELECT merchants.ID, merchant, retailerID ,merchantusers.ID AS opruserid, merchants.merchant_url, seoTools, blogTools,email_user, f_name, l_name
-FROM        merchants
-INNER JOIN  merchantusers on merchants.ID = merchantusers.merchant_ID
-where merchants.id = @merchantIDForUsers
+SELECT *
+FROM merchantblogs
+WHERE merchantid = @merchantID;
 
 
-Declare @userId INT = (SELECT top (1) merchantusers.id
-FROM        merchants merchants
-INNER JOIN  merchantusers merchantusers on merchants.ID = merchantusers.merchant_ID
-where merchants.id = @merchantIDForUsers);
+IF NOT EXISTS (
+    SELECT 1
+    FROM merchantblogs
+    WHERE merchantid = @merchantID
+      AND name = 'Default'
+)
+BEGIN
+    INSERT INTO merchantblogs (name, urlkey, merchantid)
+    VALUES ('Default', '', @merchantID);
+END;
 
-select @userId
 
-update top (1) merchantusers
-set blogtools = 1
-where id =  @userId
+SELECT *
+FROM merchantblogs
+WHERE merchantid = @merchantID;
 
+
+-- Check the users for the blogTools session
+SELECT 
+    merchants.ID,
+    merchant,
+    retailerID,
+    merchantusers.ID AS opruserid,
+    merchants.merchant_url,
+    seoTools,
+    blogTools,
+    email_user,
+    f_name,
+    l_name
+FROM merchants
+INNER JOIN merchantusers 
+    ON merchants.ID = merchantusers.merchant_ID
+WHERE merchants.ID = @merchantID;
+
+
+-- Update the 3 users for this merchant
+;WITH UsersToUpdate AS (
+    SELECT TOP (3) merchantusers.ID
+    FROM merchantusers
+    WHERE merchant_ID = @merchantID
+    ORDER BY ID
+)
+UPDATE merchantusers
+SET blogTools = 1
+WHERE ID IN (
+    SELECT ID
+    FROM UsersToUpdate
+);
+
+
+SELECT 
+    ID,
+    merchant_ID,
+    blogTools,
+    email_user,
+    f_name,
+    l_name
+FROM merchantusers
+WHERE merchant_ID = @merchantID;
