@@ -1,47 +1,39 @@
 use datatail20130410
 
-select distinct m.id, m.merchant, d.feedid, m.active, d.TotalCount, --d.rundate,d.CurrentIndex,
-    JSON_VALUE( mf.FeedOptionsJson , '$.IsActive') as isMerchantFeedActive
---,JSON_VALUE( mf.FeedOptionsJson , '$.CustomerId') as CustomerId,
---JSON_VALUE( mf.FeedOptionsJson , '$.ShipTo') as ShipTo
---, mf.FeedOptionsJson
-from datatail20130410.feeds.FeedDumps d  WITH (NOLOCK)
-    join feeds.merchantfeeds mf on mf.merchantid = d.MerchantId and mf.FeedId = d.feedid
-    join merchants m on m.id = d.MerchantId
-where  d.RunDate > convert(date,getdate()-1)
-    and m.active = 1
--- and d.feedid = 4
---and JSON_VALUE( mf.FeedOptionsJson , '$.IsActive') = 'true'
---and d.totalcount = 0
---and d.MerchantId in (2002)   
-group by m.id,m.merchant,d.feedid,m.active, d.TotalCount,mf.FeedOptionsJson
---,d.rundate,d.CurrentIndex, d.TotalCount
-order by m.id, d.totalcount
+select * from feeds.feeds
+
+SELECT [value]
+FROM dbo.SystemSettings
+WHERE [key] = 'EmailAttributes';
+
+
+select * from feeds.MerchantFeeds where feedid = 12
+
+select * from merchantwebsitetexts where merchant_id = 3526 and textcode like '%7003%' 
+select * from merchantStores where merchantid = 3526
+
+insert into merchantwebsitetexts (merchant_id, textcode, content_1, content_2, id_langue) values
+(3526,'contactformemail7003', 'info@unitedfloors.ca, sales@5starsurfaces.ca','info@unitedfloors.ca, sales@5starsurfaces.ca',1)
 
 
 select *
 from datatail20130410.feeds.FeedDumps WITH (NOLOCK)
 where  RunDate > convert(date,getdate()-1)
-order by feedid
+and feedid = 4
+order by feedid,merchantid
 
 
---delete top (2) 
+--delete top (1) 
 --from datatail20130410.feeds.FeedDumps 
 --where  RunDate > convert(date,getdate()-1)
 --    and feedid = 4
---    and MerchantId in (3577)
---  and totalcount = 0
-
---Check products information on teh merchant
-select mp.merchant_id, p.id_product, co.cie, p.ManufacturerIdentifier, mp.price, mp.reducedPrice
-from merchantprods mp
-    join products p on p.id_product = mp.ProductID
-    join companies co on co.id_Cie = p.manufid
-where p.manufid in (3181,3182,1436,3184,4227,4226)
-    and mp.merchant_id = 2002
+--    and id = 182054
+--    and MerchantId in (3608)
 
 
-select --top 150 
+
+
+select top 200 
     [LogID]
       , [Project]
       , [Category]
@@ -53,112 +45,25 @@ select --top 150
 FROM [EventReactor].[dbo].[Logs] WITH (NOLOCK)
 where category = 'feeds'
     and time > convert(date,getdate()-0)
---and severity <> 2
-order by [time] desc
+order by logid desc
 
 
-select
-    sp.tailbaseid,
-    c.category,
-    sp.handle,
-    sp.SyncStatusId,
-    fp.price as BasePrice,
-    p.manufmodel,
-    mp.productid,
-    mp.price as MerchantPrice,
-    mp.reducedPrice
-from Feeds.ProductBasePrices fp
-    join products p
-    on p.id_product = fp.productid
-    join categories c
-    on c.id_category = p.catid
-        and c.id_langue = 1
-    join merchantProds mp
-    on mp.merchant_id = fp.merchantid
-        and mp.productid   = fp.productid
-    join tailbasify.Shopify.shopifyProducts sp
-    on sp.merchantid = fp.merchantid
-        and sp.tailbaseid = fp.productid
-        and sp.itemtype = 1
-where fp.feedid = 9
-    and fp.merchantid = 3447
-    and p.active = 1
-    and p.discontinued = 0
-order by fp.productid;
-
-
-select productid, price, reducedPrice
-from merchantProds
-where merchant_id = 3447
-    and productid in (select productid
-    from feeds.ProductBasePrices
-    where feedid = 9 and merchantid = 3447)
-order by productid
-
-select tailbaseid, handle
-from tailbasify.Shopify.shopifyProducts
-where merchantid = 3447
-    and tailbaseid in (select productid
-    from feeds.ProductBasePrices
-    where feedid = 9 and merchantid = 3447)
-order by tailbaseid
-
-select
-    fp.productid,
-    fp.price as basePrice,
-    p.manufmodel,
-    p.active,
-    p.discontinued,
-    mp.price as merchantPrice,
-    mp.reducedPrice,
-    sp.handle,
-    sp.SyncStatusId
-from Feeds.ProductBasePrices fp
-    left join products p
-    on p.id_product = fp.productid
-    left join merchantProds mp
-    on mp.merchant_id = fp.merchantid
-        and mp.productid = fp.productid
-    left join tailbasify.Shopify.shopifyProducts sp
-    on sp.merchantid = fp.merchantid
-        and sp.tailbaseid = fp.productid
-        and sp.itemtype = 1
-where fp.feedid = 9
-    and fp.merchantid = 3447
-order by fp.productid;
-
-select fp.productid, fp.price as basePrice, sp.handle, sp.SyncStatusId
-from Feeds.ProductBasePrices fp
-    join merchantProds mp
-    on mp.merchant_id = fp.merchantid
-        and mp.productid = fp.productid
-    join tailbasify.Shopify.shopifyProducts sp
-    on sp.merchantid = fp.merchantid
-        and sp.tailbaseid = fp.productid
-        and sp.itemtype = 1
-where fp.feedid = 9
-    and fp.merchantid = 3447
-order by fp.productid;
 
 
 select mp.productid, p.manufmodel, p.manufid, mp.cost, mp.price, mp.reducedPrice 
 , fp.price as priceFromFeed
-, JSON_VALUE( AdditionalPricingData , '$.ManufacturerSuggestedRetailPrice') as MSRP
-, JSON_VALUE( AdditionalPricingData , '$.MinimumAdvertisedPrice') as MAP
---, fp.AdditionalPricingData
+--, JSON_VALUE( AdditionalPricingData , '$.ManufacturerSuggestedRetailPrice') as MSRP
+--, JSON_VALUE( AdditionalPricingData , '$.MinimumAdvertisedPrice') as MAP
+, fp.AdditionalPricingData
 from merchantProds mp
     inner join products p on p.id_product = mp.productid
     left join Feeds.ProductBasePrices fp on mp.productid = fp.productid and mp.merchant_id = fp.MerchantId
-where mp.merchant_id = 3025
-    and p.manufid in (3181,3182,3184,4226,4227,1436,7587)
-    and fp.feedid = 9
-    and p.manufid = 7587
-order by p.manufID
+where  fp.feedid = 27
+     and mp.merchant_id = 3673
+    and fp.AdditionalPricingData like '%sellPrice%'
 
-select *
-from feeds.pricingtiers
---and ProductId in (735643)
---and merchantid = 2654
+
+
 
 
 
@@ -174,18 +79,11 @@ where id = 25
 
 
 
-select mf.MerchantId, mf.feedid, mf.FeedOptionsJson,
-    JSON_VALUE( mf.FeedOptionsJson , '$.PricingActive') AS PricingActive
+select mf.MerchantId, mf.feedid, mf.FeedOptionsJson
 from datatail20130410.feeds.merchantfeeds mf
---left join merchants m on m.id = mf.merchantid
 where mf.feedid =9
-    --and JSON_VALUE( mf.FeedOptionsJson , '$.PricingActive') = 'true'
-    and mf.merchantid = 3447
+    and mf.merchantid = 3608
 order by mf.merchantid
-
-select *
-from merchantProds
-where merchant_id = 868058
 
 
 
@@ -199,7 +97,8 @@ where merchant_id = 868058
 
 select *
 from feeds.merchantfeeds
-where feedid = 25
+where feedid = 9
+order by merchantid
 
 
 
@@ -283,12 +182,12 @@ where mf.brand = 'Ashley'
 
 select *
 from datatail20130410.dbo.MerchantFeeds
-where merchant_id in (2976,3613,3614, 3615)
+where merchant_id in (589,1448)
     and brand = 'Ashley'
 
---delete top (4) from datatail20130410.dbo.MerchantFeeds
---where merchant_id in (2976,3613,3614, 3615) 
---and brand = 'Ashley'
+delete top (4) from datatail20130410.dbo.MerchantFeeds
+where merchant_id in (589) 
+and brand = 'Ashley'
 
 
 
@@ -360,3 +259,16 @@ select *
 from merchantprods
 where merchant_id = 3527 and productid = 30642
 
+
+
+
+
+
+select *
+from datatail20130410.dbo.MerchantFeeds
+where merchant_id in (1252)
+    and brand = 'Ashley'
+
+delete top (1) from datatail20130410.dbo.MerchantFeeds
+where merchant_id in (1252) 
+and brand = 'Ashley'

@@ -1,64 +1,57 @@
 
 use datatail20130410
 --Debugging
-DECLARE @MerchantIdforDebugForLogs AS INT = 1719;
-select top 150
-	*
+DECLARE @MerchantIdforDebugForLogs AS INT = 3457;
+select top 150	*
 from merchantwebsiteeventlogs
 where merchantid = @MerchantIdforDebugForLogs
 --and module ='ShoppingCart'
 order by time desc
 
 
-select top 10
-	*
+select top 10	*
 from merchantusers
 
-SELECT *
-FROM SystemSettings
+SELECT * FROM SystemSettings
 WHERE [key] = 'PlatinumDefaultHomePageComponents'
 
 
-DECLARE @MerchantIdforDebug AS INT = 1719;
-select top 100
-	*
-from MerchantTransactionLog
+DECLARE @MerchantIdforDebug AS INT = 3457;
+select top 100	* from MerchantTransactionLog
 where merchant_id = @MerchantIdforDebug
 order by id desc
 
-DECLARE @MIDCustomerOrders AS INT = 1719;
-select top 100
-	*
-from CustomerOrders
+DECLARE @MIDCustomerOrders AS INT = 3457;
+select top 100	* from CustomerOrders
 where merchant_id = @MIDCustomerOrders
 --and id = 132832
 order by id desc
 
-DECLARE @MerchantIdcustomers AS INT = 1719;
+DECLARE @MerchantIdcustomers AS INT = 3457;
 select c.*, ca.*
 from customers c
 	inner join CustomerAddresses ca on ca.customerId = c.id
-where c.merchant_id = 1719
+where c.merchant_id = 3457
 	and c.id = 208732
 	and c.last_name like '%Lebel%'
 
 
-DECLARE @MerchantIdforcustomerOrdersItems AS INT = 1719;
+DECLARE @MerchantIdforcustomerOrdersItems AS INT = 3457;
 select top 100
 	*
 from CustomerOrderItems
 where orderId = 132832
 order by id desc
 
-DECLARE @MerchantIdforDebugForActiveCarts AS INT = 1719;
+DECLARE @MerchantIdforDebugForActiveCarts AS INT = 3457;
 select top 100
 	*
 from ActiveShoppingCarts
---where merchantid = @MerchantIdforDebugForActiveCarts
+where merchantid = @MerchantIdforDebugForActiveCarts
 order by id desc
 
 
-DECLARE @MIDCustomerOrderPayments AS INT = 1719;
+DECLARE @MIDCustomerOrderPayments AS INT = 3457;
 select top 50
 	p.label, co.orderTimeStamp, c.*
 from CustomerOrderPayments c
@@ -68,7 +61,7 @@ where co.merchant_id = @MIDCustomerOrderPayments
 order by orderid desc
 
 
-DECLARE @CustomerOrderEmailsHistory AS INT = 1719;
+DECLARE @CustomerOrderEmailsHistory AS INT = 3457;
 select top 100
 	*
 from CustomerOrderEmailsHistory
@@ -81,7 +74,7 @@ order by id desc
 select top 50
 	*
 from customerOrderRequests
-where merchantid = 1719
+where merchantid = 3457
 order by CreationTimestamp desc
 
 -- <cfset this.ORDER_STATUS_CREATED = "C">
@@ -99,17 +92,29 @@ where url_string like '%eastcoastfurnishings.com%'
 order by [timestamp] desc
 
 
-DECLARE @MerchantIdforDebugForCartConfigurations AS INT = 1719;
+DECLARE @MerchantIdforDebugForCartConfigurations AS INT = 3457;
 select *
 from MerchantShoppingCartConfigurations
 where merchantid = @MerchantIdforDebugForCartConfigurations
 
 
 --********************FEATURES********************
-DECLARE @MerchantIdforFeatures AS INT = 1719;
+DECLARE @MerchantIdforFeatures AS INT = 3457;
 select *
 from merchantWebsiteFeatures
 where merchant_id = @MerchantIdforFeatures
+
+update top (1) merchantWebsiteFeatures
+set featurevalue = 'withnetbanx' --
+where merchant_id = 3457 
+and featurecode = 'shoppingCartType'
+
+delete top (1) merchantWebsiteFeatures
+where merchant_id = 3457 
+and featurecode = 'shoppingCartType'
+
+INSERT INTO merchantWebsiteFeatures(merchant_id, featureCode, featureValue)
+VALUES(3457, 'shoppingCartType', 'withnetbanx')
 
 
 select DISTINCT featurevalue
@@ -118,29 +123,23 @@ where featurecode = 'shoppingCartType'
 
 -- update top (1) merchantWebsiteFeatures 
 -- set featureValue = 'only-submit-as-order'
--- where merchant_id = 1719
+-- where merchant_id = 3457
 -- 	and featurecode = 'shoppingCartType'
-
 --********************texts********************
-DECLARE @MerchantIdfortexts AS INT = 2542;
+DECLARE @MerchantIdfortexts AS INT = 3457;
 select *
 from merchantWebsitetexts
 where merchant_id = @MerchantIdfortexts
-	and textcode like 'payment%'
-2542
-2802
-3025
-3065
-3165
-3385
-3388
-3390
-3423
-2660
-3033
+	and textcode like '%paymentDetailTest%'
+
+
+select *
+from merchantWebsitetexts
+where merchant_id = 2087
+	and textcode like '%paymentDetailTest%'
 
 --************Products with prices******************
-DECLARE @MerchantIdforProdsWithPrices AS INT = 1719;
+DECLARE @MerchantIdforProdsWithPrices AS INT = 3457;
 select top 1
 	productid, price, reducedPrice, storeonly
 from merchantprods
@@ -150,7 +149,7 @@ where merchant_id = @MerchantIdforProdsWithPrices
 
 update top (1) merchantprods 
 set price = null
-where merchant_id = 1719
+where merchant_id = 3457
 	and productid = 220802
 
 
@@ -158,7 +157,7 @@ where merchant_id = 1719
 
 --********************Shipping********************
 
-DECLARE @MerchantIdforShipping AS INT = 1719;
+DECLARE @MerchantIdforShipping AS INT = 3457;
 DECLARE @ShippingType as varchar(200) = 
 	( 
 		select featureValue
@@ -214,7 +213,7 @@ where merchant_id = @MerchantIdforShipping)
 
 --=========================================================================================================================
 
-DECLARE @merchantshippingIncluderules AS INT = 1719;
+DECLARE @merchantshippingIncluderules AS INT = 3457;
 select c.category, ms.name_1, msir.*
 from merchantshippingIncluderules msir
 	inner join merchantshipping ms on ms.id = msir.MerchantShippingId
@@ -225,7 +224,7 @@ where merchant_id = @merchantshippingIncluderules)
 
 
 
-DECLARE @merchantshippingexcludeRules AS INT = 1719;
+DECLARE @merchantshippingexcludeRules AS INT = 3457;
 select c.category, ms.name_1, mser.*
 from merchantshippingExcluderules mser
 	inner join merchantshipping ms on ms.id = mser.MerchantShippingId
@@ -235,7 +234,7 @@ from merchantshipping
 where merchant_id = @merchantshippingexcludeRules)
 
 
-DECLARE @MERCHANTIDFORE0XCLUSIONS as int = 1719;
+DECLARE @MERCHANTIDFORE0XCLUSIONS as int = 3457;
 select *
 from MerchantShippingExclusions
 where MerchantShippingId in (select id
@@ -245,7 +244,7 @@ where merchant_id = @MERCHANTIDFORE0XCLUSIONS)
 
 
 --********************Stores********************
-DECLARE @MerchantIdforStores AS INT = 1719;
+DECLARE @MerchantIdforStores AS INT = 3457;
 select *
 from merchantstores
 where merchantid = @MerchantIdforStores
@@ -254,7 +253,7 @@ where merchantid = @MerchantIdforStores
 
 
 --********************Zones********************
-DECLARE @MerchantIdforZones AS INT = 1719;
+DECLARE @MerchantIdforZones AS INT = 3457;
 select *
 from merchantzones
 where merchant_id =@MerchantIdforZones
@@ -277,7 +276,7 @@ where merchant_id =@MerchantIdforZones)
 
 --********************Taxes********************
 
-DECLARE @MerchantIdforTaxes AS INT = 1719;
+DECLARE @MerchantIdforTaxes AS INT = 3457;
 select *
 from merchanttaxes
 where merchant_id = @MerchantIdforTaxes
@@ -295,21 +294,21 @@ where merchantTaxId in (select id
 from merchanttaxes
 where merchant_id =@MerchantIdforTaxes)
 
-DECLARE @MerchantIdforTaxesEXemption AS INT = 1719;
+DECLARE @MerchantIdforTaxesEXemption AS INT = 3457;
 select *
 from MerchantTaxExemptItems
 where merchantid = @MerchantIdforTaxesEXemption
 
 
 --*********************Installations*****************************************
-DECLARE @MerchantIdforInstallations AS INT = 1719;
+DECLARE @MerchantIdforInstallations AS INT = 3457;
 select *
 from Merchantinstallations
 where merchantid = @MerchantIdforInstallations
 
 
 ----********************Warranties********************
-DECLARE @MerchantIdforWarranties AS INT = 1719;
+DECLARE @MerchantIdforWarranties AS INT = 3457;
 select *
 from merchantwarranties
 where merchantid = @MerchantIdforWarranties
@@ -322,7 +321,7 @@ where merchantid = @MerchantIdforWarranties)
 
 
 --********************Cart Options****************************
-DECLARE @MerchantIdforCartOptions AS INT = 1719;
+DECLARE @MerchantIdforCartOptions AS INT = 3457;
 select *
 from merchantCartOptions
 where merchantid = @MerchantIdforCartOptions
@@ -342,7 +341,7 @@ from MerchantCartOptionShippingIncludeRules
 
 
 --*********************merchantcms****************************************
-DECLARE @MerchantIdforcms AS INT = 1719;
+DECLARE @MerchantIdforcms AS INT = 3457;
 select orders, warranties
 from merchantcms
 where merchant_id = @MerchantIdforcms
@@ -361,7 +360,7 @@ from merchantwebsitefeatures mf
 	join merchants m on m.id = mf.merchant_id
 	join merchantwebsiteinformation mwi on mwi.merchant_id = m.id
 where  mf.featureCode = 'shoppingcarttype'
-	and mf.featureValue like '%authorize%'
+	and mf.featureValue like '%ppc%'
 	and m.active = 1
 	and m.merchant_url not like '%tailbase%'
 	and merchant not like '%tailbase%'

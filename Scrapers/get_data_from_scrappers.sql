@@ -49,7 +49,7 @@ select *
 from datatail20130410.dbo.products
 where model like '%RF25HMIDBSR%'
 
-SELECT TOP (100)
+SELECT TOP (200)
     [LogID]
       , [Project]
       , [Category]
@@ -60,7 +60,7 @@ SELECT TOP (100)
       , [Location]
 FROM [EventReactor].[dbo].[Logs]
 where Category = 'scrapers'
-    and module = 'CostcoScraper'
+    and module = 'CanadianAppliancesScraper'
 order by [Time] desc
 
 
@@ -91,7 +91,7 @@ order by date desc
 --This checks  the state of a scraper
 select *
 from Tailbaseservices.dbo.AsyncTasks
-where AssemblyClass like '%thebrick%'
+where AssemblyClass like '%CanadianAppliancesScraper%'
     and AssemblyMethodName like 'Scrape%'
 
 update top (1) Tailbaseservices.dbo.AsyncTasks
@@ -127,10 +127,10 @@ set state = 1
 where id = '38C5029F-EFB6-4E8E-B25D-EBDAD106470E'
 
 
---HomeDepotCanadaScraper
+--CanadianAppliancesScraper
 update top (1) Tailbaseservices.dbo.asynctasks
 set State = 1
-where id = '7C2CB5E5-171A-4354-A1DE-F5E9E198B7B1'
+where id = '90fb4928-525f-4cf5-9ea1-915ce2406478'
 
 
 --LowesCanadaScraper
